@@ -301,8 +301,13 @@ let createdRef = '';
 /* ---------- 14. phone navigation: bottom bar, badges, drawers, checkout bar ---------- */
 {
   const { window, doc, errors, close } = await loadPage('/');
+  const util = doc.querySelector('.util-bar');
+  check('top: phone number removed from util bar', util && !util.textContent.includes('+254'), util && util.textContent.trim());
+  check('top: track order removed from util bar', util && !util.textContent.includes('Track'));
+  check('app: theme-color meta present', !!doc.querySelector('meta[name="theme-color"]'));
+  check('app: back button present', !!doc.getElementById('navBack'));
   const bar = doc.getElementById('bottomBar');
-  check('phone: bottom bar present', !!bar);
+  check('phone: floating pill present', !!bar);
   check('phone: five tabs', bar && bar.querySelectorAll('.btab').length === 5);
   check('phone: home tab active', bar && bar.querySelector('.btab.active span') && bar.querySelector('.btab.active span').textContent === 'Home');
   const badge = bar && bar.querySelector('.bcount');
@@ -318,6 +323,8 @@ let createdRef = '';
   await sleep(150);
   check('phone: bottom menu opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
   check('phone: drawer has departments', doc.querySelectorAll('#menuBody .mnav-depts a').length === catalog.categories.length);
+  check('track: moved into menu drawer', !!doc.querySelector('#menuBody a[href="/order.html"]'));
+  check('track: present in footer', !!doc.querySelector('.site-footer a[href="/order.html"]'));
   check('phone: no errors', errors.length === 0, errors[0]);
   close();
 

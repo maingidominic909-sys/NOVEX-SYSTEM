@@ -51,17 +51,14 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="util-bar">
       <div class="shell">
-        <a href="tel:${NV.CONFIG.phoneRaw}">${NV.icon('phone')} ${E(NV.CONFIG.phone)}</a>
-        <span class="util-sep util-hide-md"></span>
-        <span class="util-hide-md">${E(NV.CONFIG.hours)}</span>
+        <span class="util-hide-sm">${NV.icon('clock')} ${E(NV.CONFIG.hours)}</span>
         <span class="spread"></span>
-        <span class="util-gold util-hide-sm">${NV.icon('truck')} Free delivery over ${NV.money(NV.CONFIG.freeDeliveryFrom)}</span>
-        <span class="util-sep util-hide-sm"></span>
-        <a href="/order.html">${NV.icon('box')} Track order</a>
+        <span class="util-gold">${NV.icon('truck')} Free delivery over ${NV.money(NV.CONFIG.freeDeliveryFrom)}</span>
       </div>
     </div>
     <header class="site-header" id="siteHeader">
       <div class="shell header-main">
+        <button class="hicon nav-back" id="navBack" aria-label="Go back" title="Back">${NV.icon('arrowL')}</button>
         <a class="brand" href="/index.html" aria-label="Norvex home">
           <img src="/img/logo.png" alt="Norvex Integrated Enterprises Ltd" width="164" height="40">
         </a>
@@ -121,6 +118,12 @@
     document.getElementById('searchBtn').addEventListener('click', openSearch);
     document.getElementById('cartBtn').addEventListener('click', openCart);
     document.getElementById('menuBtn').addEventListener('click', openMenu);
+    /* app-style back: uses the session history so the OS/system back gesture and
+       this button stay in sync; falls back to home when there is no history */
+    document.getElementById('navBack').addEventListener('click', () => {
+      if (window.history.length > 1) window.history.back();
+      else location.href = '/index.html';
+    });
     wireMega();
     updateCounts();
   }
@@ -204,6 +207,7 @@
               <li><a href="/basket.html">Supply basket</a></li>
               <li><a href="/checkout.html">Checkout</a></li>
               <li><a href="/orders.html" data-auth="orders-link">My orders</a></li>
+              <li><a href="/order.html">Track my order</a></li>
               <li><a href="/account.html" data-auth="account-link">My account</a></li>
               <li><a href="/auth.html?mode=signin" data-auth="drawer-link">Sign in / create account</a></li>
             </ul>
@@ -331,8 +335,10 @@
           <a href="/quote.html">${NV.icon('clipboard')} Request a quote</a>
           <a href="/basket.html">${NV.icon('cart')} Supply basket</a>
           <a href="/orders.html">${NV.icon('receipt')} My orders</a>
+          <a href="/order.html">${NV.icon('truck')} Track my order</a>
           <a href="/plan.html">${NV.icon('calendar')} Future orders</a>
           <a href="/desk.html">${NV.icon('grid')} Order desk</a>
+          <a href="/account.html">${NV.icon('user')} My account</a>
         </div>
         <p class="search-label">Popular right now</p>
         ${cat.products.filter(p => p.popular).slice(0, 4).map(p => searchHitHtml(p)).join('')}`;
@@ -460,6 +466,7 @@
         <a class="mnav-link" href="/desk.html">${NV.icon('grid')} Order desk</a>
         <a class="mnav-link" href="/basket.html">${NV.icon('cart')} Basket <span class="badge gold" style="margin-left:auto" data-cart-count>0</span></a>
         <a class="mnav-link" href="/orders.html" data-auth="orders-link">${NV.icon('receipt')} My orders</a>
+        <a class="mnav-link" href="/order.html">${NV.icon('truck')} Track my order</a>
         <a class="mnav-link" href="${user ? '/account.html' : '/auth.html?mode=signin'}">${NV.icon('user')} ${user ? E(user.name) : 'Sign in / create account'}</a>
         ${user && user.role === 'admin' ? `<a class="mnav-link" href="/admin.html">${NV.icon('chart')} Operations console</a>` : ''}
       </div>

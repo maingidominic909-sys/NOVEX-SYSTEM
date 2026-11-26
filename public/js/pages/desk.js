@@ -44,6 +44,7 @@
       ['cart', 'Supply basket', 'Review lines & tier nudges', '/basket.html'],
       ['wallet', 'Checkout', '3 steps to a placed order', '/checkout.html'],
       ['receipt', 'Order history', 'Track, export, reorder', '/orders.html'],
+      ['truck', 'Track my order', 'Live status by reference', '/order.html'],
       ['clipboard', 'Quote desk', 'Formal multi-line RFQ', '/quote.html'],
       ['calendar', 'Future planner', 'Recurring supply cycles', '/plan.html']
     ];
