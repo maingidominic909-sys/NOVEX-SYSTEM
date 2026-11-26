@@ -1241,3 +1241,75 @@ body.locked{overflow:hidden}
   .auth-demo .ad-btns{grid-template-columns:1fr}
   .profile-head .auth-avatar{width:52px;height:52px;font-size:1.1rem}
 }
+
+/* =========================================================
+   PHONE EXPERIENCE — bottom tab bar, safe areas, touch
+   ========================================================= */
+body{-webkit-tap-highlight-color:transparent}
+button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
+.count[data-zero="1"]{display:none}
+.bottom-bar{display:none}
+.checkout-bar{display:none}
+
+@media (max-width:768px){
+  /* keep content clear of the fixed bottom bar + iPhone home indicator */
+  body:not(.auth-body){padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  body.has-checkoutbar{padding-bottom:calc(128px + env(safe-area-inset-bottom,0px))}
+
+  .bottom-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:115;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));
+  }
+  .btab{
+    position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:7px 4px 5px;border-radius:12px;font-size:.66rem;font-weight:700;
+    color:var(--muted);transition:color .13s,background .13s;letter-spacing:.01em;
+  }
+  .btab svg{width:21px;height:21px}
+  .btab:active{background:var(--green-50)}
+  .btab.active{color:var(--green-800);background:var(--green-50)}
+  .btab.active::before{content:"";position:absolute;top:3px;left:50%;transform:translateX(-50%);width:22px;height:3px;border-radius:2px;background:var(--gold-500)}
+  .btab .bcount{
+    position:absolute;top:1px;left:calc(50% + 5px);min-width:17px;height:17px;padding:0 4px;
+    border-radius:99px;background:var(--gold-500);color:#241a06;font-size:.62rem;font-weight:800;
+    display:grid;place-items:center;border:2px solid var(--surface);
+  }
+
+  /* sticky checkout CTA on the basket page */
+  .checkout-bar{
+    position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:114;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:var(--green-950);color:#fff;padding:10px 16px;
+    box-shadow:0 -10px 28px rgba(5,26,19,.28);
+  }
+  .checkout-bar .cb-total small{display:block;font-size:.64rem;color:#8fa398;letter-spacing:.04em;text-transform:uppercase}
+  .checkout-bar .cb-total b{font-family:var(--font-serif);font-size:1.15rem;color:var(--gold-400);line-height:1.2}
+  .checkout-bar .btn{flex:none}
+
+  /* lift floating UI above the bar */
+  .toast-stack{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  .offline-pill{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  body.has-checkoutbar .toast-stack{bottom:calc(142px + env(safe-area-inset-bottom,0px))}
+  body.has-checkoutbar .offline-pill{bottom:calc(142px + env(safe-area-inset-bottom,0px))}
+
+  /* comfortable touch targets */
+  .qty button{width:42px;height:44px}
+  .qty input{height:44px}
+  .qty.sm button{width:36px;height:38px}
+  .qty.sm input{height:38px}
+  .btn-sm{min-height:40px}
+  .mnav-link{padding:13px 10px}
+  .mnav-depts a{padding:11px 10px}
+  .drawer-body{overscroll-behavior:contain}
+  .search-results{overscroll-behavior:contain}
+  .chip{padding:9px 15px}
+  .filter-list label{padding:9px}
+  #shopTop{scroll-margin-top:calc(var(--header-h) + 12px)}
+
+  /* drawers slide over the bar; keep their footers reachable */
+  .drawer{z-index:210}
+  .drawer-foot{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+}

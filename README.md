@@ -25,6 +25,7 @@ v2 fixes all of that:
 | **Real homepage** | `public/index.html` — hero with catalogue search, 13 department cards, featured lines, how-it-works, services, testimonials, CTA |
 | **One design system** | `css/nv.css` — tokens, buttons, forms, cards, tables, KPIs, drawers, modals, toasts, responsive rules. Deep green + gold brand kept |
 | **New login panel** | `auth.html` — split brand/form layout, sign-in/create-account tabs, inline validation, password visibility + strength meter, one-click demo accounts, return-to redirect |
+| **Phone-first navigation** | Fixed bottom tab bar (Home · Shop · Search · Basket · Menu) with live basket badge, full-screen menu drawer, sticky checkout CTA on the basket, iPhone safe-area insets and ≥44px touch targets |
 | **Preview-friendly server** | `X-Frame-Options` removed so the site renders in embedded previews; express/pickup delivery priced server-side |
 | **Legacy links redirect** | `Index.html`, `catalogue.html`, `supply-basket.html`, `future-order.html` → new pages |
 

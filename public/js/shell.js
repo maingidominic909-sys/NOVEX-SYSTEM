@@ -262,8 +262,21 @@
         <button class="drawer-x" data-close="menu" aria-label="Close menu">${NV.icon('close')}</button>
       </div>
       <div class="drawer-body" id="menuBody"></div>
-    </aside>`;
+    </aside>
+
+    <nav class="bottom-bar" id="bottomBar" aria-label="Quick navigation">
+      <a class="btab ${activeKey === 'home' ? 'active' : ''}" href="/index.html">${NV.icon('home')}<span>Home</span></a>
+      <a class="btab ${activeKey === 'shop' ? 'active' : ''}" href="/shop.html">${NV.icon('layers')}<span>Shop</span></a>
+      <button class="btab" id="bSearch" type="button" aria-label="Search catalogue">${NV.icon('search')}<span>Search</span></button>
+      <a class="btab ${activeKey === 'basket' ? 'active' : ''}" href="/basket.html" aria-label="Supply basket">
+        ${NV.icon('cart')}<span class="bcount count" data-cart-count data-zero="1">0</span><span>Basket</span>
+      </a>
+      <button class="btab" id="bMenu" type="button" aria-label="Open menu">${NV.icon('menu')}<span>Menu</span></button>
+    </nav>`;
     document.body.appendChild(host);
+
+    document.getElementById('bSearch').addEventListener('click', openSearch);
+    document.getElementById('bMenu').addEventListener('click', openMenu);
 
     document.getElementById('nvOverlay').addEventListener('click', closeAll);
     host.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
@@ -481,7 +494,7 @@
     const n = NV.basket.count();
     document.querySelectorAll('[data-cart-count]').forEach(el => {
       el.textContent = String(n);
-      if (el.classList.contains('count') && el.closest('.hicon')) el.dataset.zero = n === 0 ? '1' : '0';
+      if (el.classList.contains('count')) el.dataset.zero = n === 0 ? '1' : '0';
     });
   }
   document.addEventListener('basket:change', () => {

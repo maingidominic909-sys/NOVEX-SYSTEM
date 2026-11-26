@@ -4,11 +4,39 @@
   const NV = window.NV;
   const E = NV.esc;
 
+  function goCheckout() {
+    if (NV.auth && !NV.auth.isIn()) {
+      NV.auth.require({ returnTo: '/checkout.html', title: 'Sign in to check out', body: 'Your basket is saved. Sign in or create a trade account to place this order.' });
+    } else location.href = '/checkout.html';
+  }
+
+  /* sticky total + checkout CTA above the phone bottom bar */
+  function renderCheckoutBar(total) {
+    let bar = document.getElementById('checkoutBar');
+    if (total == null) {
+      if (bar) bar.remove();
+      document.body.classList.remove('has-checkoutbar');
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'checkoutBar';
+      bar.className = 'checkout-bar';
+      document.body.appendChild(bar);
+    }
+    document.body.classList.add('has-checkoutbar');
+    bar.innerHTML = `
+      <div class="cb-total"><small>Total · VAT incl.</small><b>${NV.money(total)}</b></div>
+      <button class="btn btn-gold" id="barCheckout" type="button">Checkout ${NV.icon('arrowR')}</button>`;
+    document.getElementById('barCheckout').addEventListener('click', goCheckout);
+  }
+
   async function render() {
     const lines = await NV.basket.lines();
     const root = document.getElementById('basketRoot');
     const empty = document.getElementById('basketEmpty');
     if (!lines.length) {
+      renderCheckoutBar(null);
       root.classList.add('hide');
       empty.classList.remove('hide');
       empty.innerHTML = NV.ui.emptyState(
@@ -73,15 +101,12 @@
         <p class="hint mt-2 center">Tier pricing is confirmed server-side at checkout.</p>
       </div>`;
 
+    renderCheckoutBar(t.total);
     document.getElementById('waOrder').href = NV.basket.whatsappText(lines);
     document.getElementById('clearBasket').addEventListener('click', () => {
       if (confirm('Remove all lines from the basket?')) { NV.basket.clear(); NV.toast('Basket cleared.', { title: 'Done' }); }
     });
-    document.getElementById('checkoutBtn').addEventListener('click', () => {
-      if (NV.auth && !NV.auth.isIn()) {
-        NV.auth.require({ returnTo: '/checkout.html', title: 'Sign in to check out', body: 'Your basket is saved. Sign in or create a trade account to place this order.' });
-      } else location.href = '/checkout.html';
-    });
+    document.getElementById('checkoutBtn').addEventListener('click', goCheckout);
     document.querySelectorAll('#basketLines .bline').forEach(row => {
       const id = row.dataset.id;
       const input = row.querySelector('input');

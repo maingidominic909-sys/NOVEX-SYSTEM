@@ -298,6 +298,48 @@ let createdRef = '';
   a.close();
 }
 
+/* ---------- 14. phone navigation: bottom bar, badges, drawers, checkout bar ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/');
+  const bar = doc.getElementById('bottomBar');
+  check('phone: bottom bar present', !!bar);
+  check('phone: five tabs', bar && bar.querySelectorAll('.btab').length === 5);
+  check('phone: home tab active', bar && bar.querySelector('.btab.active span') && bar.querySelector('.btab.active span').textContent === 'Home');
+  const badge = bar && bar.querySelector('.bcount');
+  check('phone: badge hidden at zero', badge && badge.dataset.zero === '1');
+  doc.querySelector('[data-add]').click();
+  await sleep(400);
+  check('phone: badge live-updates', badge && badge.textContent === String(window.NV.basket.count()) && badge.dataset.zero === '0', badge && badge.textContent);
+  doc.getElementById('bSearch').click();
+  await sleep(150);
+  check('phone: bottom search opens overlay', doc.getElementById('searchOverlay').classList.contains('open'));
+  window.NV.shell.closeAll();
+  doc.getElementById('bMenu').click();
+  await sleep(150);
+  check('phone: bottom menu opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
+  check('phone: drawer has departments', doc.querySelectorAll('#menuBody .mnav-depts a').length === catalog.categories.length);
+  check('phone: no errors', errors.length === 0, errors[0]);
+  close();
+
+  const shop = await loadPage('/shop.html');
+  check('phone: shop tab active on catalogue', shop.doc.querySelector('#bottomBar .btab.active span').textContent === 'Shop');
+  shop.close();
+}
+{
+  const seed = { 'norvex.basket.v1': [{ id: p1.id, qty: 10 }] };
+  const { window, doc, errors, close } = await loadPage('/basket.html', { seed });
+  const bar = doc.getElementById('checkoutBar');
+  check('phone: sticky checkout bar on basket', !!bar);
+  check('phone: checkout bar shows total', bar && /KES/.test(bar.textContent));
+  check('phone: body flagged for bar clearance', doc.body.classList.contains('has-checkoutbar'));
+  check('phone: basket tab active', doc.querySelector('#bottomBar .btab.active span:not(.bcount)').textContent === 'Basket');
+  doc.querySelector('#basketLines [data-remove]').click();
+  await sleep(400);
+  check('phone: checkout bar removed when empty', !doc.getElementById('checkoutBar') && !doc.body.classList.contains('has-checkoutbar'));
+  check('phone: basket no errors', errors.length === 0, errors[0]);
+  close();
+}
+
 console.log(results.join('\n'));
 console.log(`\n${results.filter(r => r.startsWith('PASS')).length}/${results.length} checks passed, ${failures} failed`);
 process.exit(failures ? 1 : 0);
