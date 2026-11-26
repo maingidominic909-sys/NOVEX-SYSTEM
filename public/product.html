@@ -2,66 +2,107 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Catalogue item — Norvex Integrated Enterprises Ltd</title>
-<meta name="description" content="Product detail, volume pricing, MOQ and delivery lead time from the Norvex catalogue.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d2c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Product — Norvex catalogue</title>
+<meta name="description" content="Catalogue line with live volume pricing, procurement details and tracked Nairobi delivery.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/portal.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css?v=9">
 </head>
-<body class="portal" data-page="shop">
-<div id="nv-header"></div>
+<body data-page="product">
+<div id="nv-shell-top"></div>
 
-<main>
-  <div class="shell" style="padding-top:26px">
-    <nav class="breadcrumb" id="crumbs" style="color:var(--muted)">
-      <a href="/index.html">Home</a><span class="sep">/</span><a href="/shop.html">Catalogue</a>
+<main id="main">
+  <div class="shell">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+      <a href="/shop.html">Catalogue</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+      <span id="crumbCat"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+      <b id="crumbName">…</b>
     </nav>
   </div>
 
-  <section class="section-tight" style="padding-top:14px">
+  <section class="section tight">
     <div class="shell">
-      <div class="pdp" id="pdp">
-        <div class="pdp-media"><div class="skeleton" style="width:100%;height:100%"></div></div>
-        <div class="skeleton" style="height:420px;border-radius:var(--radius)"></div>
+      <div id="productRoot" class="product-layout hide">
+        <div class="product-media">
+          <div class="pm-main" id="pMedia"></div>
+        </div>
+        <div class="product-info">
+          <div class="row wrap" id="pCat"></div>
+          <h1 id="pName"></h1>
+          <p class="p-desc" id="pDesc"></p>
+
+          <div class="price-panel">
+            <div class="price-now">
+              <span class="amount" id="unitPrice"></span>
+              <span class="per" id="unitPer"></span>
+              <span class="save" id="saveBadge"></span>
+            </div>
+            <p class="price-note" id="moqNote"></p>
+            <div class="tier-table">
+              <table class="table" style="min-width:0" id="tierTable"></table>
+            </div>
+            <div class="buy-row">
+              <span class="qty">
+                <button id="qtyMinus" aria-label="Decrease quantity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                <input id="qtyInput" type="number" min="1" value="1" aria-label="Quantity">
+                <button id="qtyPlus" aria-label="Increase quantity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+              </span>
+              <button class="btn btn-primary" id="addBtn" data-add=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.4 10.4A2 2 0 0 0 9.4 16h8.2a2 2 0 0 0 2-1.6L21 8H6"/></svg> Add to basket</button>
+              <button class="btn btn-gold" id="buyBtn">Buy now</button>
+              <button class="pc-fav" id="favBtn" style="position:static;width:46px;height:46px" aria-label="Save for later"></button>
+            </div>
+            <p class="buy-total" id="lineTotal"></p>
+            <p class="bl-nudge hide" id="tierNudge" style="margin-top:10px"></p>
+          </div>
+
+          <div class="meta-grid" id="metaGrid"></div>
+
+          <div class="acc">
+            <div class="acc-item open">
+              <button class="acc-btn" type="button">Specification &amp; procurement <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div class="acc-panel" id="specBody"></div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-btn" type="button">Delivery &amp; lead time <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div class="acc-panel" id="deliveryBody"></div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-btn" type="button">Need it differently? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div class="acc-panel">
+                <p>Different pack size, brand or specification? The sourcing desk quotes custom requirements — <a class="link-arrow gold" href="/quote.html">request a quotation</a> or call <a class="bold" href="tel:+254742021099">+254 742 021 099</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section-tight section-cream">
-    <div class="shell">
-      <div class="tabs" role="tablist">
-        <button class="on" data-tab="overview">Overview</button>
-        <button data-tab="spec">Specification &amp; delivery</button>
-        <button data-tab="procurement">Procurement notes</button>
-      </div>
-      <div id="tabBody" style="max-width:78ch"></div>
-    </div>
-  </section>
-
-  <section class="section">
+  <section class="section tight" id="relatedSection">
     <div class="shell">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Often ordered together</p>
-          <h2>Complete the requisition.</h2>
+          <p class="eyebrow">Same department</p>
+          <h2 class="h-section">Related supply lines</h2>
         </div>
-        <a href="/shop.html" class="link-arrow">Back to catalogue</a>
       </div>
-      <div class="product-grid" id="related"></div>
+      <div class="pgrid" id="relatedGrid"></div>
     </div>
   </section>
 </main>
 
-<div id="nv-footer"></div>
+<div id="nv-shell-bottom"></div>
 
-<script src="/js/catalog-snapshot.js"></script>
-<script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-portal.js"></script>
-<script src="/js/page-product.js"></script>
+<script src="/js/catalog-snapshot.js?v=9"></script>
+<script src="/js/nv-core.js?v=9"></script>
+<script src="/js/nv-auth.js?v=9"></script>
+<script src="/js/ui.js?v=9"></script>
+<script src="/js/shell.js?v=9"></script>
+<script src="/js/pages/product.js?v=9"></script>
 </body>
 </html>

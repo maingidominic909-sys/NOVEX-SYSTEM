@@ -111,9 +111,10 @@
   }
   function clearCookie() { try { document.cookie = `${COOKIE}=; path=/; max-age=0; SameSite=Lax`; } catch {} }
 
-  function startSession(user) {
-    NV.write(SESSION, { userId: user.id, at: Date.now(), expires: Date.now() + 7 * 864e5 });
-    setCookie(user.id, 7);
+  function startSession(user, days) {
+    const ttl = Math.max(1, Math.min(30, Number(days) || 7));
+    NV.write(SESSION, { userId: user.id, at: Date.now(), expires: Date.now() + ttl * 864e5 });
+    setCookie(user.id, ttl);
     /* feed checkout prefill + console identity */
     NV.customer.save({
       name: user.name, organisation: user.organisation, email: user.email, phone: user.phone
@@ -124,19 +125,32 @@
   /* ---------------- validation ---------------- */
   function validateSignup(data) {
     const errors = {};
-    if (norm(data.name).length < 2) errors.name = 'Tell us who we are quoting.';
-    if (!usernameOk(data.username)) errors.username = '3–20 characters, letters, numbers, dot, dash or underscore.';
+    if (norm(data.name).length < 2) errors.name = 'Tell us your name.';
     if (!emailOk(data.email)) errors.email = 'That email does not look right.';
-    if (!phoneOk(data.phone)) errors.phone = 'Kenyan mobile, e.g. 0712 345 678.';
-    if (norm(data.organisation).length < 2) errors.organisation = 'Organisation or school name is required.';
+    if (data.username && !usernameOk(data.username)) errors.username = '3–20 characters, letters, numbers, dot, dash or underscore.';
+    if (data.phone && !phoneOk(data.phone)) errors.phone = 'Kenyan mobile, e.g. 0712 345 678.';
+    if (data.organisation && norm(data.organisation).length < 2) errors.organisation = 'Organisation or school name is required.';
     if (String(data.password || '').length < 8) errors.password = 'At least 8 characters.';
     else if (!/[a-z]/i.test(data.password) || !/\d/.test(data.password)) errors.password = 'Use letters and at least one number.';
     if (data.confirm != null && data.password !== data.confirm) errors.confirm = 'Passwords do not match.';
 
     const list = accounts();
-    if (!errors.username && list.some(a => lower(a.username) === lower(data.username))) errors.username = 'That username is taken.';
+    if (!errors.username && data.username && list.some(a => lower(a.username) === lower(data.username))) errors.username = 'That username is taken.';
     if (!errors.email && list.some(a => lower(a.email) === lower(data.email))) errors.email = 'An account already uses this email.';
     return errors;
+  }
+
+  function uniqueUsername(seedValue) {
+    let root = lower(seedValue).split('@')[0].replace(/[^a-z0-9._-]/g, '.').replace(/^[._-]+|[._-]+$/g, '').slice(0, 14);
+    if (!/^[a-z0-9]/.test(root)) root = 'u' + root;
+    if (root.length < 3) root = (root + 'user').slice(0, 6);
+    const list = accounts();
+    let candidate = root, i = 1;
+    while (list.some(a => lower(a.username) === candidate)) {
+      candidate = (root.slice(0, 16) + i).slice(0, 20);
+      i++;
+    }
+    return candidate;
   }
 
   function strength(password) {
@@ -159,12 +173,12 @@
     const s = salt();
     const user = {
       id: 'usr_' + Math.random().toString(36).slice(2, 10),
-      name: norm(data.name), username: lower(data.username), email: lower(data.email),
-      phone: normalisePhone(data.phone), organisation: norm(data.organisation),
+      name: norm(data.name), username: lower(data.username || uniqueUsername(data.email || data.name)), email: lower(data.email),
+      phone: data.phone ? normalisePhone(data.phone) : '', organisation: norm(data.organisation),
       role: 'customer', salt: s, hash: await hashPassword(data.password, s), createdAt: nowISO()
     };
     saveAccounts([...accounts(), user]);
-    startSession(user);
+    startSession(user, data.remember ? 30 : 7);
     return { ok: true, user: publicUser(user) };
   }
 
@@ -178,8 +192,23 @@
     if (opts && opts.userId && user.id !== opts.userId) return { ok: false, error: 'Wrong account for this device.' };
     const attempt = await hashPassword(password, user.salt);
     if (attempt !== user.hash) return { ok: false, error: 'That password is not right.' };
-    startSession(user);
+    startSession(user, opts && opts.days);
     return { ok: true, user: publicUser(user) };
+  }
+
+  /* Device-local demo recovery. This does not send email; it only updates the
+     account stored in this browser, and the UI labels that clearly. */
+  async function resetPasswordLocal(email, newPassword) {
+    await seededReady;
+    const user = accounts().find(a => lower(a.email) === lower(email));
+    if (!user) return { ok: false, error: 'No account on this device uses that email.' };
+    if (String(newPassword || '').length < 8) return { ok: false, error: 'New password needs 8+ characters.' };
+    if (!/[a-z]/i.test(newPassword) || !/\d/.test(newPassword)) return { ok: false, error: 'Use letters and at least one number.' };
+    user.salt = salt();
+    user.hash = await hashPassword(newPassword, user.salt);
+    user.updatedAt = nowISO();
+    saveAccounts(accounts().map(a => a.id === user.id ? user : a));
+    return { ok: true };
   }
 
   function signOut(opts) {
@@ -441,7 +470,7 @@
 
   window.NV.auth = {
     current, isIn: () => !!current(), require: requireAuth, gate: openGate, pageGuard,
-    signUp, signIn, signOut, update, changePassword, removeAccount,
+    signUp, signIn, signOut, update, changePassword, resetPasswordLocal, removeAccount,
     validateSignup, strength, normalisePhone, phoneOk, emailOk, usernameOk,
     go, rememberReturn, takeReturn, initials, accounts: () => accounts().map(publicUser),
     onChange(fn) { listeners.add(fn); fn(current()); return () => listeners.delete(fn); },

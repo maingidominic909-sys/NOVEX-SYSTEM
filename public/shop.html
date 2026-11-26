@@ -2,113 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d2c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Catalogue — Norvex Integrated Enterprises Ltd</title>
-<meta name="description" content="Browse the full Norvex catalogue: dry food commodities, office and stationery, ICT, furniture, cleaning, safety and PPE, hardware, uniforms, catering, printing, water and agricultural inputs. Tiered contract pricing.">
+<meta name="description" content="Browse 45+ supply lines across 13 departments with live volume pricing, MOQ and dispatch lead times.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/portal.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css?v=9">
 </head>
-<body class="portal" data-page="shop">
-<div id="nv-header"></div>
+<body data-page="shop">
+<div id="nv-shell-top"></div>
 
-<main>
+<main id="main">
   <section class="page-hero">
-    <div class="page-hero-media"><img src="/img/future-hero.jpg" alt="Pallets of institutional supplies ready for dispatch" fetchpriority="high"></div>
-    <div class="shell page-hero-inner shop-hero-tight">
-      <nav class="breadcrumb"><a href="/index.html">Home</a><span class="sep">/</span><span class="current">Catalogue</span></nav>
-      <h1>The catalogue, <span class="serif-accent">priced for volume.</span></h1>
-      <p class="lede">Every line is sourced to specification and priced on quantity — the more you order, the lower the unit rate. Add items to your supply basket and a tiered quotation builds itself.</p>
-      <div class="row" style="margin-top:24px;gap:10px;flex-wrap:wrap">
-        <a href="/basket.html" class="btn btn-gold">Open supply basket</a>
-        <a href="/quote.html" class="btn btn-light">Request a tender quotation</a>
-      </div>
+    <div class="bg" style="background-image:url('/img/products/maize.jpg')"></div>
+    <div class="scrim"></div>
+    <div class="shell">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg><b>Catalogue</b></nav>
+      <h1 id="shopTitle">Full catalogue</h1>
+      <p class="lede">Every line carries a pack unit, minimum order and 3-step volume pricing. Filter, search and build your supply basket.</p>
     </div>
   </section>
 
-  <section class="section-tight" style="padding-top:clamp(22px,3vw,34px)">
+  <section class="section tight" id="shopTop">
     <div class="shell">
+      <div class="shop-toolbar">
+        <button class="btn btn-ghost btn-sm filters-toggle" id="filtersToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg> Filters
+        </button>
+        <div class="input-wrap search-in">
+          <span class="lead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+          <input class="input" id="shopSearch" type="text" placeholder="Search the catalogue…" aria-label="Search the catalogue">
+        </div>
+        <span class="shop-count" id="shopCount"></span>
+        <select class="select" id="shopSort" style="width:auto" aria-label="Sort products">
+          <option value="popular">Most popular</option>
+          <option value="price-asc">Price · low to high</option>
+          <option value="price-desc">Price · high to low</option>
+          <option value="name">Name · A to Z</option>
+        </select>
+      </div>
+      <div class="active-chips" id="activeChips"></div>
       <div class="shop-layout">
-        <!-- ================= FILTERS ================= -->
-        <aside class="filters collapsed" id="filters">
-          <div class="filters-head">
-            <h2>Refine</h2>
-            <button class="chip" id="filterToggle" type="button">Show</button>
-          </div>
-          <div class="filter-group">
-            <h3>Department</h3>
-            <div id="catFilters"></div>
-          </div>
-          <div class="filter-group">
-            <h3>Unit price band</h3>
-            <label class="filter-opt"><input type="radio" name="band" value="all" checked> Any price</label>
-            <label class="filter-opt"><input type="radio" name="band" value="0-2000"> Under KES 2,000</label>
-            <label class="filter-opt"><input type="radio" name="band" value="2000-10000"> KES 2,000 – 10,000</label>
-            <label class="filter-opt"><input type="radio" name="band" value="10000-50000"> KES 10,000 – 50,000</label>
-            <label class="filter-opt"><input type="radio" name="band" value="50000-9999999"> KES 50,000+</label>
-          </div>
-          <div class="filter-group">
-            <h3>Buying options</h3>
-            <label class="filter-opt"><input type="checkbox" id="optFeatured"> Contract picks only</label>
-            <label class="filter-opt"><input type="checkbox" id="optMoq"> Low MOQ (≤ 10 units)</label>
-            <label class="filter-opt"><input type="checkbox" id="optFast"> Dispatch within 3 days</label>
-          </div>
-          <div class="filter-group" style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm" id="clearFilters" style="flex:1" type="button">Reset</button>
-          </div>
-        </aside>
-
-        <!-- ================= RESULTS ================= -->
+        <aside class="shop-side" id="shopSide" aria-label="Catalogue filters"></aside>
         <div>
-          <div class="shop-toolbar">
-            <label class="search-inline">
-              <span style="color:var(--muted);width:16px;display:inline-block" data-icon="search"></span>
-              <input type="search" id="shopSearch" placeholder="Search 45 lines — try “beans” or “A4”" aria-label="Search catalogue">
-            </label>
-            <select id="sortBy" aria-label="Sort by">
-              <option value="relevance">Sort: Relevance</option>
-              <option value="name">Name A–Z</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="moq">Lowest MOQ</option>
-            </select>
-            <span class="result-count" id="resultCount">—</span>
-          </div>
-
-          <div class="active-filters" id="activeFilters"></div>
-          <div class="product-grid" id="shopGrid"></div>
-          <div class="pagination" id="pagination"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-tight section-cream">
-    <div class="shell">
-      <div class="card card-pad cta-strip" style="border-radius:var(--radius-lg)">
-        <div>
-          <p class="eyebrow">Can't find it?</p>
-          <h2 style="font-size:clamp(1.25rem,2.2vw,1.65rem);margin-bottom:6px">We source beyond the catalogue.</h2>
-          <p class="muted small" style="margin:0">Send us a specification or bill of quantities and our sourcing team will quote against it — typically within 24 hours.</p>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a href="/quote.html" class="btn btn-gold">Send a specification</a>
-          <a href="/plan.html" class="btn btn-ghost">Plan ahead</a>
+          <div class="pgrid" id="shopGrid"></div>
+          <div class="pager" id="shopPager"></div>
         </div>
       </div>
     </div>
   </section>
 </main>
 
-<div id="nv-footer"></div>
+<div id="nv-shell-bottom"></div>
 
-<script src="/js/catalog-snapshot.js"></script>
-<script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-portal.js"></script>
-<script src="/js/page-shop.js"></script>
+<script src="/js/catalog-snapshot.js?v=9"></script>
+<script src="/js/nv-core.js?v=9"></script>
+<script src="/js/nv-auth.js?v=9"></script>
+<script src="/js/ui.js?v=9"></script>
+<script src="/js/shell.js?v=9"></script>
+<script src="/js/pages/shop.js?v=9"></script>
 </body>
 </html>

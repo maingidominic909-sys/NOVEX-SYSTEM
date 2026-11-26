@@ -2,184 +2,85 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Future order planner — Norvex order desk</title>
-<meta name="description" content="Plan upcoming supply requirements with Norvex: reserve stock, fix pricing and schedule delivery by term, season or project start.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d2c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Future order planner — Norvex</title>
+<meta name="description" content="Reserve recurring supply cycles — weekly, monthly or quarterly — with stock and price confirmed before each delivery.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/console.css">
-<link rel="stylesheet" href="/css/responsive.css">
-<style>
-  .plan-line-head { display:grid; grid-template-columns:minmax(0,1fr) 100px 84px 34px; gap:10px; padding-bottom:8px; }
-  .plan-row { display:grid; grid-template-columns:minmax(0,1fr) 100px 84px 34px; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid #f0f2ee; }
-  .plan-row .unit { font-size:.78rem; color:var(--muted); }
-  .plan-row .kill { border:0;background:none;color:var(--muted);display:grid;place-items:center; }
-  .plan-row .kill:hover { color:var(--danger); }
-  @media (max-width:600px){ .plan-line-head { display:none; } .plan-row { grid-template-columns:minmax(0,1fr) 84px 34px; } .plan-row > :first-child { grid-column:1/-1; } }
-</style>
+<link rel="stylesheet" href="/css/nv.css?v=9">
 </head>
-<body class="console" data-page="plan" data-crumb="Procurement|Future order planner">
-<div class="console-body">
-  <div id="nv-rail"></div>
-  <div class="console-main">
-    <div id="nv-cmdbar"></div>
+<body data-page="plan">
+<div id="nv-shell-top"></div>
 
-    <main class="workspace">
-      <div class="workspace-narrow">
-        <div class="page-title-bar">
-          <div>
-            <h1>Plan your supply</h1>
-            <p class="sub">Tell us what you'll need and when. We reserve stock, hold pricing and schedule delivery around your calendar.</p>
-          </div>
-          <div class="title-actions">
-            <a href="/desk.html" class="btn btn-ghost btn-sm">← Desk overview</a>
-          </div>
-        </div>
+<main id="main">
+  <section class="page-hero">
+    <div class="bg" style="background-image:url('/img/future-hero.jpg')"></div>
+    <div class="scrim"></div>
+    <div class="shell">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg><b>Future orders</b></nav>
+      <h1>Plan supply before you need it</h1>
+      <p class="lede">Termly food, monthly stationery, quarterly PPE — reserve the cycle now, pay nothing today, and we confirm stock and price before every delivery.</p>
+    </div>
+  </section>
 
-        <div class="ctx-band">
-          <span class="dot" style="background:var(--gold-500)"></span>
-          <span>Planning more than 14 days ahead unlocks reserved stock and fixed pricing</span>
-        </div>
-
-        <div class="layout-2col">
-          <div>
-            <form id="planForm" novalidate>
-              <div class="panel">
-                <div class="panel-head"><h2>What will you need?</h2><span class="hint">Add a line per product</span></div>
-                <div class="panel-body">
-                  <div class="plan-line-head">
-                    <span class="label-xs" style="margin:0">Catalogue item</span>
-                    <span class="label-xs" style="margin:0">Quantity</span>
-                    <span class="label-xs" style="margin:0">Unit</span>
-                    <span></span>
-                  </div>
-                  <div id="planLines"></div>
-                  <button type="button" class="btn btn-ghost btn-sm" id="addPlanLine" style="margin-top:12px">+ Add another line</button>
-                  <div id="planEstimate" class="inline-note info" style="margin-top:16px;font-size:.78rem">
-                    <span data-icon="info"></span>
-                    <div>Indicative value: <strong id="planEstValue">KES 0</strong> at current catalogue rates. Final pricing is confirmed against your delivery date.</div>
-                  </div>
+  <section class="section tight">
+    <div class="shell">
+      <div id="planDone" class="hide"></div>
+      <div class="builder-layout">
+        <div class="card">
+          <div class="card-head"><h3>Build the plan</h3><button class="btn btn-soft btn-sm" id="addItem" type="button">+ Add item</button></div>
+          <div class="card-body">
+            <div id="planItems"></div>
+            <form id="planForm" novalidate style="margin-top:22px">
+              <h4 class="small bold mb-1">Schedule</h4>
+              <div class="form-grid">
+                <div class="field"><label>First delivery date <span class="req">*</span></label><input class="input" name="deliveryDate" type="date"><span class="err-msg">Pick a date.</span></div>
+                <div class="field"><label>Repeats</label>
+                  <select class="select" name="recurrence">
+                    <option>One-off</option><option>Weekly</option><option>Fortnightly</option><option>Monthly</option><option>Quarterly</option><option>Every school term</option>
+                  </select>
+                </div>
+                <div class="field"><label>Delivery location <span class="req">*</span></label><input class="input" name="deliveryLocation" placeholder="Store, campus, depot…"><span class="err-msg">Where should cycles land?</span></div>
+                <div class="field"><label>Budget band / cycle</label>
+                  <select class="select" name="budget">
+                    <option>Under KES 100K</option><option selected>KES 100K – 500K</option><option>KES 500K – 1M</option><option>Over KES 1M</option><option>To be discussed</option>
+                  </select>
                 </div>
               </div>
-
-              <div class="panel">
-                <div class="panel-head"><h2>Schedule &amp; delivery</h2></div>
-                <div class="panel-body">
-                  <div class="grid-2">
-                    <label class="field"><span>Preferred delivery date *</span><input class="input" type="date" name="deliveryDate" required><span class="field-error">Choose a date</span></label>
-                    <label class="field"><span>Recurrence</span>
-                      <select class="select" name="recurrence">
-                        <option>One-off</option>
-                        <option>Monthly</option>
-                        <option>Termly (school terms)</option>
-                        <option>Quarterly</option>
-                        <option>Annual contract</option>
-                      </select>
-                    </label>
-                  </div>
-                  <label class="field"><span>Delivery location *</span><input class="input" name="deliveryLocation" required placeholder="Site, town, county"><span class="field-error">Where should this go?</span></label>
-                  <div class="grid-2">
-                    <label class="field"><span>Budget indication</span>
-                      <select class="select" name="budget">
-                        <option value="">Not specified</option>
-                        <option>Under KES 100,000</option>
-                        <option>KES 100,000 – 500,000</option>
-                        <option>KES 500,000 – 1M</option>
-                        <option>Above KES 1M</option>
-                      </select>
-                    </label>
-                    <label class="field"><span>Procurement reference</span><input class="input" name="reference" placeholder="LPO, tender or project code"></label>
-                  </div>
-                  <label class="field"><span>Anything we should know?</span><textarea class="textarea" name="notes" placeholder="Storage constraints, phased delivery, packaging, quality standards…"></textarea></label>
-                </div>
-              </div>
-
-              <div class="panel">
-                <div class="panel-head"><h2>Who is planning?</h2></div>
-                <div class="panel-body">
-                  <div class="grid-2">
-                    <label class="field"><span>Contact name *</span><input class="input" name="name" required><span class="field-error">Required</span></label>
-                    <label class="field"><span>Organisation *</span><input class="input" name="organisation" required><span class="field-error">Required</span></label>
-                  </div>
-                  <div class="grid-2">
-                    <label class="field"><span>Email *</span><input class="input" type="email" name="email" required><span class="field-error">Enter a valid email</span></label>
-                    <label class="field"><span>Phone</span><input class="input" name="phone"></label>
-                  </div>
-                  <label class="check" style="margin-bottom:16px">
-                    <input type="checkbox" name="consent" required>
-                    <span>I'd like the desk to contact me to confirm this plan.</span>
-                  </label>
-                  <button class="btn btn-gold btn-lg btn-block" type="submit" id="planSubmit">Submit future order</button>
-                  <p class="tiny muted" style="margin-top:10px">Submitting is a planning request — no commitment until you approve the quotation.</p>
-                </div>
+              <h4 class="small bold mt-3 mb-1">Contact</h4>
+              <div class="form-grid">
+                <div class="field"><label>Contact name <span class="req">*</span></label><input class="input" name="name" placeholder="Grace Wanjiru"><span class="err-msg">Required.</span></div>
+                <div class="field"><label>Organisation <span class="req">*</span></label><input class="input" name="organisation" placeholder="School, hospital, county…"><span class="err-msg">Required.</span></div>
+                <div class="field"><label>Email <span class="req">*</span></label><input class="input" name="email" type="email" placeholder="you@organisation.co.ke"><span class="err-msg">Enter a valid email.</span></div>
+                <div class="field"><label>Phone</label><input class="input" name="phone" type="tel" placeholder="0712 345 678"></div>
+                <div class="field full"><label>Notes</label><textarea class="textarea" name="notes" style="min-height:80px" placeholder="Term dates, storage constraints, preferred brands…"></textarea></div>
               </div>
             </form>
-
-            <div id="planSuccess" class="panel hide">
-              <div class="empty-state">
-                <div class="icon-wrap" data-icon="check"></div>
-                <h3>Plan submitted</h3>
-                <p>Reference <strong class="mono" id="planRef">—</strong>. Our desk will review availability and come back with a reserved-stock quotation.</p>
-                <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">
-                  <a href="/desk.html" class="btn btn-gold">Back to the desk</a>
-                  <a href="/shop.html" class="btn btn-ghost">Browse catalogue</a>
-                  <button type="button" class="btn btn-ghost" id="planAgain">Plan another</button>
-                </div>
-              </div>
-            </div>
           </div>
-
-          <aside>
-            <div class="panel">
-              <div class="panel-head"><h2>Why plan ahead</h2></div>
-              <div class="panel-body">
-                <div class="stack-sm" style="font-size:.86rem">
-                  <div class="row" style="gap:10px;align-items:flex-start"><span style="color:var(--green-700);width:18px" data-icon="lock"></span><div><b>Price protection</b><div class="tiny muted">Lock rates for up to 12 months on framework terms.</div></div></div>
-                  <div class="row" style="gap:10px;align-items:flex-start"><span style="color:var(--green-700);width:18px" data-icon="box"></span><div><b>Reserved stock</b><div class="tiny muted">We hold quantity against your delivery window.</div></div></div>
-                  <div class="row" style="gap:10px;align-items:flex-start"><span style="color:var(--green-700);width:18px" data-icon="calendar"></span><div><b>Phased delivery</b><div class="tiny muted">Split one order across terms or project milestones.</div></div></div>
-                  <div class="row" style="gap:10px;align-items:flex-start"><span style="color:var(--green-700);width:18px" data-icon="receipt"></span><div><b>Tender-ready</b><div class="tiny muted">Documentation issued ahead of submission deadlines.</div></div></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><h2>Seasonal calendar</h2></div>
-              <div class="panel-body" style="font-size:.84rem">
-                <div class="row-between" style="padding:8px 0;border-bottom:1px solid #f0f2ee"><span>Term 1 supply</span><span class="tiny muted">Dec – Jan</span></div>
-                <div class="row-between" style="padding:8px 0;border-bottom:1px solid #f0f2ee"><span>Term 2 supply</span><span class="tiny muted">Apr</span></div>
-                <div class="row-between" style="padding:8px 0;border-bottom:1px solid #f0f2ee"><span>Term 3 supply</span><span class="tiny muted">Aug</span></div>
-                <div class="row-between" style="padding:8px 0"><span>Year-end consumables</span><span class="tiny muted">Nov</span></div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><h2>Need it sooner?</h2></div>
-              <div class="panel-body">
-                <p class="small muted" style="margin-bottom:12px">For an immediate requirement, order from the catalogue or send an RFQ.</p>
-                <div style="display:grid;gap:8px">
-                  <a href="/shop.html" class="btn btn-sm btn-block">Order now</a>
-                  <a href="/quote.html" class="btn btn-ghost btn-sm btn-block">Request a quote</a>
-                </div>
-              </div>
-            </div>
-          </aside>
+        </div>
+        <div>
+          <div class="summary-card" id="planEstimate"></div>
         </div>
       </div>
-    </main>
 
-    <footer class="console-foot">
-      <span>Future orders are reviewed within one business day</span>
-      <span><a href="/orders.html">Order history</a> · <a href="/contact.html">Support</a></span>
-    </footer>
-  </div>
-</div>
+      <div class="card mt-3 hide" id="plansCard">
+        <div class="card-head"><h3>Your reserved plans</h3></div>
+        <div class="card-body" style="padding-top:6px" id="planList"></div>
+      </div>
+    </div>
+  </section>
+</main>
 
-<script src="/js/catalog-snapshot.js"></script>
-<script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-console.js"></script>
-<script src="/js/page-plan.js"></script>
+<div id="nv-shell-bottom"></div>
+
+<script src="/js/catalog-snapshot.js?v=9"></script>
+<script src="/js/nv-core.js?v=9"></script>
+<script src="/js/nv-auth.js?v=9"></script>
+<script src="/js/ui.js?v=9"></script>
+<script src="/js/shell.js?v=9"></script>
+<script src="/js/pages/plan.js?v=9"></script>
 </body>
 </html>

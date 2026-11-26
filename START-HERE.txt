@@ -1,62 +1,54 @@
-NORVEX INTEGRATED ENTERPRISES LTD — supply & procurement system
-================================================================
+NORVEX INTEGRATED ENTERPRISES LTD — supply & procurement system (v2)
+====================================================================
 
-WHAT'S IN THIS FOLDER
----------------------
-norvex-app.html            ← THE APP. One self-contained file (nothing to install).
-                             Open it in any modern browser and you are in.
-norvex-v6-preview.html     ← screenshot tour of this round (basket, sign-out, buttons).
-norvex-navigation-preview.html ← how the website and the console navigate.
-norvex-mobile-preview.html     ← phone layouts.
-norvex-analytics-preview.html ← admin money dashboard tour.
-norvex-accounts-preview.html  ← sign in / sign up / catalogue manager tour.
-
-SOURCE (for developers)
------------------------
-public/          the multi-page site: HTML, CSS, JS, images
-data/            catalogue.json (13 departments, 45 products)
-server/          zero-dependency Node API + session cookies
-tools/           build-single-file.py  (rebuilds norvex-app.html)
-                 pw-setup.sh           (installs the QA browser harness)
-README.md / README-analytics.md       how it is put together
-
-RUN THE MULTI-PAGE VERSION WITH THE API
----------------------------------------
-    cd norvex
+RUN THE SYSTEM
+--------------
     node server/server.js          # → http://localhost:3000
 
-REBUILD THE SINGLE FILE AFTER EDITS
------------------------------------
-    python3 tools/build-single-file.py
+No install needed (zero dependencies). Node 18+.
+
+WHAT'S NEW IN v2
+----------------
+• One modern design system and ONE navigation shell on every page.
+• A real homepage at /  (the old build 404'd here).
+• All 18 pages connected: header nav + order-desk tab strip + mega footer.
+• Brand-new sign-in / create-account panel with one-click demo accounts.
+• Admin operations console + catalogue manager behind the admin role.
+• Legacy links (Index.html, catalogue.html, supply-basket.html,
+  future-order.html) redirect to the new pages.
 
 SIGNING IN
 ----------
-Demo customer   demo@norvex.co.ke    Norvex2026
-Admin           admin@norvex.co.ke   Norvex2026
-(You can also create your own account — name, organisation, email,
- mobile, username, password.)
+Demo customer   demo@norvex.co.ke    Norvex2026   (has seeded order history)
+Admin           admin@norvex.co.ke   Norvex2026   (operations + catalogue manager)
+Or create your own account on the Sign in page — under a minute.
 
 WHERE THINGS ARE
 ----------------
-Browsing           free, no account needed
-Sign in            menu → Sign in,  or  #/auth
-Sign out           header avatar menu → Sign out
-                   rail (bottom left) → ⏻
-                   account page → Sign out
-                   basket summary → Sign out
-Place an order     needs an account (guest is returned to the review step)
-Orders             #/orders
-Basket             #/basket
-Pay                #/checkout
-Admin dashboard    #/admin          (money, profit, charts)
-Catalogue manager  #/manage         (add / edit / delete products & departments,
-                                     prices, pictures)
+Home               /                     hero, departments, featured lines
+Catalogue          /shop.html            search, filters, sort, pagination
+Product            /product.html?id=…    live 3-tier volume pricing
+Services / About   /services.html · /about.html
+Contact            /contact.html         validated form → API
+Quote desk         /quote.html           multi-line formal RFQ
+Order desk         /desk.html            KPIs, quick actions, recent orders
+Basket             /basket.html          tier nudges, free-delivery progress
+Checkout           /checkout.html        3-step wizard (account required to place)
+Orders             /orders.html          history, search, CSV, reorder
+Track order        /order.html           live timeline + printable sheet
+Future planner     /plan.html            recurring supply cycles
+Account            /account.html         profile, security, favourites
+Operations         /admin.html           admin: revenue, pipeline, enquiries
+Catalogue manager  /manage.html          admin: products, tiers, pictures, departments
+Sign in            /auth.html            the new login panel
 
-HOW IT WAS TESTED
------------------
-Layout   102 checks — 17 routes at 6 widths (320, 375, 390, 768, 1024, 1440).
-         0 overflow problems, 0 overlaps, 0 page errors.
-Buttons  403 buttons clicked on fresh pages, 0 did nothing, 0 errors.
-Speed    cold load 350 ms; route switch 28–142 ms; add to basket 42 ms;
-         quantity + 36 ms; catalogue editor open 40 ms / close 47 ms;
-         demo sign-in 32 ms. Measured in headless Chromium on the single file.
+USEFUL COMMANDS
+---------------
+node tools/seed-demo.js --force    # reset & reseed realistic demo records
+npm run snapshot                   # refresh the offline catalogue snapshot
+node tools/qa-smoke.mjs            # 91-check QA harness (needs: npm i --no-save jsdom)
+
+NOTE
+----
+The root norvex-*.html files and legacy-original-site/ are the OLD v1
+artifacts, kept for reference. The live system is public/ + server/.

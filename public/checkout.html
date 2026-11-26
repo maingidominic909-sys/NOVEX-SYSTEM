@@ -2,208 +2,100 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d2c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Checkout — Norvex order desk</title>
-<meta name="description" content="Confirm your Norvex order: organisation details, delivery window and payment method.">
+<meta name="description" content="Three-step checkout: organisation, delivery & payment, review. Server-verified tier pricing.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/console.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css?v=9">
 </head>
-<body class="console" data-page="checkout" data-crumb="Ordering|Checkout">
-<div class="console-body">
-  <div id="nv-rail"></div>
-  <div class="console-main">
-    <div id="nv-cmdbar"></div>
+<body data-page="checkout">
+<div id="nv-shell-top"></div>
 
-    <main class="workspace">
-      <div class="workspace-narrow">
-        <div class="page-title-bar">
+<main id="main">
+  <section class="section tight">
+    <div class="shell">
+      <div id="checkoutEmpty" class="hide"></div>
+      <div id="checkoutSuccess" class="hide"></div>
+      <div id="checkoutMain">
+        <div class="section-head" style="margin-bottom:20px">
           <div>
-            <h1>Checkout</h1>
-            <p class="sub">Four short steps to a confirmed order. Your details are saved for next time.</p>
+            <p class="eyebrow">Order desk</p>
+            <h1 class="h-display">Checkout</h1>
           </div>
-          <div class="title-actions">
-            <a href="/basket.html" class="btn btn-ghost btn-sm">← Back to basket</a>
-          </div>
+          <a class="btn btn-ghost" href="/basket.html">Back to basket</a>
+        </div>
+        <div id="checkoutGuard"></div>
+
+        <div class="steps-bar" aria-label="Checkout steps">
+          <div class="step-pill on" data-step="1"><span class="n">1</span><span class="t">Organisation</span></div>
+          <div class="step-line"></div>
+          <div class="step-pill" data-step="2"><span class="n">2</span><span class="t">Delivery &amp; payment</span></div>
+          <div class="step-line"></div>
+          <div class="step-pill" data-step="3"><span class="n">3</span><span class="t">Review &amp; place</span></div>
         </div>
 
-        <div class="co-account is-out" id="checkoutAccount"></div>
-
-        <div class="wizard-steps" id="wizSteps">
-          <div class="wstep on" data-step="1"><span class="n">1</span> Organisation</div>
-          <div class="wstep" data-step="2"><span class="n">2</span> Delivery</div>
-          <div class="wstep" data-step="3"><span class="n">3</span> Payment</div>
-          <div class="wstep" data-step="4"><span class="n">4</span> Review &amp; confirm</div>
-        </div>
-
-        <div class="layout-2col">
-          <div>
-            <form id="checkoutForm" novalidate>
-              <!-- STEP 1 -->
-              <section class="panel" data-panel="1">
-                <div class="panel-head"><h2>Organisation &amp; contact</h2><span class="hint">Step 1 of 4</span></div>
-                <div class="panel-body">
-                  <div class="grid-2">
-                    <label class="field"><span>Contact name *</span><input class="input" name="name" required autocomplete="name"><span class="field-error">Please enter a contact name</span></label>
-                    <label class="field"><span>Organisation *</span><input class="input" name="organisation" required autocomplete="organization"><span class="field-error">Please enter your organisation</span></label>
-                  </div>
-                  <div class="grid-2">
-                    <label class="field"><span>Email address *</span><input class="input" type="email" name="email" required autocomplete="email"><span class="field-error">Enter a valid email address</span></label>
-                    <label class="field"><span>Phone number *</span><input class="input" name="phone" required autocomplete="tel" placeholder="+254 …"><span class="field-error">Please enter a phone number</span></label>
-                  </div>
-                  <div class="grid-2">
-                    <label class="field"><span>LPO / requisition reference</span><input class="input" name="lpo" placeholder="Optional"></label>
-                    <label class="field"><span>Buyer department</span><input class="input" name="department" placeholder="Procurement, admin, stores…"></label>
-                  </div>
-                  <div class="panel-foot" style="background:none;border:0;padding:0;margin-top:8px">
-                    <span></span>
-                    <button type="button" class="btn btn-gold" data-next="2">Continue to delivery →</button>
-                  </div>
-                </div>
-              </section>
-
-              <!-- STEP 2 -->
-              <section class="panel hide" data-panel="2">
-                <div class="panel-head"><h2>Delivery &amp; scheduling</h2><span class="hint">Step 2 of 4</span></div>
-                <div class="panel-body">
-                  <label class="field"><span>Delivery address *</span><input class="input" name="address" required placeholder="Building, street, store / gate"><span class="field-error">Please enter the delivery address</span></label>
-                  <div class="grid-3">
-                    <label class="field"><span>Town / city</span><input class="input" name="town" value="Nairobi"></label>
-                    <label class="field"><span>County</span><input class="input" name="county" placeholder="Nairobi"></label>
-                    <label class="field"><span>Preferred date</span><input class="input" type="date" name="requiredDate"></label>
-                  </div>
-
-                  <p class="field-label">Delivery method</p>
-                  <div style="display:grid;gap:10px;margin-bottom:18px">
-                    <label class="opt-tile">
-                      <input type="radio" name="deliveryMethod" value="Standard delivery" checked>
-                      <span><b>Standard delivery</b><small>Nairobi Metro · 1–2 business days from confirmation</small></span>
-                      <span class="price" id="priceStandard">KES 4,500</span>
-                    </label>
-                    <label class="opt-tile">
-                      <input type="radio" name="deliveryMethod" value="Express (same-day)">
-                      <span><b>Express</b><small>Same-day dispatch for orders confirmed before 11:00am</small></span>
-                      <span class="price">+ KES 2,500</span>
-                    </label>
-                    <label class="opt-tile">
-                      <input type="radio" name="deliveryMethod" value="Collect from hub">
-                      <span><b>Collect from hub</b><small>Nairobi collection point · ready once confirmed</small></span>
-                      <span class="price">Free</span>
-                    </label>
-                    <label class="opt-tile">
-                      <input type="radio" name="deliveryMethod" value="Upcountry consignment">
-                      <span><b>Upcountry consignment</b><small>Quoted per consignment by our desk after review</small></span>
-                      <span class="price">Quoted</span>
-                    </label>
-                  </div>
-
-                  <label class="field"><span>Delivery window</span>
-                    <select class="select" name="deliveryWindow">
-                      <option>Morning (8:00 – 12:00)</option>
-                      <option>Afternoon (12:00 – 17:00)</option>
-                      <option>Any time during business hours</option>
-                      <option>Call before arrival</option>
-                    </select>
-                  </label>
-                  <label class="field"><span>Delivery notes / instructions</span><textarea class="textarea" name="notes" placeholder="Gate access, receiving hours, offloading requirements…" style="min-height:90px"></textarea></label>
-
-                  <div class="panel-foot" style="background:none;border:0;padding:0;margin-top:8px">
-                    <button type="button" class="btn btn-ghost" data-prev="1">← Back</button>
-                    <button type="button" class="btn btn-gold" data-next="3">Continue to payment →</button>
-                  </div>
-                </div>
-              </section>
-
-              <!-- STEP 3 — PAYMENT -->
-              <section class="panel hide" data-panel="3">
-                <div class="panel-head"><h2>Payment method</h2><span class="hint">Step 3 of 4</span></div>
-                <div class="panel-body">
-                  <p class="small muted" style="margin-bottom:18px">Choose how you want to settle this order. M-Pesa and cards confirm instantly; bank transfers and invoices are matched by our accounts desk.</p>
-                  <div id="paySelector"></div>
-                  <div id="payFields"></div>
-
-                  <div class="inline-note info" style="margin-top:20px;font-size:.8rem">
-                    <span data-icon="lock"></span>
-                    <div><b>Your money is protected.</b> Card details are tokenised and never stored on our servers; the checkout session uses a <code>Secure · HttpOnly · SameSite=Lax</code> cookie and runs over TLS. Prices include 16% VAT.</div>
-                  </div>
-
-                  <div class="panel-foot" style="background:none;border:0;padding:0;margin-top:20px">
-                    <button type="button" class="btn btn-ghost" data-prev="2">← Back</button>
-                    <button type="button" class="btn btn-gold" data-next="4">Review order →</button>
-                  </div>
-                </div>
-              </section>
-
-              <!-- STEP 4 — REVIEW -->
-              <section class="panel hide" data-panel="4">
-                <div class="panel-head"><h2>Review &amp; confirm</h2><span class="hint">Step 4 of 4</span></div>
-                <div class="panel-body">
-                  <div id="reviewItems" style="margin-bottom:18px"></div>
-                  <div class="layout-2col" style="grid-template-columns:1fr 1fr">
-                    <div class="card card-pad" style="padding:16px;box-shadow:none">
-                      <p class="label-xs" style="margin:0 0 6px">Delivering to</p>
-                      <div id="reviewDelivery" class="small muted">—</div>
-                    </div>
-                    <div class="card card-pad" style="padding:16px;box-shadow:none">
-                      <p class="label-xs" style="margin:0 0 6px">Contact</p>
-                      <div id="reviewContact" class="small muted">—</div>
-                    </div>
-                  </div>
-
-                  <div class="pay-confirm" style="margin-top:18px">
-                    <div class="pay-confirm-head">
-                      <span class="lm" id="reviewPayLogo"></span>
-                      <span><b id="reviewPayName">Payment method</b><small id="reviewPayNote">—</small></span>
-                      <a href="#" class="hint" style="margin-left:auto" id="editPayment">Change</a>
-                    </div>
-                    <div class="pay-confirm-body" id="reviewPayBody"></div>
-                  </div>
-
-                  <label class="check" style="margin-top:18px">
-                    <input type="checkbox" id="termsCheck" name="terms" required>
-                    <span>I confirm the quantities, delivery details and payment method above, and accept that a formal quotation will follow for approval.</span>
-                  </label>
-
-                  <div class="panel-foot" style="background:none;border:0;padding:0;margin-top:16px">
-                    <button type="button" class="btn btn-ghost" data-prev="3">← Back</button>
-                    <button class="btn btn-gold btn-lg" type="submit" id="placeOrder">Place order</button>
-                  </div>
-                </div>
-              </section>
-            </form>
-          </div>
-
-          <aside>
-            <div class="summary-card">
-              <div class="panel-head"><h2>Your order</h2><a href="/basket.html" class="hint">Edit</a></div>
-              <div id="summaryItems" style="max-height:300px;overflow-y:auto;padding:0 20px"></div>
-              <div class="summary-lines" id="summaryTotals"></div>
-              <div style="padding:0 20px 20px">
-                <div class="inline-note info" style="font-size:.76rem">
-                  <span data-icon="info"></span>
-                  <div>M-Pesa and card payments confirm instantly. Bank transfers and invoices are verified by our accounts desk before dispatch.</div>
-                </div>
+        <div class="checkout-layout">
+          <form class="card card-pad" id="checkoutForm" novalidate>
+            <!-- STEP 1 -->
+            <div class="co-panel on" data-panel="1">
+              <h3 class="serif" style="font-size:1.2rem;margin-bottom:16px">Who is this order for?</h3>
+              <div class="form-grid">
+                <div class="field"><label>Contact name <span class="req">*</span></label><input class="input" name="name" autocomplete="name" placeholder="Grace Wanjiru"><span class="err-msg">Contact name is required.</span></div>
+                <div class="field"><label>Organisation <span class="req">*</span></label><input class="input" name="organisation" autocomplete="organization" placeholder="School, hospital, county…"><span class="err-msg">Organisation is required.</span></div>
+                <div class="field"><label>Email <span class="req">*</span></label><input class="input" name="email" type="email" autocomplete="email" placeholder="procurement@organisation.co.ke"><span class="err-msg">Enter a valid email.</span></div>
+                <div class="field"><label>Phone <span class="req">*</span></label><input class="input" name="phone" type="tel" autocomplete="tel" placeholder="0712 345 678"><span class="err-msg">Enter a valid phone number.</span></div>
+              </div>
+              <div class="co-nav">
+                <a class="btn btn-ghost" href="/basket.html">Back</a>
+                <button class="btn btn-primary" type="button" id="next1">Continue to delivery</button>
               </div>
             </div>
-          </aside>
+            <!-- STEP 2 -->
+            <div class="co-panel" data-panel="2">
+              <h3 class="serif" style="font-size:1.2rem;margin-bottom:16px">Where should it land?</h3>
+              <div class="form-grid">
+                <div class="field full"><label>Delivery address <span class="req">*</span></label><input class="input" name="address" autocomplete="street-address" placeholder="Building, street, area"><span class="err-msg">Delivery address is required.</span></div>
+                <div class="field"><label>Town / city <span class="req">*</span></label><input class="input" name="town" value="Nairobi"><span class="err-msg">Town is required.</span></div>
+                <div class="field"><label>County</label><input class="input" name="county" value="Nairobi"></div>
+                <div class="field full"><label>Order notes <span class="muted">(optional)</span></label><textarea class="textarea" name="notes" style="min-height:80px" placeholder="Gate instructions, LPO number, contact on site…"></textarea></div>
+              </div>
+              <h4 class="small bold mt-3 mb-1">Delivery method</h4>
+              <div class="pay-options" id="deliveryOptions"></div>
+              <h4 class="small bold mt-3 mb-1">Payment</h4>
+              <div class="pay-options" id="paymentOptions"></div>
+              <div class="co-nav">
+                <button class="btn btn-ghost" type="button" id="back2">Back</button>
+                <button class="btn btn-primary" type="button" id="next2">Review order</button>
+              </div>
+            </div>
+            <!-- STEP 3 -->
+            <div class="co-panel" data-panel="3">
+              <h3 class="serif" style="font-size:1.2rem;margin-bottom:16px">One last look</h3>
+              <div id="reviewBlocks"></div>
+              <div class="co-nav">
+                <button class="btn btn-ghost" type="button" id="back3">Back</button>
+                <button class="btn btn-gold btn-lg" type="button" id="placeBtn">Place order</button>
+              </div>
+            </div>
+          </form>
+          <div id="coSummary"></div>
         </div>
       </div>
-    </main>
+    </div>
+  </section>
+</main>
 
-    <footer class="console-foot">
-      <span>Checkout is protected — details stored only against your order</span>
-      <span><a href="/basket.html">Basket</a> · <a href="/contact.html">Support</a></span>
-    </footer>
-  </div>
-</div>
+<div id="nv-shell-bottom"></div>
 
-<script src="/js/catalog-snapshot.js"></script>
-<script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-console.js"></script>
-<script src="/js/page-checkout.js"></script>
+<script src="/js/catalog-snapshot.js?v=9"></script>
+<script src="/js/nv-core.js?v=9"></script>
+<script src="/js/nv-auth.js?v=9"></script>
+<script src="/js/ui.js?v=9"></script>
+<script src="/js/shell.js?v=9"></script>
+<script src="/js/pages/checkout.js?v=9"></script>
 </body>
 </html>

@@ -203,10 +203,11 @@ function sessionFor(req, res) {
 
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'SAMEORIGIN',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-  'Cross-Origin-Opener-Policy': 'same-origin'
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
+  /* X-Frame-Options intentionally omitted so the site can render inside
+     embedded previews (e.g. Arena live preview). Re-add SAMEORIGIN or a
+     frame-ancestors CSP when deploying to production if embedding is unwanted. */
 };
 const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || ''));
 
@@ -334,7 +335,10 @@ async function handleApi(req, res, url) {
     if (!lines.length) return json(res, 422, { ok: false, errors: ['No valid catalogue items in the basket'] });
 
     const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
-    const delivery = subtotal >= COMPANY.freeDeliveryFrom ? 0 : 4500;
+    const deliveryMethod = clean(body.deliveryMethod, 60) || 'Standard delivery';
+    let delivery = subtotal >= COMPANY.freeDeliveryFrom ? 0 : 4500;
+    if (/express/i.test(deliveryMethod)) delivery += 2500;
+    if (/pickup|collect/i.test(deliveryMethod)) delivery = 0;
     const vat = Math.round((subtotal + delivery) * COMPANY.vatRate);
     const order = {
       ref: ref('NVX'),
