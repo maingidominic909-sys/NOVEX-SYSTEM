@@ -156,19 +156,25 @@
       tickerTrack.innerHTML = `<div class="lt-half">${half}</div><div class="lt-half" aria-hidden="true">${half}</div>`;
     }
 
-    /* ---------- deals rail ---------- */
-    const rail = $('dealRail');
-    if (rail) {
-      rail.innerHTML = savers.slice(0, 8).map(p => `<div class="prail-item">${NV.ui.productCard(p, cat)}</div>`).join('');
+    /* ---------- horizontal rails (deals + departments) ---------- */
+    const wireRail = (railId, prevId, nextId) => {
+      const rail = $(railId);
+      if (!rail) return;
       const scrollRail = dir => {
-        const item = rail.querySelector('.prail-item');
+        const item = rail.querySelector('.prail-item,.dept-card');
         const step = item ? (item.getBoundingClientRect().width + 16) * 2 : 560;
         if (rail.scrollBy) rail.scrollBy({ left: dir * step, behavior: reduceMotion ? 'auto' : 'smooth' });
         else rail.scrollLeft += dir * step;
       };
-      const dp = $('dealPrev'), dn = $('dealNext');
-      if (dp) { dp.innerHTML = NV.icon('arrowL'); dp.addEventListener('click', () => scrollRail(-1)); }
-      if (dn) { dn.innerHTML = NV.icon('arrowR'); dn.addEventListener('click', () => scrollRail(1)); }
+      const p = $(prevId), n = $(nextId);
+      if (p) { p.innerHTML = NV.icon('arrowL'); p.addEventListener('click', () => scrollRail(-1)); }
+      if (n) { n.innerHTML = NV.icon('arrowR'); n.addEventListener('click', () => scrollRail(1)); }
+    };
+
+    const rail = $('dealRail');
+    if (rail) {
+      rail.innerHTML = savers.slice(0, 8).map(p => `<div class="prail-item">${NV.ui.productCard(p, cat)}</div>`).join('');
+      wireRail('dealRail', 'dealPrev', 'dealNext');
     }
 
     /* ---------- departments ---------- */
@@ -184,6 +190,7 @@
             <span class="dc-arrow">${NV.icon('arrowR')}</span>
           </span>
         </a>`).join('');
+      wireRail('deptGrid', 'deptPrev', 'deptNext');
     }
 
     /* ---------- trending tabs + featured grid ---------- */

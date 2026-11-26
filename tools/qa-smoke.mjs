@@ -100,8 +100,8 @@ for (const [path, key] of pages) {
   const { window, doc, errors, navs, close } = await loadPage('/');
   check('home: live ticker items', doc.querySelectorAll('#liveTicker .lt-item').length >= 7);
   check('home: ticker loop halves', doc.querySelectorAll('#liveTicker .lt-half').length === 2);
-  check('home: offer carousel has 4 slides', doc.querySelectorAll('#ocTrack .oc-slide').length === 4);
-  check('home: carousel dots built', doc.querySelectorAll('#ocDots .oc-dot').length === 4);
+  check('home: offer carousel has 3 slides', doc.querySelectorAll('#ocTrack .oc-slide').length === 3);
+  check('home: carousel dots built', doc.querySelectorAll('#ocDots .oc-dot').length === 3);
   doc.getElementById('ocNext').click();
   await sleep(60);
   check('home: carousel next advances', doc.getElementById('ocTrack').style.transform.includes('-100%'), doc.getElementById('ocTrack').style.transform);
@@ -117,6 +117,15 @@ for (const [path, key] of pages) {
   check('home: trending tab switches', saversTab.classList.contains('on') && doc.querySelectorAll('#featuredGrid .pcard').length === 8);
   check('home: logistics milestones', doc.querySelectorAll('.route-steps .rs').length === 5);
   check('home: desk feed items', doc.querySelectorAll('#deskFeedList .df-item').length === 3);
+  const restored = doc.querySelector('.hero-restore');
+  check('home: classic hero restored below offers', !!restored && restored.querySelector('h1').textContent.includes('Reliable supply'));
+  check('home: hero search + stats + ticket back', !!doc.getElementById('heroSearch') && doc.querySelectorAll('.hero-restore .hero-stats > div').length === 4 && !!doc.querySelector('.hero-restore .hero-ticket'));
+  check('home: offers come before classic hero', doc.getElementById('offerCarousel').compareDocumentPosition(restored) & 4);
+  check('home: departments are a scroll rail', !!doc.getElementById('deptNext') && !!doc.getElementById('deptPrev'));
+  check('home: compact flow strip', doc.querySelectorAll('.flow-strip .fs-step').length === 4);
+  check('home: quick module tiles', doc.querySelectorAll('.module-row .module-tile').length === 3);
+  check('home: long marketing blocks removed', doc.querySelectorAll('.quote-card, .steps-grid, .service-card').length === 0);
+  check('home: compact page (max 9 sections)', doc.querySelectorAll('#main > section').length <= 9, String(doc.querySelectorAll('#main > section').length));
   const tf = doc.getElementById('trackForm');
   tf.querySelector('input').value = 'NVX-2611-P2D77E';
   tf.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
