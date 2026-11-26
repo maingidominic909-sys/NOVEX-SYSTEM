@@ -1,1 +1,517 @@
-[]
+[
+  {
+    "ref": "NVX-2611-K4F2A8",
+    "createdAt": "2026-11-16T09:30:00.000Z",
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-16T09:30:00.000Z",
+        "note": "Order received through the Norvex web console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-16T12:30:00.000Z",
+        "note": "Availability and tier pricing confirmed by the desk"
+      },
+      {
+        "status": "sourcing",
+        "at": "2026-11-17T05:30:00.000Z",
+        "note": "Goods sourced and packed against the order sheet"
+      },
+      {
+        "status": "dispatched",
+        "at": "2026-11-18T05:30:00.000Z",
+        "note": "Loaded for delivery — driver assigned"
+      },
+      {
+        "status": "delivered",
+        "at": "2026-11-19T07:30:00.000Z",
+        "note": "Delivered and signed for at the receiving store"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "Hospital Road, Kiambu Town",
+      "town": "Kiambu",
+      "county": "Kiambu",
+      "notes": "Deliver to the main store, gate B.",
+      "payment": "Invoice / LPO"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-fd-001",
+        "sku": "NVX-FD-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "cat": "food",
+        "qty": 40,
+        "unitPrice": 8700,
+        "listPrice": 9200,
+        "discount": 5,
+        "lineTotal": 348000
+      },
+      {
+        "id": "nvx-fd-012",
+        "sku": "NVX-FD-012",
+        "name": "Rice",
+        "unit": "25kg bag",
+        "cat": "food",
+        "qty": 20,
+        "unitPrice": 4150,
+        "listPrice": 4300,
+        "discount": 3,
+        "lineTotal": 83000
+      },
+      {
+        "id": "nvx-fd-011",
+        "sku": "NVX-FD-011",
+        "name": "Maize Grain",
+        "unit": "90kg bag",
+        "cat": "food",
+        "qty": 20,
+        "unitPrice": 4550,
+        "listPrice": 4700,
+        "discount": 3,
+        "lineTotal": 91000
+      }
+    ],
+    "totals": {
+      "subtotal": 522000,
+      "delivery": 0,
+      "vat": 83520,
+      "total": 605520,
+      "savings": 26000,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  },
+  {
+    "ref": "NVX-2611-M9C31B",
+    "createdAt": "2026-11-19T11:30:00.000Z",
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-19T11:30:00.000Z",
+        "note": "Order received through the Norvex web console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-19T14:30:00.000Z",
+        "note": "Availability and tier pricing confirmed by the desk"
+      },
+      {
+        "status": "sourcing",
+        "at": "2026-11-20T07:30:00.000Z",
+        "note": "Goods sourced and packed against the order sheet"
+      },
+      {
+        "status": "dispatched",
+        "at": "2026-11-21T07:30:00.000Z",
+        "note": "Loaded for delivery — driver assigned"
+      },
+      {
+        "status": "delivered",
+        "at": "2026-11-22T09:30:00.000Z",
+        "note": "Delivered and signed for at the receiving store"
+      }
+    ],
+    "customer": {
+      "name": "James Mwangi",
+      "email": "bursar@brookside.ac.ke",
+      "phone": "+254722114455",
+      "organisation": "Brookside Academy",
+      "address": "Limuru Road, Campus Store",
+      "town": "Limuru",
+      "county": "Kiambu",
+      "notes": "Term 3 stationery allocation.",
+      "payment": "M-Pesa"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-of-001",
+        "sku": "NVX-OF-001",
+        "name": "A4 Copy Paper",
+        "unit": "ream (500 sheets)",
+        "cat": "office",
+        "qty": 200,
+        "unitPrice": 565,
+        "listPrice": 620,
+        "discount": 9,
+        "lineTotal": 113000
+      },
+      {
+        "id": "nvx-in-001",
+        "sku": "NVX-IN-001",
+        "name": "School Supplies",
+        "unit": "pack",
+        "cat": "institutional",
+        "qty": 50,
+        "unitPrice": 2200,
+        "listPrice": 2400,
+        "discount": 8,
+        "lineTotal": 110000
+      },
+      {
+        "id": "nvx-of-002",
+        "sku": "NVX-OF-002",
+        "name": "Writing Stationery",
+        "unit": "pack",
+        "cat": "office",
+        "qty": 25,
+        "unitPrice": 720,
+        "listPrice": 780,
+        "discount": 8,
+        "lineTotal": 18000
+      }
+    ],
+    "totals": {
+      "subtotal": 241000,
+      "delivery": 0,
+      "vat": 38560,
+      "total": 279560,
+      "savings": 22500,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  },
+  {
+    "ref": "NVX-2611-P2D77E",
+    "createdAt": "2026-11-22T14:30:00.000Z",
+    "status": "dispatched",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-22T14:30:00.000Z",
+        "note": "Order received through the Norvex web console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-22T17:30:00.000Z",
+        "note": "Availability and tier pricing confirmed by the desk"
+      },
+      {
+        "status": "sourcing",
+        "at": "2026-11-23T10:30:00.000Z",
+        "note": "Goods sourced and packed against the order sheet"
+      },
+      {
+        "status": "dispatched",
+        "at": "2026-11-24T10:30:00.000Z",
+        "note": "Loaded for delivery — driver assigned"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "Hospital Road, Kiambu Town",
+      "town": "Kiambu",
+      "county": "Kiambu",
+      "notes": "Site store, Thika Road works.",
+      "payment": "Bank transfer"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-sf-002",
+        "sku": "NVX-SF-002",
+        "name": "Safety Boots",
+        "unit": "pair",
+        "cat": "safety",
+        "qty": 25,
+        "unitPrice": 2950,
+        "listPrice": 3200,
+        "discount": 8,
+        "lineTotal": 73750
+      },
+      {
+        "id": "nvx-sf-001",
+        "sku": "NVX-SF-001",
+        "name": "Safety Helmets",
+        "unit": "unit",
+        "cat": "safety",
+        "qty": 50,
+        "unitPrice": 870,
+        "listPrice": 950,
+        "discount": 8,
+        "lineTotal": 43500
+      },
+      {
+        "id": "nvx-sf-004",
+        "sku": "NVX-SF-004",
+        "name": "First Aid Kits",
+        "unit": "kit",
+        "cat": "safety",
+        "qty": 10,
+        "unitPrice": 4150,
+        "listPrice": 4500,
+        "discount": 8,
+        "lineTotal": 41500
+      },
+      {
+        "id": "nvx-sf-003",
+        "sku": "NVX-SF-003",
+        "name": "Reflective Vests",
+        "unit": "unit",
+        "cat": "safety",
+        "qty": 50,
+        "unitPrice": 590,
+        "listPrice": 650,
+        "discount": 9,
+        "lineTotal": 29500
+      }
+    ],
+    "totals": {
+      "subtotal": 188250,
+      "delivery": 0,
+      "vat": 30120,
+      "total": 218370,
+      "savings": 16750,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  },
+  {
+    "ref": "NVX-2611-R8B52C",
+    "createdAt": "2026-11-24T10:30:00.000Z",
+    "status": "sourcing",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-24T10:30:00.000Z",
+        "note": "Order received through the Norvex web console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-24T13:30:00.000Z",
+        "note": "Availability and tier pricing confirmed by the desk"
+      },
+      {
+        "status": "sourcing",
+        "at": "2026-11-25T06:30:00.000Z",
+        "note": "Goods sourced and packed against the order sheet"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "Hospital Road, Kiambu Town",
+      "town": "Kiambu",
+      "county": "Kiambu",
+      "notes": "Deliver to the main store, gate B.",
+      "payment": "Invoice / LPO"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-fd-012",
+        "sku": "NVX-FD-012",
+        "name": "Rice",
+        "unit": "25kg bag",
+        "cat": "food",
+        "qty": 50,
+        "unitPrice": 4150,
+        "listPrice": 4300,
+        "discount": 3,
+        "lineTotal": 207500
+      },
+      {
+        "id": "nvx-fd-001",
+        "sku": "NVX-FD-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "cat": "food",
+        "qty": 20,
+        "unitPrice": 8950,
+        "listPrice": 9200,
+        "discount": 3,
+        "lineTotal": 179000
+      },
+      {
+        "id": "nvx-wt-001",
+        "sku": "NVX-WT-001",
+        "name": "Bottled Drinking Water",
+        "unit": "carton (12 x 1L)",
+        "cat": "water",
+        "qty": 50,
+        "unitPrice": 660,
+        "listPrice": 720,
+        "discount": 8,
+        "lineTotal": 33000
+      }
+    ],
+    "totals": {
+      "subtotal": 419500,
+      "delivery": 0,
+      "vat": 67120,
+      "total": 486620,
+      "savings": 15500,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  },
+  {
+    "ref": "NVX-2611-T5E90D",
+    "createdAt": "2026-11-26T08:45:00.000Z",
+    "status": "received",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-26T08:45:00.000Z",
+        "note": "Order received through the Norvex web console"
+      }
+    ],
+    "customer": {
+      "name": "Amina Noor",
+      "email": "ops@mwangaza.org",
+      "phone": "+254733998877",
+      "organisation": "Mwangaza NGO",
+      "address": "Ngong Lane, Kilimani",
+      "town": "Nairobi",
+      "county": "Nairobi",
+      "notes": "ICT refresh for the new field office.",
+      "payment": "Card"
+    },
+    "delivery": {
+      "method": "Express delivery",
+      "window": "Same day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-it-001",
+        "sku": "NVX-IT-001",
+        "name": "Laptops & Computers",
+        "unit": "unit",
+        "cat": "ict",
+        "qty": 5,
+        "unitPrice": 78000,
+        "listPrice": 78000,
+        "discount": 0,
+        "lineTotal": 390000
+      },
+      {
+        "id": "nvx-it-002",
+        "sku": "NVX-IT-002",
+        "name": "Printers & Scanners",
+        "unit": "unit",
+        "cat": "ict",
+        "qty": 2,
+        "unitPrice": 46000,
+        "listPrice": 46000,
+        "discount": 0,
+        "lineTotal": 92000
+      },
+      {
+        "id": "nvx-it-004",
+        "sku": "NVX-IT-004",
+        "name": "UPS & Power Protection",
+        "unit": "unit",
+        "cat": "ict",
+        "qty": 4,
+        "unitPrice": 17500,
+        "listPrice": 17500,
+        "discount": 0,
+        "lineTotal": 70000
+      }
+    ],
+    "totals": {
+      "subtotal": 552000,
+      "delivery": 2500,
+      "vat": 88720,
+      "total": 643220,
+      "savings": 0,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  },
+  {
+    "ref": "NVX-2611-W1A46F",
+    "createdAt": "2026-11-26T12:10:00.000Z",
+    "status": "received",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-26T12:10:00.000Z",
+        "note": "Order received through the Norvex web console"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "Hospital Road, Kiambu Town",
+      "town": "Kiambu",
+      "county": "Kiambu",
+      "notes": "Deliver to the main store, gate B.",
+      "payment": "M-Pesa"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-of-001",
+        "sku": "NVX-OF-001",
+        "name": "A4 Copy Paper",
+        "unit": "ream (500 sheets)",
+        "cat": "office",
+        "qty": 50,
+        "unitPrice": 590,
+        "listPrice": 620,
+        "discount": 5,
+        "lineTotal": 29500
+      },
+      {
+        "id": "nvx-of-004",
+        "sku": "NVX-OF-004",
+        "name": "Printer Toner & Cartridges",
+        "unit": "unit",
+        "cat": "office",
+        "qty": 10,
+        "unitPrice": 6450,
+        "listPrice": 6800,
+        "discount": 5,
+        "lineTotal": 64500
+      }
+    ],
+    "totals": {
+      "subtotal": 94000,
+      "delivery": 4500,
+      "vat": 15760,
+      "total": 114260,
+      "savings": 5000,
+      "currency": "KES"
+    },
+    "source": "demo-seed"
+  }
+]

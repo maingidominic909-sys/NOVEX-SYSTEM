@@ -4,125 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Supply basket — Norvex order desk</title>
-<meta name="description" content="Review and edit your Norvex supply basket with live tiered pricing, then continue to checkout.">
+<meta name="description" content="Review your supply lines, watch tier pricing nudges and proceed to checkout.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/console.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css">
 </head>
-<body class="console" data-page="basket" data-crumb="Order desk|Supply basket">
-<div class="console-body">
-  <div id="nv-rail"></div>
-  <div class="console-main">
-    <div id="nv-cmdbar"></div>
+<body data-page="basket">
+<div id="nv-shell-top"></div>
 
-    <main class="workspace">
-      <div class="workspace-narrow">
-        <div class="page-title-bar">
-          <div>
-            <h1>Supply basket</h1>
-            <p class="sub">Everything you're planning to procure, priced against volume tiers in real time.</p>
-          </div>
-          <div class="title-actions">
-            <a href="/shop.html" class="btn btn-ghost btn-sm">← Continue shopping</a>
-            <button class="btn btn-sm btn-danger" id="clearBasket">Clear basket</button>
-          </div>
+<main id="main">
+  <section class="section tight">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <div>
+          <p class="eyebrow">Order desk</p>
+          <h1 class="h-display">Supply basket</h1>
+          <p class="lede">Quantities cross price tiers live — the nudges show exactly how many more units unlock the next break.</p>
         </div>
-
-        <div class="ctx-band" id="ctxBand">
-          <span class="dot"></span>
-          <span id="ctxText">Live pricing · VAT 16% · Free delivery over KES 150,000</span>
-          <span style="margin-left:auto" class="mono tiny" id="ctxRef">—</span>
-        </div>
-
-        <div class="layout-2col">
-          <div>
-            <div class="panel">
-              <div class="panel-head">
-                <h2>Basket lines</h2>
-                <span class="hint" id="lineCount">0 lines</span>
-              </div>
-              <div class="panel-body tight">
-                <div class="table-wrap">
-                  <table class="data stack" id="basketTable">
-                    <thead>
-                      <tr>
-                        <th>Item</th>
-                        <th>Unit price</th>
-                        <th>Quantity</th>
-                        <th class="num">Line total</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody id="basketBody"></tbody>
-                  </table>
-                </div>
-                <div id="basketEmpty" class="empty-state hide">
-                  <div class="icon-wrap" data-icon="cart"></div>
-                  <h3>Your basket is empty</h3>
-                  <p>Add catalogue lines and volume pricing will be applied automatically as quantities grow.</p>
-                  <a href="/shop.html" class="btn btn-gold">Browse the catalogue</a>
-                </div>
-              </div>
-              <div class="panel-foot" id="basketFoot">
-                <span class="muted tiny">Prices are indicative until your order is confirmed by the desk.</span>
-                <a href="/quote.html" class="link-arrow" style="border:0">Send this list for quotation →</a>
-              </div>
-            </div>
-
-          </div>
-
-          <aside>
-            <div class="summary-card">
-              <div class="panel-head"><h2>Order summary</h2></div>
-              <div class="summary-lines" id="summaryLines"></div>
-              <div class="summary-delivery" id="summaryDelivery">
-                <div class="row-between" style="margin-bottom:6px">
-                  <span class="tiny" id="freeDeliveryLabel">Spend KES 150,000 to unlock free delivery</span>
-                  <span class="tiny mono" id="freeDeliveryPct">0%</span>
-                </div>
-                <div class="delivery-progress" style="margin:0"><i id="freeDeliveryBar" style="width:0%"></i></div>
-                <p class="tiny muted" style="margin:8px 0 0">Standard delivery is KES 4,500 within Nairobi Metro. Upcountry consignments are quoted at checkout.</p>
-              </div>
-              <div class="summary-actions">
-                <div class="basket-auth" id="basketAuth"></div>
-                <a href="/checkout.html" class="btn btn-gold btn-block" id="checkoutBtn">Proceed to checkout</a>
-                <button class="btn btn-ghost btn-block btn-sm" id="whatsappBtn">Send list on WhatsApp</button>
-                <a href="/plan.html" class="btn btn-ghost btn-block btn-sm">Schedule for later</a>
-              </div>
-              <div style="padding:0 20px 20px">
-                <div class="inline-note" style="font-size:.76rem">
-                  <span data-icon="shield"></span>
-                  <div>Quotation, delivery note and invoice issued for every order — ready for audit.</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><h2>Buying on account?</h2></div>
-              <div class="panel-body">
-                <p class="small muted" style="margin-bottom:12px">Approved organisations can settle on 30-day invoice terms with an LPO reference.</p>
-                <a href="/quote.html" class="btn btn-ghost btn-sm btn-block">Request account terms</a>
-              </div>
-            </div>
-          </aside>
-        </div>
+        <a class="btn btn-ghost" href="/desk.html">Back to order desk</a>
       </div>
-    </main>
+      <div id="basketEmpty" class="hide"></div>
+      <div id="basketRoot" class="basket-layout hide">
+        <div class="card" id="basketLines"></div>
+        <div id="basketSummary"></div>
+      </div>
+    </div>
+  </section>
+</main>
 
-    <footer class="console-foot">
-      <span>Norvex order desk · secure workspace</span>
-      <span><a href="/index.html">Storefront</a> · <a href="/contact.html">Support</a> · <a href="/admin.html">Operations</a></span>
-    </footer>
-  </div>
-</div>
+<div id="nv-shell-bottom"></div>
 
 <script src="/js/catalog-snapshot.js"></script>
 <script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-console.js"></script>
-<script src="/js/page-basket.js"></script>
+<script src="/js/nv-auth.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/shell.js"></script>
+<script src="/js/pages/basket.js"></script>
 </body>
 </html>

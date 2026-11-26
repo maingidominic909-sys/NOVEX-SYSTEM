@@ -1,7 +1,10 @@
-/* Norvex service worker — network-first for pages, cache-first for assets */
-const CACHE = 'norvex-v1';
-const ASSETS = ['/css/base.css', '/css/portal.css', '/css/console.css', '/js/nv-core.js', '/js/nv-ui.js',
-  '/js/chrome-portal.js', '/js/chrome-console.js', '/js/catalog-snapshot.js', '/img/logo.png', '/img/mark.png'];
+/* Norvex v2 service worker — network-first for pages, cache-first for assets */
+const CACHE = 'norvex-v2';
+const ASSETS = [
+  '/css/nv.css',
+  '/js/nv-core.js', '/js/nv-auth.js', '/js/ui.js', '/js/shell.js', '/js/catalog-snapshot.js',
+  '/img/logo.png', '/img/logo-light.png', '/img/mark.png'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

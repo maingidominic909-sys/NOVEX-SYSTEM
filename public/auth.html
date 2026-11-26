@@ -4,55 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sign in — Norvex trade account</title>
-<meta name="description" content="Sign in or create your Norvex trade account to order, track deliveries and keep your tier pricing.">
+<meta name="description" content="Sign in or create your Norvex trade account: tier pricing, order history, LPO terms and tracked delivery in one place.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/portal.css">
-<link rel="stylesheet" href="/css/auth.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css">
 </head>
 <body class="auth-body" data-page="auth">
 
-<div class="auth-shell">
+<main class="auth-layout" id="main">
 
-  <!-- ================= BRAND STAGE ================= -->
-  <aside class="auth-stage" aria-hidden="false">
-    <div class="aurora"><i></i><i></i><i></i></div>
-
-    <div style="display:flex;align-items:center;gap:14px;position:relative;z-index:2">
-      <a class="auth-brand" href="/index.html">
-        <img src="/img/logo-light.png" alt="Norvex Integrated Enterprises Ltd">
-      </a>
-      <a class="auth-brand-back" href="/index.html">
-        <span data-icon="arrowL"></span> Keep browsing
-      </a>
+  <!-- BRAND STAGE -->
+  <aside class="auth-stage">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="auth-stage-top">
+      <a href="/index.html" aria-label="Norvex home"><img src="/img/logo-light.png" alt="Norvex Integrated Enterprises Ltd"></a>
+      <a class="auth-back" href="/index.html"><span data-icon="arrowL"></span> Keep browsing</a>
     </div>
-
     <div class="auth-stage-main">
-      <p class="eyebrow">Trade account · Kenya</p>
+      <p class="eyebrow" style="color:var(--gold-400)">Trade account · Kenya</p>
       <h1>Procurement,<br><em>in your name.</em></h1>
-      <p class="auth-stage-lede">One account keeps your tier pricing, delivery addresses, LPO references and every order in one place — from the first requisition to the delivery note.</p>
-
+      <p class="lede">One account keeps your tier pricing, delivery addresses, LPO references and every order together — from first requisition to delivery note.</p>
       <ul class="auth-perks">
-        <li><span data-icon="check"></span> Tier pricing applied automatically at checkout</li>
-        <li><span data-icon="check"></span> Order history, re-order and track dispatch in real time</li>
-        <li><span data-icon="check"></span> 30-day invoice terms for approved institutions</li>
+        <li><span class="pk"><span data-icon="check"></span></span> Tier pricing applied automatically at checkout</li>
+        <li><span class="pk"><span data-icon="check"></span></span> Order history, re-order and live dispatch tracking</li>
+        <li><span class="pk"><span data-icon="check"></span></span> 30-day invoice terms for approved institutions</li>
       </ul>
-
       <div class="auth-tally">
         <div><b>45+</b><span>Catalogue lines</span></div>
         <div><b>13</b><span>Departments</span></div>
         <div><b>24–72h</b><span>Nairobi dispatch</span></div>
       </div>
     </div>
-
-    <div class="auth-ticket" id="authTicket" aria-hidden="true">
-      <div class="auth-ticket-head"><b>Order in progress</b><small>NVX sample</small></div>
-      <div class="auth-ticket-row"><span>Dry Food Commodities · 3 lines</span><span>KES 84,250</span></div>
-      <div class="auth-ticket-bar"><i></i></div>
-      <div class="auth-ticket-row"><i>Status</i><span>Sourcing → dispatch</span></div>
+    <div class="auth-ticket" aria-hidden="true">
+      <div class="at-head"><b>Order in progress</b><small>NVX sample</small></div>
+      <div class="at-row"><span>Dry Food Commodities · 3 lines</span><span>KES 84,250</span></div>
+      <div class="progress"><i style="width:62%"></i></div>
+      <div class="at-row"><span>Status</span><span>Sourcing → dispatch</span></div>
     </div>
-
     <div class="auth-stage-foot">
       <span><span data-icon="shield"></span> Encrypted session</span>
       <span><span data-icon="phone"></span> +254 742 021 099</span>
@@ -60,160 +47,138 @@
     </div>
   </aside>
 
-  <!-- ================= FORM PANEL ================= -->
+  <!-- FORM PANEL -->
   <section class="auth-panel">
     <div class="auth-panel-top">
       <span class="mini-brand"><img src="/img/mark.png" alt=""> Norvex account</span>
-      <a href="/index.html">Continue browsing →</a>
+      <a href="/shop.html">Continue browsing →</a>
     </div>
 
     <div class="auth-card">
-      <header>
-        <h2 id="authTitle">Welcome back</h2>
-        <p id="authSub">Sign in to your trade account. Browsing stays open to everyone.</p>
-      </header>
+      <div id="authCardInner">
+        <header>
+          <h2 id="authTitle">Welcome back</h2>
+          <p class="auth-sub" id="authSub">Sign in to your trade account. Browsing the catalogue stays open to everyone.</p>
+        </header>
 
-      <div class="auth-seg" id="authSeg" data-mode="signin" role="tablist" aria-label="Sign in or create account">
-        <span class="auth-seg-thumb" aria-hidden="true"></span>
-        <button type="button" role="tab" data-tab="signin" aria-selected="true">Sign in</button>
-        <button type="button" role="tab" data-tab="signup" aria-selected="false">Create account</button>
-      </div>
+        <div class="auth-seg" id="authSeg" data-mode="signin" role="tablist" aria-label="Sign in or create account">
+          <span class="auth-seg-thumb" aria-hidden="true"></span>
+          <button type="button" role="tab" data-tab="signin" aria-selected="true">Sign in</button>
+          <button type="button" role="tab" data-tab="signup" aria-selected="false">Create account</button>
+        </div>
 
-      <form class="auth-form" id="authForm" data-mode="signin" novalidate autocomplete="on">
-        <!-- ===== SIGN IN ONLY ===== -->
-        <label class="auth-field" data-only="signin" data-field="identifier">
-          <span class="lbl">Email, phone or username</span>
-          <span class="auth-input-wrap">
-            <span class="lead" data-icon="user"></span>
-            <input class="auth-input" name="identifier" type="text" inputmode="email" autocomplete="username" placeholder="you@organisation.co.ke" aria-describedby="err-identifier">
-          </span>
-          <span class="auth-err" id="err-identifier">Enter the email, phone or username on your account.</span>
-        </label>
+        <div class="auth-note" id="authNote" role="alert"></div>
 
-        <!-- ===== SIGN UP ONLY ===== -->
-        <div class="auth-row" data-only="signup">
-          <label class="auth-field" data-field="name">
-            <span class="lbl">Full name</span>
+        <form class="auth-form" id="authForm" data-mode="signin" novalidate style="margin-top:16px">
+          <!-- SIGN IN -->
+          <label class="auth-field" data-only="signin" data-field="identifier">
+            <span class="lbl">Email, phone or username</span>
             <span class="auth-input-wrap">
               <span class="lead" data-icon="user"></span>
-              <input class="auth-input" name="name" type="text" autocomplete="name" placeholder="Grace Wanjiru" aria-describedby="err-name">
+              <input class="auth-input" name="identifier" type="text" autocomplete="username" placeholder="you@organisation.co.ke">
             </span>
-            <span class="auth-err" id="err-name">Tell us who we are quoting.</span>
+            <span class="auth-err">Enter the email, phone or username on your account.</span>
           </label>
 
-          <label class="auth-field" data-field="organisation">
-            <span class="lbl">Organisation</span>
+          <!-- SIGN UP -->
+          <div class="auth-row" data-only="signup">
+            <label class="auth-field" data-field="name">
+              <span class="lbl">Full name</span>
+              <span class="auth-input-wrap">
+                <span class="lead" data-icon="user"></span>
+                <input class="auth-input" name="name" type="text" autocomplete="name" placeholder="Grace Wanjiru">
+              </span>
+              <span class="auth-err">Tell us who we are quoting.</span>
+            </label>
+            <label class="auth-field" data-field="organisation">
+              <span class="lbl">Organisation</span>
+              <span class="auth-input-wrap">
+                <span class="lead" data-icon="building"></span>
+                <input class="auth-input" name="organisation" type="text" autocomplete="organization" placeholder="School, hospital, county…">
+              </span>
+              <span class="auth-err">Organisation name is required.</span>
+            </label>
+          </div>
+          <div class="auth-row" data-only="signup">
+            <label class="auth-field" data-field="email">
+              <span class="lbl">Email</span>
+              <span class="auth-input-wrap">
+                <span class="lead" data-icon="mail"></span>
+                <input class="auth-input" name="email" type="email" autocomplete="email" placeholder="you@organisation.co.ke">
+              </span>
+              <span class="auth-err">That email does not look right.</span>
+            </label>
+            <label class="auth-field" data-field="phone">
+              <span class="lbl">Mobile</span>
+              <span class="auth-input-wrap">
+                <span class="lead" data-icon="phone"></span>
+                <input class="auth-input" name="phone" type="tel" autocomplete="tel" placeholder="0712 345 678">
+              </span>
+              <span class="auth-err">Kenyan mobile, e.g. 0712 345 678.</span>
+            </label>
+          </div>
+          <label class="auth-field" data-only="signup" data-field="username">
+            <span class="lbl">Username</span>
             <span class="auth-input-wrap">
-              <span class="lead" data-icon="building"></span>
-              <input class="auth-input" name="organisation" type="text" list="orgList" autocomplete="organization" placeholder="School, hospital, county…" aria-describedby="err-organisation">
+              <span class="lead" data-icon="sparkle"></span>
+              <input class="auth-input" name="username" type="text" autocomplete="off" placeholder="grace.wanjiru">
             </span>
-            <span class="auth-err" id="err-organisation">Organisation or institution name is required.</span>
+            <span class="auth-err">3–20 characters: letters, numbers, dot, dash or underscore.</span>
           </label>
-        </div>
-        <datalist id="orgList">
-          <option value="Kiambu County Referral Hospital"></option>
-          <option value="Brookside Academy"></option>
-          <option value="Kenya Highlands University"></option>
-          <option value="Mwangaza NGO"></option>
-          <option value="Rift Valley Technical College"></option>
-          <option value="County Government of Kajiado"></option>
-          <option value="Afya Bora Clinic"></option>
-          <option value="Tumaini Children's Home"></option>
-        </datalist>
 
-        <div class="auth-row" data-only="signup">
-          <label class="auth-field" data-field="email">
-            <span class="lbl">Work email</span>
+          <!-- SHARED -->
+          <label class="auth-field" data-field="password">
+            <span class="lbl">Password</span>
             <span class="auth-input-wrap">
-              <span class="lead" data-icon="mail"></span>
-              <input class="auth-input" name="email" type="email" autocomplete="email" placeholder="you@organisation.co.ke" aria-describedby="err-email">
+              <span class="lead" data-icon="lock"></span>
+              <input class="auth-input" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+              <button type="button" class="pw-toggle" data-pw-toggle="password" aria-label="Show password"><span data-icon="eye"></span></button>
             </span>
-            <span class="auth-err" id="err-email">That email does not look right.</span>
+            <span class="auth-err">Enter your password.</span>
+            <span class="pw-meter" id="pwMeter" style="display:none"><span class="progress"><i id="pwMeterFill" style="width:0%"></i></span><small id="pwMeterLabel"></small></span>
           </label>
-
-          <label class="auth-field" data-field="phone">
-            <span class="lbl">Mobile</span>
+          <label class="auth-field" data-only="signup" data-field="confirm">
+            <span class="lbl">Confirm password</span>
             <span class="auth-input-wrap">
-              <span class="lead" data-icon="phone"></span>
-              <input class="auth-input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0712 345 678" aria-describedby="err-phone">
+              <span class="lead" data-icon="shield"></span>
+              <input class="auth-input" name="confirm" type="password" autocomplete="new-password" placeholder="Repeat password">
+              <button type="button" class="pw-toggle" data-pw-toggle="confirm" aria-label="Show password"><span data-icon="eye"></span></button>
             </span>
-            <span class="auth-err" id="err-phone">Kenyan mobile, e.g. 0712 345 678.</span>
+            <span class="auth-err">Passwords do not match.</span>
           </label>
-        </div>
 
-        <label class="auth-field" data-only="signup" data-field="username">
-          <span class="lbl">Username</span>
-          <span class="auth-input-wrap">
-            <span class="lead" data-icon="user"></span>
-            <input class="auth-input" name="username" type="text" autocomplete="username" placeholder="g.wanjiru" aria-describedby="err-username">
-          </span>
-          <span class="auth-err" id="err-username">3–20 characters — letters, numbers, dot, dash or underscore.</span>
-        </label>
+          <label class="check" id="termsRow" style="display:none">
+            <input type="checkbox" id="termsCheck">
+            <span>I accept the Norvex supply terms and understand this demo account is stored on this device.</span>
+          </label>
 
-        <label class="auth-field" data-field="password">
-          <span class="lbl">Password</span>
-          <span class="auth-input-wrap">
-            <span class="lead" data-icon="shield"></span>
-            <input class="auth-input has-tail" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" aria-describedby="err-password">
-            <button type="button" class="tail" data-reveal="password" aria-label="Show password">Show</button>
-          </span>
-          <span class="auth-strength" data-only="signup" aria-hidden="true">
-            <span class="auth-strength-bar"><i></i><i></i><i></i><i></i><i></i></span>
-            <small>Use 8+ characters with a number for a stronger password.</small>
-          </span>
-          <span class="auth-err" id="err-password">Use at least 8 characters with a letter and a number.</span>
-        </label>
+          <button class="btn btn-gold btn-lg btn-block auth-submit" id="authSubmit" type="submit">
+            <span class="spinner" style="display:none"></span>
+            <span id="authSubmitLabel">Sign in to my account</span>
+          </button>
+        </form>
 
-        <label class="auth-field" data-only="signup" data-field="confirm">
-          <span class="lbl">Confirm password</span>
-          <span class="auth-input-wrap">
-            <span class="lead" data-icon="shield"></span>
-            <input class="auth-input" name="confirm" type="password" autocomplete="new-password" placeholder="Repeat password" aria-describedby="err-confirm">
-          </span>
-          <span class="auth-err" id="err-confirm">Passwords do not match.</span>
-        </label>
-
-        <div class="auth-meta" data-only="signin">
-          <label class="auth-check"><input type="checkbox" name="remember" checked> Keep me signed in</label>
-          <a href="#" id="forgotLink">Forgot password?</a>
-        </div>
-        <div class="auth-meta" data-only="signup">
-          <label class="auth-check"><input type="checkbox" name="terms" id="authTerms"> I accept the supply terms and privacy notice</label>
-        </div>
-
-        <div class="auth-note" id="authNote"></div>
-
-        <button class="auth-submit" type="submit" id="authSubmit">
-          <span id="authSubmitLabel">Sign in to my account</span>
-          <span data-icon="arrowR"></span>
-        </button>
-      </form>
-
-      <div class="auth-alt">
         <div class="auth-demo">
-          <p>Just looking? Try the demo account.<br><b>demo@norvex.co.ke</b> · <b>Norvex2026</b></p>
-          <button type="button" id="demoFill">Fill demo login</button>
+          <div class="ad-head"><span data-icon="sparkle"></span> Try it instantly — demo accounts</div>
+          <div class="ad-btns">
+            <button type="button" class="ad-btn" data-demo="customer"><b>Customer demo</b><small>demo@norvex.co.ke · Norvex2026</small></button>
+            <button type="button" class="ad-btn" data-demo="admin"><b>Admin demo</b><small>admin@norvex.co.ke · Norvex2026</small></button>
+          </div>
         </div>
+
+        <p class="auth-foot">Browsing is free — an account is only needed to place orders.<br>Questions? <a href="tel:+254742021099">+254 742 021 099</a> · <a href="/contact.html">Contact the desk</a></p>
       </div>
 
-      <p class="auth-legal">Browsing the catalogue, quotations and this basket never needs an account. By continuing you agree to our <a href="/about.html">terms of supply</a> and <a href="/about.html">privacy notice</a>.</p>
+      <div class="auth-success" id="authSuccess" aria-live="polite"></div>
     </div>
-  </section>
-</div>
 
-<div class="auth-success" id="authSuccess" role="status" aria-live="polite">
-  <div class="auth-success-card">
-    <div class="auth-success-ring"><span data-icon="check"></span></div>
-    <h3 id="authSuccessTitle">You're in.</h3>
-    <p id="authSuccessCopy">Taking you to your account…</p>
-  </div>
-</div>
+    <p class="auth-terms">© <span data-year>2026</span> Norvex Integrated Enterprises Ltd · Nairobi, Kenya</p>
+  </section>
+</main>
 
 <script src="/js/catalog-snapshot.js"></script>
 <script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
 <script src="/js/nv-auth.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/page-auth.js"></script>
+<script src="/js/pages/auth.js"></script>
 </body>
 </html>

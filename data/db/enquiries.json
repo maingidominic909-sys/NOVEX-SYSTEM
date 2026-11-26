@@ -1,1 +1,53 @@
-[]
+[
+  {
+    "ref": "ENQ-2611-Q7D21C",
+    "createdAt": "2026-11-25T15:30:00.000Z",
+    "status": "new",
+    "type": "quote",
+    "name": "Peter Kariuki",
+    "organisation": "County Government of Kajiado",
+    "email": "supply@kajiado.go.ke",
+    "phone": "+254720556644",
+    "subject": "Quotation request — 4 lines",
+    "message": "Please quote for the quarterly health-facilities replenishment:\n60 × Safety Boots (pair)\n40 × First Aid Kits (kit)\n120 × Hygiene Supplies (carton)\n30 × Cleaning Chemicals (20L jerrycan)\nDelivery to Kajiado town stores. LPO will follow.",
+    "items": [
+      {
+        "id": "nvx-sf-002",
+        "name": "Safety Boots",
+        "unit": "pair",
+        "qty": 60
+      },
+      {
+        "id": "nvx-sf-004",
+        "name": "First Aid Kits",
+        "unit": "kit",
+        "qty": 40
+      },
+      {
+        "id": "nvx-cl-003",
+        "name": "Hygiene Supplies",
+        "unit": "carton",
+        "qty": 120
+      },
+      {
+        "id": "nvx-cl-001",
+        "name": "Cleaning Chemicals",
+        "unit": "20L jerrycan",
+        "qty": 30
+      }
+    ]
+  },
+  {
+    "ref": "ENQ-2611-H3B88A",
+    "createdAt": "2026-11-23T09:30:00.000Z",
+    "status": "new",
+    "type": "general",
+    "name": "Dr. Faith Otieno",
+    "organisation": "Afya Bora Clinic",
+    "email": "admin@afyabora.co.ke",
+    "phone": "+254711223344",
+    "subject": "Custom sourcing",
+    "message": "Do you source examination couches and medical-grade screening curtains? We are opening a second branch in Ruiru next month and need a consolidated quotation with delivery.",
+    "items": []
+  }
+]

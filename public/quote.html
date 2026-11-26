@@ -3,145 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Request a Quotation — Norvex Integrated Enterprises Ltd</title>
-<meta name="description" content="Request a formal quotation from Norvex for bulk commodities, institutional supplies, tenders and framework agreements. Quotations issued within 24 hours.">
+<title>Request a quotation — Norvex</title>
+<meta name="description" content="Build a multi-line requisition and get a formal quotation with tier pricing within one business day.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/portal.css">
-<link rel="stylesheet" href="/css/responsive.css">
-<style>
-  .rfq-head { display:grid; grid-template-columns:minmax(0,1fr) 84px 96px 112px 30px; gap:10px; padding-bottom:8px; border-bottom:1px solid var(--line); }
-  .rfq-layout { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:clamp(20px,3vw,40px); align-items:start; }
-  .rfq-row { display:grid; grid-template-columns:minmax(0,1fr) 84px 96px 112px 30px; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid var(--line); }
-  .rfq-row .rfq-unit { font-size:.78rem; color:var(--muted); }
-  .rfq-row .rfq-total { font-size:.84rem; font-weight:600; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .rfq-row .rfq-del { border:0; background:none; color:var(--muted); display:grid; place-items:center; }
-  .rfq-row .rfq-del:hover { color:var(--danger); }
-  @media (max-width:1020px){ .rfq-layout { grid-template-columns: minmax(0,1fr); } }
-  @media (max-width:640px){
-    .rfq-head { display:none; }
-    .rfq-row { grid-template-columns:minmax(0,1fr) 92px 34px; grid-auto-rows:auto; gap:8px 10px; padding:12px 0; }
-    .rfq-row > :nth-child(1){ grid-column:1/-1; }
-    .rfq-row .rfq-total { text-align:left; }
-  }
-</style>
+<link rel="stylesheet" href="/css/nv.css">
 </head>
-<body class="portal" data-page="quote">
-<div id="nv-header"></div>
+<body data-page="quote">
+<div id="nv-shell-top"></div>
 
-<main>
-  <section class="page-hero" style="background:var(--green-950)">
-    <div class="shell page-hero-inner">
-      <nav class="breadcrumb"><a href="/index.html">Home</a><span class="sep">/</span><span class="current">Request a quotation</span></nav>
-      <h1>Quote desk. <span class="serif-accent">Answered within 24 hours.</span></h1>
-      <p class="lede">For tenders, bills of quantities and institutional requirements. Add the lines you need priced, tell us the delivery window, and our desk will issue a formal quotation with validity period and payment terms.</p>
+<main id="main">
+  <section class="page-hero">
+    <div class="bg" style="background-image:url('/img/contact-hero.jpg')"></div>
+    <div class="scrim"></div>
+    <div class="shell">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg><b>Quote desk</b></nav>
+      <h1>Request a formal quotation</h1>
+      <p class="lede">Tenders, contract supply and bulk requisitions — build the lines, see an indicative estimate, and our desk replies within one business day.</p>
     </div>
   </section>
 
-  <section class="section-tight">
-    <div class="shell rfq-layout">
-      <div>
-        <div class="card card-pad" style="padding:clamp(20px,3vw,32px)">
-          <form id="rfqForm" novalidate>
-            <p class="eyebrow">01 — Your organisation</p>
-            <div class="grid-2">
-              <label class="field"><span>Contact name *</span><input class="input" name="name" required autocomplete="name"><span class="field-error">Required</span></label>
-              <label class="field"><span>Organisation *</span><input class="input" name="organisation" required autocomplete="organization"><span class="field-error">Required</span></label>
-            </div>
-            <div class="grid-2">
-              <label class="field"><span>Email *</span><input class="input" type="email" name="email" required autocomplete="email"><span class="field-error">Enter a valid email</span></label>
-              <label class="field"><span>Phone</span><input class="input" name="phone" autocomplete="tel"></label>
-            </div>
-            <div class="grid-2">
-              <label class="field"><span>Required by</span><input class="input" type="date" name="requiredBy"></label>
-              <label class="field"><span>Delivery location</span><input class="input" name="deliveryLocation" placeholder="Town / county / site"></label>
-            </div>
-            <label class="field"><span>Purchase route</span>
-              <select class="select" name="route">
-                <option>Tender / RFQ document</option>
-                <option>Local purchase order (LPO)</option>
-                <option>Framework agreement (3–12 months)</option>
-                <option>One-off bulk purchase</option>
-              </select>
-            </label>
-
-            <p class="eyebrow" style="margin-top:26px">02 — Lines to be priced</p>
-            <div class="rfq-head">
-              <span class="label-xs" style="margin:0">Item</span>
-              <span class="label-xs" style="margin:0">Quantity</span>
-              <span class="label-xs" style="margin:0">Unit</span>
-              <span class="label-xs" style="margin:0;text-align:right">Indicative</span>
-              <span></span>
-            </div>
-            <div id="rfqLines"></div>
-            <button type="button" class="btn btn-ghost btn-sm" id="addLine" style="margin-top:14px">+ Add another line</button>
-
-            <p class="eyebrow" style="margin-top:26px">03 — Anything else</p>
-            <label class="field"><span>Specification, standards or notes</span>
-              <textarea class="textarea" name="notes" placeholder="Packaging requirements, brand preferences, delivery conditions, tender reference…"></textarea>
-            </label>
-            <label class="check" style="margin-bottom:18px">
-              <input type="checkbox" name="consent" required>
-              <span>I'd like Norvex to contact me about this quotation request.</span>
-            </label>
-            <button class="btn btn-gold btn-lg btn-block" type="submit" id="rfqSubmit">Submit request for quotation</button>
-            <p class="tiny muted" style="margin-top:12px">Indicative values are catalogue rates. A formal quotation supersedes them and states validity and payment terms.</p>
-          </form>
-
-          <div id="rfqSuccess" class="hide" style="text-align:center;padding:26px 0">
-            <div style="width:64px;height:64px;border-radius:50%;background:var(--green-50);border:1px solid var(--green-100);display:grid;place-items:center;margin:0 auto 18px;color:var(--success)" data-icon="check"></div>
-            <h3 style="font-size:1.35rem">Request received</h3>
-            <p class="muted small" style="max-width:44ch;margin:0 auto 8px">Reference <strong class="mono" id="rfqRef">—</strong>. Our desk will issue your formal quotation within one working day.</p>
-            <div class="row" style="justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap">
-              <a href="/shop.html" class="btn btn-ghost">Continue browsing</a>
-              <a href="/desk.html" class="btn btn-gold">Open order desk</a>
-              <button class="btn btn-ghost" id="rfqAgain" type="button">New request</button>
+  <section class="section tight">
+    <div class="shell" id="quoteMain">
+      <div class="builder-layout">
+        <div class="col" style="gap:22px">
+          <div class="card">
+            <div class="card-head"><h3>Requisition lines</h3><button class="btn btn-soft btn-sm" id="addLine" type="button">+ Add line</button></div>
+            <div class="card-body" id="quoteLines"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Who should we quote?</h3></div>
+            <div class="card-body">
+              <form class="form-grid" id="quoteContact" novalidate>
+                <div class="field"><label>Contact name <span class="req">*</span></label><input class="input" name="name" autocomplete="name" placeholder="Grace Wanjiru"><span class="err-msg">Required.</span></div>
+                <div class="field"><label>Organisation <span class="req">*</span></label><input class="input" name="organisation" placeholder="School, hospital, county…"><span class="err-msg">Required.</span></div>
+                <div class="field"><label>Email <span class="req">*</span></label><input class="input" name="email" type="email" placeholder="procurement@organisation.co.ke"><span class="err-msg">Enter a valid email.</span></div>
+                <div class="field"><label>Phone <span class="req">*</span></label><input class="input" name="phone" type="tel" placeholder="0712 345 678"><span class="err-msg">Enter a valid phone.</span></div>
+                <div class="field full"><label>Notes for the desk</label><textarea class="textarea" name="notes" placeholder="Tender number, required brands, delivery schedule, LPO details…"></textarea></div>
+              </form>
             </div>
           </div>
         </div>
+        <div id="quoteSummary"></div>
       </div>
-
-      <aside>
-        <div class="card card-pad" style="position:sticky;top:96px">
-          <p class="eyebrow">Indicative estimate</p>
-          <div class="summary-lines" style="padding:0 0 14px">
-            <div class="srow"><span>Lines priced</span><span class="val" id="sumLines">0</span></div>
-            <div class="srow"><span>Estimated subtotal</span><span class="val" id="sumSubtotal">KES 0</span></div>
-            <div class="srow"><span>Volume savings</span><span class="val" id="sumSavings" style="color:var(--success)">KES 0</span></div>
-            <div class="srow total"><span>Estimate</span><span class="val" id="sumTotal">KES 0</span></div>
-          </div>
-          <div class="inline-note" style="margin-top:6px">
-            <span data-icon="info"></span>
-            <div>Bulk quantities qualify for contract pricing. We'll apply the best rate when we issue the quotation.</div>
-          </div>
-          <div style="margin-top:18px;display:grid;gap:8px">
-            <a href="/basket.html" class="btn btn-ghost btn-sm btn-block">Prefer to order directly? Use the basket</a>
-            <a href="https://wa.me/254742021099" target="_blank" rel="noopener" class="btn btn-ghost btn-sm btn-block">WhatsApp the desk</a>
-          </div>
-        </div>
-
-        <div class="card card-pad" style="margin-top:16px">
-          <p class="eyebrow">What you get</p>
-          <ul class="checklist" style="margin-top:0">
-            <li>Formal quotation on company letterhead</li>
-            <li>Itemised tier pricing and validity period</li>
-            <li>Delivery schedule and terms</li>
-            <li>Tender-ready compliance documents</li>
-          </ul>
-        </div>
-      </aside>
     </div>
   </section>
 </main>
 
-<div id="nv-footer"></div>
+<div id="nv-shell-bottom"></div>
 
 <script src="/js/catalog-snapshot.js"></script>
 <script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
-<script src="/js/nv-payments.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/chrome-portal.js"></script>
-<script src="/js/page-quote.js"></script>
+<script src="/js/nv-auth.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/shell.js"></script>
+<script src="/js/pages/quote.js"></script>
 </body>
 </html>

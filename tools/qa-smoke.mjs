@@ -1,0 +1,303 @@
+/* NORVEX v2 QA — loads every page in jsdom, executes the real scripts against
+   the running server, and simulates key user flows. Run: node tools/qa-smoke.mjs */
+import { JSDOM, VirtualConsole } from 'jsdom';
+
+const BASE = 'http://localhost:3000';
+const results = [];
+let failures = 0;
+
+/* page-script crashes inside async handlers surface as node-level events — record, don't crash */
+let currentPage = '(boot)';
+process.on('uncaughtException', e => { failures++; results.push(`FAIL  uncaught on ${currentPage} → ${e.message}`); });
+process.on('unhandledRejection', e => { failures++; results.push(`FAIL  unhandled rejection on ${currentPage} → ${e && e.message || e}`); });
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function loadPage(path, { seed = {}, wait = 1300 } = {}) {
+  currentPage = path;
+  const errors = [];
+  const navs = [];
+  const vc = new VirtualConsole();
+  vc.on('jsdomError', e => {
+    const msg = String(e.message || e);
+    if (msg.includes('Not implemented: navigation')) {
+      const m = msg.match(/\(except hash changes\)\s*(.*)$/s);
+      navs.push(msg);
+      return;
+    }
+    if (msg.includes('Could not parse CSS stylesheet')) return; // modern CSS — fine in real browsers
+    if (msg.includes('Not implemented: window.scrollTo')) return;
+    errors.push(msg + (e.detail ? ` :: ${e.detail && e.detail.message || e.detail}` : ''));
+  });
+  const dom = await JSDOM.fromURL(BASE + path, {
+    resources: 'usable',
+    runScripts: 'dangerously',
+    pretendToBeVisual: true,
+    virtualConsole: vc,
+    beforeParse(window) {
+      window.fetch = (input, init) => fetch(new URL(typeof input === 'string' ? input : input.url, BASE), init);
+      window.scrollTo = () => {};
+      window.Element.prototype.scrollIntoView = () => {};
+      window.addEventListener('error', e => errors.push('window.onerror: ' + (e.error && e.error.stack || e.message)));
+      for (const [k, v] of Object.entries(seed)) window.localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));
+    }
+  });
+  await sleep(wait);
+  return { dom, window: dom.window, doc: dom.window.document, errors, navs, close: () => dom.window.close() };
+}
+
+function check(name, cond, detail = '') {
+  const ok = !!cond;
+  if (!ok) failures++;
+  results.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${!ok && detail ? '  → ' + detail : ''}`);
+  return ok;
+}
+
+const session = id => ({ 'norvex.session.v1': { userId: id, at: Date.now(), expires: Date.now() + 864e5 } });
+const setInput = (window, el, value) => {
+  el.value = value;
+  el.dispatchEvent(new window.Event('input', { bubbles: true }));
+  el.dispatchEvent(new window.Event('change', { bubbles: true }));
+};
+
+const catalog = await (await fetch(BASE + '/api/catalog')).json();
+const p1 = catalog.products[0], p2 = catalog.products[1];
+
+/* ---------- 1. every page boots cleanly with shell + footer ---------- */
+const pages = [
+  ['/', 'home'], ['/shop.html', 'shop'], ['/product.html?id=' + p1.id, 'product'],
+  ['/services.html', 'services'], ['/about.html', 'about'], ['/contact.html', 'contact'],
+  ['/quote.html', 'quote'], ['/desk.html', 'desk'], ['/basket.html', 'basket'],
+  ['/checkout.html', 'checkout'], ['/orders.html', 'orders'], ['/order.html', 'order'],
+  ['/plan.html', 'plan'], ['/account.html', 'account'], ['/admin.html', 'admin'],
+  ['/manage.html', 'manage'], ['/auth.html', 'auth'], ['/404.html', '404']
+];
+for (const [path, key] of pages) {
+  const { doc, errors, close } = await loadPage(path);
+  const shellOk = key === 'auth' ? !!doc.querySelector('.auth-layout') : !!doc.querySelector('.site-header .main-nav, .site-header .nav-burger');
+  const footOk = key === 'auth' ? true : !!doc.querySelector('.site-footer');
+  check(`boot ${key}`, errors.length === 0, errors.slice(0, 2).join(' | '));
+  check(`shell ${key}`, shellOk && footOk);
+  close();
+}
+
+/* ---------- 2. home: add to basket ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/');
+  const btn = doc.querySelector('[data-add]');
+  btn.click();
+  await sleep(400);
+  check('home: add-to-basket updates count', window.NV.basket.count() >= p1.moq, `count=${window.NV.basket.count()}`);
+  check('home: departments rendered', doc.querySelectorAll('#deptGrid .dept-card').length === catalog.categories.length);
+  check('home: featured rendered', doc.querySelectorAll('#featuredGrid .pcard').length >= 8);
+  check('home: no errors after interaction', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 3. shop: search + filters ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/shop.html');
+  check('shop: first page has 12 cards', doc.querySelectorAll('#shopGrid .pcard').length === 12);
+  setInput(window, doc.getElementById('shopSearch'), 'rice');
+  await sleep(600);
+  const names = [...doc.querySelectorAll('#shopGrid .pc-name')].map(n => n.textContent.toLowerCase());
+  check('shop: search narrows results', names.length > 0 && names.length < 12 && names.some(n => n.includes('rice')), names.join(','));
+  const catBox = doc.querySelector('[data-cat="safety"]');
+  catBox.checked = true;
+  catBox.dispatchEvent(new window.Event('change', { bubbles: true }));
+  await sleep(300);
+  check('shop: department filter works', doc.getElementById('shopTitle').textContent.includes('Safety'));
+  check('shop: no errors', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 4. product: live tier pricing ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/product.html?id=' + p1.id);
+  const price = () => doc.getElementById('unitPrice').textContent;
+  check('product: MOQ default price', price() === 'KES ' + p1.tiers[0][1].toLocaleString('en-KE'), price());
+  const target = p1.tiers[1][0];
+  for (let i = 0; i < target - p1.moq; i++) doc.getElementById('qtyPlus').click();
+  check('product: tier 2 price after qty ' + target, price() === 'KES ' + p1.tiers[1][1].toLocaleString('en-KE'), price());
+  check('product: tier row highlighted', doc.querySelectorAll('#tierTable tr.tier-on').length === 1);
+  check('product: related lines', doc.querySelectorAll('#relatedGrid .pcard').length > 0);
+  check('product: no errors', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 5. auth: demo fill + sign-in + redirect ---------- */
+{
+  const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
+  doc.querySelector('[data-demo="customer"]').click();
+  check('auth: demo fill', doc.querySelector('[name="identifier"]').value === 'demo@norvex.co.ke');
+  doc.getElementById('authForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(1800);
+  check('auth: success state', doc.getElementById('authSuccess').classList.contains('show'));
+  check('auth: signed in', window.NV.auth.isIn() && window.NV.auth.current().email === 'demo@norvex.co.ke');
+  check('auth: redirect attempted', navs.some(n => n.includes('desk.html') || n.includes('navigation to another Document')), navs.join('|'));
+  /* signup validation */
+  const { window: w2, doc: d2, close: c2 } = await loadPage('/auth.html?mode=signup');
+  d2.getElementById('authForm').dispatchEvent(new w2.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(300);
+  check('auth: signup validates empty fields', d2.querySelectorAll('.auth-field.bad').length >= 5);
+  check('auth: no errors', errors.length === 0, errors[0]);
+  close(); c2();
+}
+
+/* ---------- 6. basket: steppers + summary ---------- */
+{
+  const seed = { 'norvex.basket.v1': [{ id: p1.id, qty: p1.tiers[1][0] }] };
+  const { window, doc, errors, close } = await loadPage('/basket.html', { seed });
+  check('basket: line rendered', doc.querySelectorAll('#basketLines .bline').length === 1);
+  const before = doc.querySelector('.bl-total').textContent;
+  doc.querySelector('#basketLines [data-step="1"]').click();
+  await sleep(400);
+  const after = doc.querySelector('.bl-total').textContent;
+  check('basket: stepper updates total', before !== after, `${before} → ${after}`);
+  check('basket: summary total present', /KES/.test(doc.querySelector('.sum-total b').textContent));
+  check('basket: no errors', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 7. checkout: full 3-step flow → real order ---------- */
+let createdRef = '';
+{
+  const seed = {
+    ...session('usr_demo'),
+    'norvex.basket.v1': [{ id: p1.id, qty: 10 }, { id: p2.id, qty: 10 }]
+  };
+  const { window, doc, errors, close } = await loadPage('/checkout.html', { seed, wait: 1500 });
+  check('checkout: prefilled from account', doc.querySelector('[name="organisation"]').value.length > 0);
+  doc.getElementById('next1').click();
+  await sleep(200);
+  check('checkout: step 2 shown', doc.querySelector('.co-panel[data-panel="2"]').classList.contains('on'));
+  setInput(window, doc.querySelector('[name="address"]'), 'QA House, Test Road');
+  const express = doc.querySelector('input[name="deliveryMethod"][value="Express delivery"]');
+  express.checked = true;
+  express.dispatchEvent(new window.Event('change', { bubbles: true }));
+  doc.getElementById('next2').click();
+  await sleep(200);
+  check('checkout: review shows lines', doc.querySelectorAll('#reviewBlocks tbody tr').length === 2);
+  doc.getElementById('placeBtn').click();
+  await sleep(1600);
+  const success = !doc.getElementById('checkoutSuccess').classList.contains('hide');
+  check('checkout: order placed', success, errors[0]);
+  const refEl = doc.querySelector('#checkoutSuccess .ref-chip');
+  createdRef = refEl ? refEl.textContent.trim().split(/\s/)[0] : '';
+  check('checkout: reference issued', /^NVX-/.test(createdRef), createdRef);
+  check('checkout: basket cleared', window.NV.basket.count() === 0);
+  check('checkout: no errors', errors.length === 0, errors.slice(0, 2).join('|'));
+  close();
+  const remote = await (await fetch(BASE + '/api/orders?email=demo@norvex.co.ke')).json();
+  const serverOrder = (remote.orders || []).find(o => o.ref === createdRef);
+  check('checkout: order exists server-side', !!serverOrder);
+  const expectedFee = serverOrder ? (serverOrder.totals.subtotal >= 150000 ? 0 : 4500) + 2500 : -1;
+  check('checkout: express fee server-side', serverOrder && serverOrder.totals.delivery === expectedFee, serverOrder && `${serverOrder.totals.delivery} vs ${expectedFee}`);
+}
+
+/* ---------- 8. orders + order tracking ---------- */
+{
+  const { doc, errors, close } = await loadPage('/orders.html', { seed: session('usr_demo') });
+  check('orders: history lists the new order', doc.body.textContent.includes(createdRef));
+  check('orders: KPIs rendered', doc.querySelectorAll('.kpi').length === 3);
+  check('orders: no errors', errors.length === 0, errors[0]);
+  close();
+  const t = await loadPage('/order.html?ref=' + createdRef);
+  check('order: timeline rendered', t.doc.querySelectorAll('.tl-step').length === 5);
+  check('order: items table', t.doc.querySelectorAll('.table tbody tr').length === 2);
+  check('order: no errors', t.errors.length === 0, t.errors[0]);
+  t.close();
+}
+
+/* ---------- 9. admin: guard + console + status advance ---------- */
+{
+  const g = await loadPage('/admin.html');
+  check('admin: guest sees guard', g.doc.body.textContent.includes('Administrator sign-in required'));
+  g.close();
+  const { window, doc, errors, close } = await loadPage('/admin.html', { seed: session('usr_admin'), wait: 1600 });
+  check('admin: KPI tiles', doc.querySelectorAll('.kpi').length === 6);
+  check('admin: pipeline rows', doc.querySelectorAll('[data-status-ref]').length > 0);
+  const sel = doc.querySelector(`[data-status-ref="${createdRef}"]`);
+  if (sel) {
+    sel.value = 'confirmed';
+    sel.dispatchEvent(new window.Event('change', { bubbles: true }));
+    await sleep(900);
+    const o = await (await fetch(BASE + '/api/orders/' + createdRef)).json();
+    check('admin: status advance persisted', o.order.status === 'confirmed', o.order.status);
+  } else check('admin: pipeline contains new order', false, createdRef);
+  check('admin: no errors', errors.length === 0, errors.slice(0, 2).join('|'));
+  close();
+}
+
+/* ---------- 10. manage: render + add product ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/manage.html', { seed: session('usr_admin'), wait: 1600 });
+  const rowsBefore = doc.querySelectorAll('#manageBody tbody tr').length;
+  check('manage: product table', rowsBefore >= catalog.products.length);
+  doc.getElementById('addProduct').click();
+  await sleep(200);
+  const modal = doc.getElementById('manageModal');
+  setInput(window, modal.querySelector('[name="name"]'), 'QA Test Widget');
+  setInput(window, modal.querySelector('[name="unit"]'), 'box of 10');
+  modal.querySelector('#saveProduct').click();
+  await sleep(900);
+  check('manage: product added', doc.body.textContent.includes('QA Test Widget'), errors[0]);
+  check('manage: no errors', errors.length === 0, errors.slice(0, 2).join('|'));
+  close();
+}
+
+/* ---------- 11. quote desk flow ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/quote.html');
+  const sel = doc.querySelector('[data-line-id]');
+  setInput(window, sel, p1.id);
+  await sleep(200);
+  setInput(window, doc.querySelector('[data-line-qty]'), '40');
+  await sleep(200);
+  ['name', 'organisation', 'email', 'phone'].forEach(n => setInput(window, doc.querySelector(`#quoteContact [name="${n}"]`), n === 'email' ? 'qa@norvex.co.ke' : n === 'phone' ? '0712345678' : 'QA ' + n));
+  doc.getElementById('sendQuote').click();
+  await sleep(1200);
+  check('quote: RFQ submitted', /ENQ-/.test(doc.getElementById('quoteMain').textContent));
+  check('quote: no errors', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 12. future planner flow ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/plan.html');
+  setInput(window, doc.querySelector('[data-item-id]'), p1.id);
+  ['name', 'organisation', 'email'].forEach(n => setInput(window, doc.querySelector(`#planForm [name="${n}"]`), n === 'email' ? 'qa@norvex.co.ke' : 'QA ' + n));
+  setInput(window, doc.querySelector('#planForm [name="deliveryDate"]'), '2026-12-15');
+  setInput(window, doc.querySelector('#planForm [name="deliveryLocation"]'), 'QA Depot, Nairobi');
+  doc.getElementById('sendPlan').click();
+  await sleep(1200);
+  check('plan: reserved', /FO-/.test(doc.getElementById('planDone').textContent));
+  check('plan: no errors', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 13. contact + account ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/contact.html');
+  setInput(window, doc.querySelector('#contactForm [name="name"]'), 'QA Visitor');
+  setInput(window, doc.querySelector('#contactForm [name="email"]'), 'qa@norvex.co.ke');
+  setInput(window, doc.querySelector('#contactForm [name="message"]'), 'This is a smoke-test message over ten chars.');
+  doc.getElementById('contactForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(1000);
+  check('contact: message sent', doc.getElementById('contactFormCard').textContent.includes('Message received'));
+  check('contact: no errors', errors.length === 0, errors[0]);
+  close();
+
+  const a = await loadPage('/account.html', { seed: session('usr_demo'), wait: 1500 });
+  check('account: profile rendered', !!a.doc.getElementById('profileForm'));
+  setInput(a.window, a.doc.querySelector('#profileForm [name="organisation"]'), 'QA Updated Org');
+  a.doc.getElementById('profileForm').dispatchEvent(new a.window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(400);
+  check('account: profile update works', a.window.NV.auth.current().organisation === 'QA Updated Org');
+  check('account: no errors', a.errors.length === 0, a.errors[0]);
+  a.close();
+}
+
+console.log(results.join('\n'));
+console.log(`\n${results.filter(r => r.startsWith('PASS')).length}/${results.length} checks passed, ${failures} failed`);
+process.exit(failures ? 1 : 0);

@@ -3,254 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Catalogue manager — Norvex operations</title>
-<meta name="description" content="Add, edit and remove Norvex catalogue products and departments, including pricing tiers and product photography.">
+<title>Catalogue manager — Norvex</title>
+<meta name="description" content="Add, edit and retire products and departments: prices, tiers, pictures, MOQ and lead times.">
+<meta name="robots" content="noindex">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/console.css">
-<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/nv.css">
 </head>
-<body class="console" data-page="manage" data-crumb="Catalogue|Catalogue manager">
-<div class="console-body">
-  <div id="nv-rail"></div>
-  <div class="console-main">
-    <div id="nv-cmdbar"></div>
+<body data-page="manage">
+<div id="nv-shell-top"></div>
 
-    <main class="workspace">
-      <div class="page-title-bar">
-        <div>
-          <h1>Catalogue manager</h1>
-          <p class="sub">Add products and departments, set tier pricing and upload pictures. Changes go live on the shopfront immediately.</p>
-        </div>
-        <div class="title-actions">
-          <button class="btn btn-ghost btn-sm" id="mgExport">Export JSON</button>
-          <button class="btn btn-ghost btn-sm" id="mgReset">Reset demo data</button>
-          <button class="btn btn-gold btn-sm" id="mgAddProduct">+ Add product</button>
-        </div>
-      </div>
-
-      <div class="mg-stats" id="mgStats"></div>
-
-      <div class="mg-toolbar">
-        <label class="mg-search">
-          <span data-icon="search"></span>
-          <input type="search" id="mgSearch" placeholder="Search products, codes or departments…" aria-label="Search the catalogue">
-        </label>
-        <label class="mg-select">
-          <span class="sr-only">Department</span>
-          <select id="mgDept"></select>
-        </label>
-        <label class="mg-select">
-          <span class="sr-only">Sort</span>
-          <select id="mgSort">
-            <option value="name">Sort: name A–Z</option>
-            <option value="price-high">Price: high to low</option>
-            <option value="price-low">Price: low to high</option>
-            <option value="newest">Newest first</option>
-          </select>
-        </label>
-        <span class="mg-count" id="mgCount">—</span>
-      </div>
-
-      <div class="panel mg-products">
-        <div class="panel-head">
-          <h2>Products</h2>
-          <span class="hint">Click a row to edit price, description or picture</span>
-        </div>
-        <div class="panel-body tight">
-          <div class="table-wrap scroll-y">
-            <table class="data mg-table">
-              <thead>
-                <tr>
-                  <th class="mg-col-media"><span class="sr-only">Picture</span></th>
-                  <th>Product</th>
-                  <th>Department</th>
-                  <th class="num">Base price</th>
-                  <th class="num">Tier 2</th>
-                  <th class="num">MOQ</th>
-                  <th class="actions">Manage</th>
-                </tr>
-              </thead>
-              <tbody id="mgRows"></tbody>
-            </table>
-          </div>
-          <div class="empty-state hide" id="mgEmpty">
-            <div class="icon-wrap" data-icon="box"></div>
-            <h3>Nothing matches that search</h3>
-            <p>Try a different term, or add the product to the catalogue now.</p>
-            <button class="btn btn-gold btn-sm" id="mgAddProduct2">+ Add product</button>
-          </div>
-        </div>
-        <div class="panel-foot">
-          <span class="tiny muted" id="mgMeta">—</span>
-          <span class="tiny muted">Prices in KES, ex-VAT. Customers see the tier that matches their quantity.</span>
-        </div>
-      </div>
-
-      <div class="layout-2col mg-lower">
-        <aside id="categories">
-          <div class="panel">
-            <div class="panel-head">
-              <h2>Departments</h2>
-              <button class="btn btn-ghost btn-sm" id="mgAddCat">+ Add</button>
-            </div>
-            <div class="panel-body" id="mgCats" style="display:grid;gap:9px"></div>
-            <div class="panel-foot">
-              <span class="tiny muted">Deleting a department hides its products.</span>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head"><h2>Recent changes</h2></div>
-            <div class="panel-body" id="mgLog" style="display:grid;gap:9px"></div>
-            <div class="panel-foot"><span class="tiny muted">Stored on this device · export for backup</span></div>
-          </div>
-        </aside>
-      </div>
-
-    </main>
-
-    <footer class="console-foot">
-      <span>Catalogue manager · internal use</span>
-      <span><a href="/shop.html">View shopfront</a> · <a href="/admin.html">Dashboard</a></span>
-    </footer>
-  </div>
-</div>
-
-<!-- ============ product / department editor ============ -->
-<div class="mg-modal" id="mgModal" role="dialog" aria-modal="true" aria-labelledby="mgModalTitle">
-  <div class="mg-sheet" role="document">
-    <header class="mg-sheet-head">
-      <div>
-        <p class="eyebrow" id="mgModalEyebrow">Product</p>
-        <h2 id="mgModalTitle">Add product</h2>
-      </div>
-      <button class="mg-x" id="mgClose" aria-label="Close editor"><span data-icon="close"></span></button>
-    </header>
-
-    <form class="mg-form" id="mgForm" novalidate>
-      <!-- product fields -->
-      <div data-mg="product">
-        <div class="mg-grid">
-          <label class="field"><span>Product name *</span>
-            <input class="input" name="name" placeholder="e.g. Maize Flour — 24 × 2 kg" required>
-          </label>
-          <label class="field"><span>Department *</span>
-            <select class="select" name="cat" id="mgFormCat" required></select>
-          </label>
-        </div>
-
-        <div class="mg-grid three">
-          <label class="field"><span>Unit</span>
-            <input class="input" name="unit" placeholder="50kg bag" list="unitList">
-          </label>
-          <label class="field"><span>Minimum order (MOQ)</span>
-            <input class="input" name="moq" type="number" min="1" step="1" value="1">
-          </label>
-          <label class="field"><span>Lead time</span>
-            <input class="input" name="lead" placeholder="2–4 days">
-          </label>
-        </div>
-        <datalist id="unitList">
-          <option value="50kg bag"></option><option value="25kg bale"></option><option value="carton"></option>
-          <option value="ream"></option><option value="piece"></option><option value="pair"></option>
-          <option value="litre"></option><option value="pack"></option><option value="set"></option>
-        </datalist>
-
-        <p class="mg-sect">Price tiers <span class="tiny muted">— the customer pays the tier that matches the quantity</span></p>
-        <div class="mg-tiers">
-          <label class="field"><span>1+ (base)</span><input class="input" name="price1" type="number" min="0" step="1" placeholder="9200" required></label>
-          <label class="field"><span>From qty</span><input class="input" name="qty2" type="number" min="2" step="1" placeholder="10"></label>
-          <label class="field"><span>Tier 2 price</span><input class="input" name="price2" type="number" min="0" step="1" placeholder="8950"></label>
-          <label class="field"><span>From qty</span><input class="input" name="qty3" type="number" min="3" step="1" placeholder="40"></label>
-          <label class="field"><span>Tier 3 price</span><input class="input" name="price3" type="number" min="0" step="1" placeholder="8700"></label>
-        </div>
-
-        <label class="field"><span>Description</span>
-          <textarea class="textarea" name="desc" rows="3" placeholder="Specification, packaging, standards or delivery notes."></textarea>
-        </label>
-
-        <p class="mg-sect">Picture</p>
-        <div class="mg-media">
-          <div class="mg-media-preview" id="mgPreview">
-            <span class="mg-media-empty" id="mgPreviewEmpty" data-icon="box"></span>
-            <img id="mgPreviewImg" alt="" hidden>
-          </div>
-          <div class="mg-media-side">
-            <label class="mg-upload">
-              <input type="file" id="mgFile" accept="image/*" hidden>
-              <span class="btn btn-ghost btn-sm" id="mgUploadBtn">Upload picture</span>
-            </label>
-            <p class="tiny muted" style="margin:0">JPG or PNG. Resized to 900px automatically.</p>
-            <div class="mg-thumbs" id="mgThumbs"></div>
-            <button type="button" class="mg-link" id="mgClearImg">Remove picture</button>
-          </div>
-        </div>
-
-        <div class="mg-flags">
-          <label class="check"><input type="checkbox" name="featured"> <span>Show on the homepage</span></label>
-          <label class="check"><input type="checkbox" name="popular"> <span>Mark as popular</span></label>
-        </div>
-      </div>
-
-      <!-- department fields -->
-      <div data-mg="category" hidden>
-        <label class="field"><span>Department name *</span>
-          <input class="input" name="catName" placeholder="e.g. Laboratory Supplies">
-        </label>
-        <div class="mg-grid">
-          <label class="field"><span>Icon</span>
-            <select class="select" name="catIcon" id="mgCatIcon"></select>
-          </label>
-          <label class="field"><span>Short blurb</span>
-            <input class="input" name="catBlurb" placeholder="What this department covers">
-          </label>
-        </div>
-        <p class="mg-sect">Picture</p>
-        <div class="mg-media">
-          <div class="mg-media-preview" id="mgCatPreview">
-            <span class="mg-media-empty" id="mgCatPreviewEmpty" data-icon="layers"></span>
-            <img id="mgCatPreviewImg" alt="" hidden>
-          </div>
-          <div class="mg-media-side">
-            <label class="mg-upload">
-              <input type="file" id="mgCatFile" accept="image/*" hidden>
-              <span class="btn btn-ghost btn-sm" id="mgCatUploadBtn">Upload picture</span>
-            </label>
-            <p class="tiny muted" style="margin:0">Used on the shopfront department cards.</p>
-            <div class="mg-thumbs" id="mgCatThumbs"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mg-error" id="mgFormError"></div>
-
-      <footer class="mg-sheet-foot">
-        <button type="button" class="btn btn-ghost" id="mgCancel">Cancel</button>
-        <button type="submit" class="btn btn-gold" id="mgSave">Save product</button>
-      </footer>
-    </form>
-  </div>
-</div>
-
-<!-- ============ delete confirmation ============ -->
-<div class="mg-confirm" id="mgConfirm" role="dialog" aria-modal="true" aria-labelledby="mgConfirmTitle">
-  <div class="mg-confirm-card" role="document">
-    <div class="mg-confirm-icon"><span data-icon="close"></span></div>
-    <h2 id="mgConfirmTitle">Remove product?</h2>
-    <p id="mgConfirmCopy">This removes it from the shopfront and the basket.</p>
-    <div class="mg-confirm-actions">
-      <button class="btn btn-ghost" id="mgConfirmNo">Keep it</button>
-      <button class="btn btn-danger" id="mgConfirmYes">Remove</button>
+<main id="main">
+  <section class="section tight">
+    <div class="shell">
+      <div id="manageRoot"></div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
+
+<div id="nv-shell-bottom"></div>
 
 <script src="/js/catalog-snapshot.js"></script>
 <script src="/js/nv-core.js"></script>
-<script src="/js/nv-ui.js"></script>
 <script src="/js/nv-auth.js"></script>
-<script src="/js/nv-cookies.js"></script>
-<script src="/js/page-manage.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/shell.js"></script>
+<script src="/js/pages/manage.js"></script>
 </body>
 </html>

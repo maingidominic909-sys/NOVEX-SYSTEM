@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "ref": "FO-2611-C6E41D",
+    "createdAt": "2026-11-21T13:30:00.000Z",
+    "status": "planning",
+    "contact": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital"
+    },
+    "deliveryDate": "2026-12-08",
+    "deliveryLocation": "Main store, gate B — Kiambu Town",
+    "budget": "KES 100K – 500K",
+    "recurrence": "Monthly",
+    "notes": "Standing monthly feeding-programme cycle. Confirm stock a week before each delivery.",
+    "items": [
+      {
+        "id": "nvx-fd-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "qty": 30
+      },
+      {
+        "id": "nvx-fd-012",
+        "name": "Rice",
+        "unit": "25kg bag",
+        "qty": 40
+      },
+      {
+        "id": "nvx-fd-011",
+        "name": "Maize Grain",
+        "unit": "90kg bag",
+        "qty": 25
+      }
+    ]
+  }
+]
