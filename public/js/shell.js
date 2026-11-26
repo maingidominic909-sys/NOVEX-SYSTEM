@@ -128,6 +128,61 @@
     updateCounts();
   }
 
+  /* ---------------- collapsible desktop side navigation ---------------- */
+  const SN_KEY = 'norvex.sidenav.v1';
+  function snCollapsed() { try { return localStorage.getItem(SN_KEY) === '1'; } catch { return false; } }
+  function buildSideNav() {
+    const old = document.getElementById('sideNav');
+    if (old) old.remove();
+    if (!document.getElementById('nv-shell-top')) return;
+    const isAdmin = NV.auth && NV.auth.isIn() && NV.auth.current().role === 'admin';
+    const link = (href, icon, label, key, extra) => `
+      <a class="sn-link ${activeKey === key ? 'active' : ''}" href="${href}" data-tip="${E(label)}">
+        <span class="sn-ico">${NV.icon(icon)}</span><span class="sn-text">${E(label)}</span>${extra || ''}
+      </a>`;
+    const aside = document.createElement('aside');
+    aside.className = 'side-nav';
+    aside.id = 'sideNav';
+    aside.setAttribute('aria-label', 'Side navigation');
+    aside.innerHTML = `
+      <div class="sn-head">
+        <a class="sn-brand" href="/index.html" aria-label="Norvex home">
+          <img src="/img/mark.png" alt="" width="30" height="30"><span class="sn-word">Norvex</span>
+        </a>
+        <button class="sn-collapse" id="snCollapse" aria-label="Collapse sidebar" aria-expanded="true" data-tip="Expand">${NV.icon('arrowL')}</button>
+      </div>
+      <nav class="sn-nav" aria-label="Primary">
+        <p class="sn-label">Browse</p>
+        ${NAV.map(n => link(n.href, n.icon, n.label, n.key)).join('')}
+        <p class="sn-label">Workspace</p>
+        ${WTABS.map(t => link(t.href, t.icon, t.label, t.key, t.count ? '<span class="count sn-count" data-cart-count data-zero="1">0</span>' : '')).join('')}
+        ${link('/quote.html', 'clipboard', 'Request quote', 'quote')}
+        ${link('/order.html', 'truck', 'Track order', 'order')}
+        ${isAdmin ? `<p class="sn-label">Admin</p>` + ADMIN_TABS.map(t => link(t.href, t.icon, t.label, t.key)).join('') : ''}
+      </nav>
+      <div class="sn-foot">
+        <a class="sn-link" href="/contact.html" data-tip="Contact desk"><span class="sn-ico">${NV.icon('phone')}</span><span class="sn-text">Contact desk</span></a>
+      </div>`;
+    document.body.appendChild(aside);
+    document.body.classList.add('has-sidenav');
+    document.body.classList.toggle('sn-collapsed', snCollapsed());
+    const btn = document.getElementById('snCollapse');
+    const sync = () => {
+      const c = document.body.classList.contains('sn-collapsed');
+      btn.setAttribute('aria-expanded', String(!c));
+      btn.setAttribute('aria-label', c ? 'Expand sidebar' : 'Collapse sidebar');
+      btn.setAttribute('data-tip', c ? 'Expand' : 'Collapse');
+    };
+    btn.addEventListener('click', () => {
+      const c = !document.body.classList.contains('sn-collapsed');
+      document.body.classList.toggle('sn-collapsed', c);
+      try { localStorage.setItem(SN_KEY, c ? '1' : '0'); } catch {}
+      sync();
+    });
+    sync();
+    updateCounts();
+  }
+
   /* ---------------- mega menu ---------------- */
   let megaTimer = null;
   function wireMega() {
@@ -512,6 +567,7 @@
   /* ---------------- boot ---------------- */
   function boot() {
     buildTop();
+    buildSideNav();
     buildFooter();
     buildOverlays();
     document.dispatchEvent(new Event('norvex:chrome'));
@@ -535,7 +591,7 @@
       const strip = document.querySelector('.workspace-tabs .shell');
       if (!strip) return;
       const hasAdmin = !!strip.querySelector('.wtab.admin');
-      if (isAdmin !== hasAdmin) buildTop(), document.dispatchEvent(new Event('norvex:chrome'));
+      if (isAdmin !== hasAdmin) { buildTop(); buildSideNav(); document.dispatchEvent(new Event('norvex:chrome')); }
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

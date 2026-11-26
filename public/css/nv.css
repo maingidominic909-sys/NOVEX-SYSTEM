@@ -1636,3 +1636,63 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .aa-toggle{display:none}
   .auth-photo.is-active{opacity:1}
 }
+
+/* =========================================================
+   DESKTOP SIDE NAVIGATION — collapsible, icon-only mode
+   ========================================================= */
+.side-nav{display:none}
+@media (min-width:1025px){
+  body.has-sidenav{--sn-w:252px}
+  body.has-sidenav.sn-collapsed{--sn-w:78px}
+  body.has-sidenav .util-bar,
+  body.has-sidenav .site-header,
+  body.has-sidenav .workspace-tabs,
+  body.has-sidenav #main,
+  body.has-sidenav .site-footer{margin-left:var(--sn-w);transition:margin-left .28s var(--ease)}
+  body.has-sidenav .main-nav,
+  body.has-sidenav .header-main .brand,
+  body.has-sidenav .nav-burger,
+  body.has-sidenav .workspace-tabs{display:none}
+  body.has-sidenav .header-main{justify-content:flex-end}
+
+  .side-nav{
+    display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:60;
+    width:var(--sn-w);background:var(--green-950);color:#cfdcd4;overflow:hidden;
+    border-right:1px solid rgba(255,255,255,.08);transition:width .28s var(--ease);
+  }
+  .sn-head{display:flex;align-items:center;gap:10px;padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.08);min-height:64px}
+  .sn-brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+  .sn-brand img{width:30px;height:30px;border-radius:8px;flex:none}
+  .sn-word{font-family:var(--font-serif);font-weight:700;font-size:1.15rem;color:#fff;white-space:nowrap}
+  .sn-collapse{width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.18);color:#cfdcd4;display:grid;place-items:center;flex:none;transition:transform .28s var(--ease),background .15s}
+  .sn-collapse:hover{background:rgba(255,255,255,.08);color:var(--gold-400)}
+  .sn-collapse svg{width:15px;height:15px}
+  body.sn-collapsed .sn-collapse{transform:rotate(180deg)}
+  body.sn-collapsed .sn-head{flex-direction:column;justify-content:center;gap:10px;padding:14px 8px}
+  body.sn-collapsed .sn-brand{flex:none;justify-content:center}
+  body.sn-collapsed .sn-word{display:none}
+
+  .sn-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 10px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}
+  .sn-label{font-size:.64rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#7d948a;margin:14px 8px 6px;white-space:nowrap}
+  body.sn-collapsed .sn-label{opacity:0;height:8px;margin:8px 0 0;overflow:hidden}
+  .sn-link{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:11px;color:#cfdcd4;font-size:.86rem;font-weight:600;margin-bottom:2px;white-space:nowrap;transition:background .15s,color .15s}
+  .sn-link:hover{background:rgba(255,255,255,.07);color:#fff}
+  .sn-link.active{background:var(--green-800);color:#fff}
+  .sn-link.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:99px;background:var(--gold-400)}
+  .sn-ico{display:grid;place-items:center;width:20px;flex:none}
+  .sn-ico svg{width:18px;height:18px}
+  .sn-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .sn-count{margin-left:auto;background:var(--gold-500);color:var(--green-950);font-size:.68rem;font-weight:800;border-radius:99px;padding:1px 7px}
+  body.sn-collapsed .sn-link{justify-content:center;padding:11px 0}
+  body.sn-collapsed .sn-text{display:none}
+  body.sn-collapsed .sn-count{position:absolute;top:4px;right:6px;margin:0;padding:0 5px;font-size:.6rem}
+  body.sn-collapsed .sn-link::after{
+    content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);
+    background:var(--green-900);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;
+    padding:6px 10px;font-size:.74rem;font-weight:650;white-space:nowrap;opacity:0;pointer-events:none;
+    transition:opacity .15s;z-index:70;box-shadow:var(--shadow-m);
+  }
+  body.sn-collapsed .sn-link:hover::after,body.sn-collapsed .sn-link:focus-visible::after{opacity:1}
+  .sn-foot{border-top:1px solid rgba(255,255,255,.08);padding:10px}
+}
+@media print{.side-nav{display:none!important}}

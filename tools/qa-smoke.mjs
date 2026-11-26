@@ -422,6 +422,31 @@ let createdRef = '';
   close();
 }
 
+/* ---------- 15. desktop collapsible side navigation ---------- */
+{
+  const { window, doc, errors, close } = await loadPage('/');
+  const sn = doc.getElementById('sideNav');
+  check('sidenav: present on desktop shell', !!sn && doc.body.classList.contains('has-sidenav'));
+  check('sidenav: icon + label links', sn.querySelectorAll('.sn-link').length >= 15 && sn.querySelectorAll('.sn-link .sn-ico svg').length === sn.querySelectorAll('.sn-link').length);
+  check('sidenav: browse + workspace sections', sn.querySelectorAll('.sn-label').length >= 2 && !!sn.querySelector('.sn-link[href="/shop.html"]') && !!sn.querySelector('.sn-link[href="/desk.html"]'));
+  const toggle = doc.getElementById('snCollapse');
+  toggle.click();
+  check('sidenav: collapses to icons', doc.body.classList.contains('sn-collapsed') && window.localStorage.getItem('norvex.sidenav.v1') === '1' && toggle.getAttribute('aria-expanded') === 'false');
+  toggle.click();
+  check('sidenav: expands again', !doc.body.classList.contains('sn-collapsed') && window.localStorage.getItem('norvex.sidenav.v1') === '0');
+  doc.querySelector('[data-add]').click();
+  await sleep(400);
+  const snCount = sn.querySelector('.sn-count');
+  check('sidenav: live basket badge', snCount && snCount.textContent === String(window.NV.basket.count()));
+  check('sidenav: no errors', errors.length === 0, errors[0]);
+  close();
+
+  const admin = await loadPage('/admin.html', { seed: session('usr_admin'), wait: 1400 });
+  check('sidenav: admin links for admin', !!admin.doc.querySelector('#sideNav .sn-link[href="/admin.html"]') && !!admin.doc.querySelector('#sideNav .sn-link[href="/manage.html"]'));
+  check('sidenav: admin no errors', admin.errors.length === 0, admin.errors[0]);
+  admin.close();
+}
+
 console.log(results.join('\n'));
 console.log(`\n${results.filter(r => r.startsWith('PASS')).length}/${results.length} checks passed, ${failures} failed`);
 process.exit(failures ? 1 : 0);
