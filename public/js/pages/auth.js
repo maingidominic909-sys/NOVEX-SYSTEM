@@ -69,8 +69,117 @@
     return false;
   }
 
+  /* Animated logistics scene: trucks passing through + crew loading goods.
+     Pure SVG + CSS keyframes, no external assets. Injected into every
+     [data-auth-scene] mount (brand stage on desktop, card banner on phone). */
+  const WHEEL = '<circle r="12" class="tyre"/><circle r="4.5" class="hub"/><path d="M-8 0H8M0 -8V8" class="spoke"/>';
+  const SCENE_SVG = `
+  <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Norvex logistics — trucks passing through while the crew loads goods">
+    <g class="sc-bg">
+      <rect x="24" y="78" width="150" height="104" rx="4"/>
+      <path d="M24 78 99 52 174 78" class="roof"/>
+      <rect x="58" y="120" width="34" height="62" class="door"/>
+      <rect x="112" y="104" width="26" height="20" class="win"/>
+      <rect x="555" y="96" width="140" height="86" rx="4"/>
+      <path d="M555 96 625 74 695 96" class="roof"/>
+      <rect x="600" y="128" width="30" height="54" class="door"/>
+      <circle cx="300" cy="40" r="1.6"/><circle cx="420" cy="26" r="1.3"/><circle cx="520" cy="48" r="1.6"/><circle cx="240" cy="24" r="1.2"/>
+    </g>
+
+    <line x1="0" y1="150" x2="720" y2="150" class="sc-farroad"/>
+    <line x1="0" y1="150" x2="720" y2="150" class="sc-dash"/>
+
+    <!-- passing truck A: box truck -->
+    <g class="pass-truck a"><g transform="translate(0,88) scale(0.62)">
+      <rect x="0" y="10" width="120" height="52" rx="6" class="sc-cargo"/>
+      <rect x="0" y="34" width="120" height="7" class="sc-stripe"/>
+      <text x="14" y="28" class="sc-brand">NORVEX</text>
+      <path d="M120 22h34l16 18v22h-50z" class="sc-cab"/>
+      <rect x="126" y="26" width="22" height="14" rx="3" class="sc-window"/>
+      <rect x="166" y="48" width="8" height="6" rx="2" class="sc-light"/>
+      <g transform="translate(28,66)"><g class="wheel">${WHEEL}</g></g>
+      <g transform="translate(96,66)"><g class="wheel">${WHEEL}</g></g>
+      <g transform="translate(146,66)"><g class="wheel">${WHEEL}</g></g>
+    </g></g>
+
+    <!-- passing truck B: flatbed with sacks -->
+    <g class="pass-truck b"><g transform="translate(0,102) scale(0.5)">
+      <rect x="0" y="34" width="130" height="10" rx="3" class="sc-bed"/>
+      <ellipse cx="28" cy="24" rx="18" ry="13" class="sc-sack"/>
+      <ellipse cx="64" cy="22" rx="17" ry="14" class="sc-sack"/>
+      <rect x="88" y="12" width="30" height="24" rx="3" class="sc-box"/>
+      <path d="M130 16h30l16 18v20h-46z" class="sc-cab"/>
+      <rect x="136" y="20" width="20" height="13" rx="3" class="sc-window"/>
+      <rect x="172" y="42" width="7" height="6" rx="2" class="sc-light"/>
+      <g transform="translate(26,52)"><g class="wheel">${WHEEL}</g></g>
+      <g transform="translate(96,52)"><g class="wheel">${WHEEL}</g></g>
+      <g transform="translate(150,52)"><g class="wheel">${WHEEL}</g></g>
+    </g></g>
+
+    <!-- near road -->
+    <line x1="0" y1="228" x2="720" y2="228" class="sc-road"/>
+
+    <!-- dolly with sacks -->
+    <g transform="translate(96,226)">
+      <path d="M0 0 10 -46M0 0h16" class="sc-frame"/>
+      <circle cx="4" cy="2" r="6" class="tyre"/>
+      <ellipse cx="18" cy="-13" rx="12" ry="9" class="sc-sack"/>
+      <ellipse cx="22" cy="-29" rx="11" ry="8" class="sc-sack"/>
+    </g>
+
+    <!-- box stack -->
+    <g class="stack">
+      <rect x="140" y="196" width="34" height="32" rx="3" class="sc-box"/>
+      <rect x="176" y="196" width="34" height="32" rx="3" class="sc-box"/>
+      <path d="M157 196v32M193 196v32" class="sc-tape"/>
+      <g class="top"><rect x="158" y="164" width="34" height="32" rx="3" class="sc-box"/><path d="M175 164v32" class="sc-tape"/></g>
+    </g>
+
+    <!-- worker 1: at the stack -->
+    <g class="loader l1" transform="translate(252,228)"><g class="bob">
+      <circle cx="0" cy="-44" r="7" class="sc-head"/>
+      <path d="M-7 -36h14l3 20h-20z" class="sc-shirt"/>
+      <rect x="-6" y="-16" width="5" height="16" rx="2" class="sc-leg"/>
+      <rect x="1" y="-16" width="5" height="16" rx="2" class="sc-leg"/>
+      <path d="M6 -32 20 -24" class="sc-arm"/>
+      <path d="M-6 -32 -14 -22" class="sc-arm"/>
+      <circle cx="20" cy="-24" r="2.5" class="sc-head"/>
+    </g></g>
+
+    <!-- parked flatbed being loaded -->
+    <g class="parked">
+      <rect x="368" y="186" width="210" height="12" rx="3" class="sc-bed"/>
+      <rect x="368" y="160" width="6" height="30" class="sc-rail"/>
+      <rect x="572" y="160" width="6" height="30" class="sc-rail"/>
+      <path d="M578 150h44l20 24v24h-64z" class="sc-cab"/>
+      <rect x="584" y="156" width="26" height="16" rx="3" class="sc-window"/>
+      <rect x="638" y="184" width="9" height="7" rx="2" class="sc-light"/>
+      <rect x="368" y="198" width="274" height="6" rx="3" class="sc-chassis"/>
+      <g transform="translate(400,212)"><circle r="15" class="tyre"/><circle r="5" class="hub"/><path d="M-9 0H9M0 -9V9" class="spoke"/></g>
+      <g transform="translate(470,212)"><circle r="15" class="tyre"/><circle r="5" class="hub"/><path d="M-9 0H9M0 -9V9" class="spoke"/></g>
+      <g transform="translate(610,212)"><circle r="15" class="tyre"/><circle r="5" class="hub"/><path d="M-9 0H9M0 -9V9" class="spoke"/></g>
+      <g class="bed-box"><rect x="386" y="154" width="34" height="32" rx="3" class="sc-box"/><path d="M403 154v32" class="sc-tape"/></g>
+      <g class="bed-box"><rect x="424" y="154" width="34" height="32" rx="3" class="sc-box"/><path d="M441 154v32" class="sc-tape"/></g>
+    </g>
+
+    <!-- worker 2: on the bed, receiving -->
+    <g class="loader l2" transform="translate(524,186)"><g class="bob">
+      <circle cx="0" cy="-44" r="7" class="sc-head"/>
+      <path d="M-7 -36h14l3 20h-20z" class="sc-shirt"/>
+      <rect x="-6" y="-16" width="5" height="16" rx="2" class="sc-leg"/>
+      <rect x="1" y="-16" width="5" height="16" rx="2" class="sc-leg"/>
+      <path d="M-6 -32 -20 -26" class="sc-arm"/>
+      <path d="M6 -32 14 -22" class="sc-arm"/>
+      <circle cx="-20" cy="-26" r="2.5" class="sc-head"/>
+    </g></g>
+
+    <!-- the box being carried: stack -> worker -> truck bed -->
+    <g class="carry-box"><rect x="-15" y="-13" width="30" height="26" rx="3" class="sc-box"/><path d="M0 -13v26" class="sc-tape"/></g>
+  </svg>`;
+
   function wire() {
     document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = NV.icon(el.dataset.icon); });
+    document.querySelectorAll('[data-auth-scene]').forEach(el => { el.innerHTML = SCENE_SVG; });
 
     /* tabs */
     document.querySelectorAll('#authSeg [role="tab"]').forEach(btn => {

@@ -10,7 +10,7 @@
 <title>Sign in — Norvex trade account</title>
 <meta name="description" content="Sign in or create your Norvex trade account: tier pricing, order history, LPO terms and tracked delivery in one place.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/nv.css?v=5">
+<link rel="stylesheet" href="/css/nv.css?v=6">
 </head>
 <body class="auth-body" data-page="auth">
 
@@ -38,12 +38,7 @@
         <div><b>24–72h</b><span>Nairobi dispatch</span></div>
       </div>
     </div>
-    <div class="auth-ticket" aria-hidden="true">
-      <div class="at-head"><b>Order in progress</b><small>NVX sample</small></div>
-      <div class="at-row"><span>Dry Food Commodities · 3 lines</span><span>KES 84,250</span></div>
-      <div class="progress"><i style="width:62%"></i></div>
-      <div class="at-row"><span>Status</span><span>Sourcing → dispatch</span></div>
-    </div>
+    <div class="auth-scene" data-auth-scene aria-hidden="true"></div>
     <div class="auth-stage-foot">
       <span><span data-icon="shield"></span> Encrypted session</span>
       <span><span data-icon="phone"></span> +254 742 021 099</span>
@@ -60,6 +55,7 @@
 
     <div class="auth-card">
       <div id="authCardInner">
+        <div class="auth-scene banner" data-auth-scene aria-hidden="true"></div>
         <header>
           <h2 id="authTitle">Welcome back</h2>
           <p class="auth-sub" id="authSub">Sign in to your trade account. Browsing the catalogue stays open to everyone.</p>
@@ -180,9 +176,9 @@
   </section>
 </main>
 
-<script src="/js/catalog-snapshot.js?v=5"></script>
-<script src="/js/nv-core.js?v=5"></script>
-<script src="/js/nv-auth.js?v=5"></script>
-<script src="/js/pages/auth.js?v=5"></script>
+<script src="/js/catalog-snapshot.js?v=6"></script>
+<script src="/js/nv-core.js?v=6"></script>
+<script src="/js/nv-auth.js?v=6"></script>
+<script src="/js/pages/auth.js?v=6"></script>
 </body>
 </html>

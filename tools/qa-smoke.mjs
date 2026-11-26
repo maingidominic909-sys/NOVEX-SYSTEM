@@ -169,6 +169,10 @@ for (const [path, key] of pages) {
 /* ---------- 5. auth: demo fill + sign-in + redirect ---------- */
 {
   const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
+  check('auth: logistics scene mounted (stage + card banner)', doc.querySelectorAll('[data-auth-scene] svg').length === 2);
+  const scene = doc.querySelector('[data-auth-scene]');
+  check('auth: trucks passing through', scene.querySelectorAll('.pass-truck').length === 2 && scene.querySelectorAll('.pass-truck .wheel').length === 6);
+  check('auth: crew loading goods', scene.querySelectorAll('.loader').length === 2 && scene.querySelectorAll('.carry-box').length === 1 && scene.querySelectorAll('.bed-box').length === 2);
   doc.querySelector('[data-demo="customer"]').click();
   check('auth: demo fill', doc.querySelector('[name="identifier"]').value === 'demo@norvex.co.ke');
   doc.getElementById('authForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
