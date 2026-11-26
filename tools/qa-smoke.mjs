@@ -170,6 +170,12 @@ for (const [path, key] of pages) {
 {
   const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
   check('auth: realistic photo scenes', doc.querySelectorAll('.auth-photo').length === 2 && !!doc.querySelector('.auth-visual-status'));
+  check('auth: living animation scene', !!doc.getElementById('authAnim') && doc.querySelectorAll('.aa-pass').length === 2 && !!doc.querySelector('.aa-carry') && !!doc.querySelector('.aa-receive') && !!doc.querySelector('.aa-stack'));
+  const animToggle = doc.getElementById('animToggle');
+  animToggle.click();
+  check('auth: animation pauses', doc.getElementById('authAnim').classList.contains('paused') && animToggle.getAttribute('aria-pressed') === 'true');
+  animToggle.click();
+  check('auth: animation resumes', !doc.getElementById('authAnim').classList.contains('paused'));
   check('auth: compact sign-in fields', !!doc.querySelector('[name="identifier"]') && !!doc.querySelector('[name="password"]') && !doc.querySelector('[name="organisation"]'));
   check('auth: demo picker present', doc.querySelectorAll('[data-demo]').length === 2);
   doc.querySelector('[data-demo="customer"]').click();

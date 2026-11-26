@@ -4,7 +4,7 @@
   const NV = window.NV;
   const A = NV.auth;
   let mode = 'signin', busy = false;
-  let scene = 0, sceneTimer = null;
+  let sceneTimer = null;
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const $ = sel => document.querySelector(sel);
@@ -108,21 +108,30 @@
     catch { dlg.removeAttribute('open'); }
   }
 
-  function setScene(i) {
-    scene = i;
-    document.querySelectorAll('.auth-photo').forEach(img => img.classList.toggle('is-active', Number(img.dataset.scene) === i));
-    document.querySelectorAll('[data-scene-btn]').forEach(btn => {
-      const on = Number(btn.dataset.sceneBtn) === i;
-      btn.classList.toggle('is-active', on);
-      btn.setAttribute('aria-selected', String(on));
-    });
-    const label = $('#sceneLabel');
-    if (label) label.textContent = i === 0 ? 'Loading at the depot' : 'On the way to you';
+  const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>';
+  const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
+  const LABELS = ['Loading at the depot', 'On the way to you', 'Tracked to your door'];
+  let animPaused = false, labelIdx = 0;
+
+  function setAnimPaused(p) {
+    animPaused = p;
+    const a = $('#authAnim');
+    if (a) a.classList.toggle('paused', p);
+    const t = $('#animToggle');
+    if (t) {
+      t.setAttribute('aria-pressed', String(p));
+      t.setAttribute('aria-label', p ? 'Play animation' : 'Pause animation');
+      t.innerHTML = p ? ICON_PLAY : ICON_PAUSE;
+    }
   }
   function startSceneTimer() {
     stopSceneTimer();
     if (reduceMotion) return;
-    sceneTimer = setInterval(() => setScene((scene + 1) % 2), 9000);
+    sceneTimer = setInterval(() => {
+      labelIdx = (labelIdx + 1) % LABELS.length;
+      const l = $('#sceneLabel');
+      if (l) l.textContent = LABELS[labelIdx];
+    }, 6000);
   }
   function stopSceneTimer() { if (sceneTimer) { clearInterval(sceneTimer); sceneTimer = null; } }
 
@@ -234,17 +243,10 @@
 
     form().addEventListener('submit', onSubmit);
 
-    document.querySelectorAll('[data-scene-btn]').forEach(btn => btn.addEventListener('click', () => {
-      setScene(Number(btn.dataset.sceneBtn));
-      startSceneTimer();
-    }));
-    const visual = document.querySelector('.auth-visual');
-    if (visual) {
-      visual.addEventListener('pointerenter', stopSceneTimer);
-      visual.addEventListener('pointerleave', startSceneTimer);
-    }
+    const toggle = $('#animToggle');
+    if (toggle) toggle.addEventListener('click', () => setAnimPaused(!animPaused));
     document.addEventListener('visibilitychange', () => { document.hidden ? stopSceneTimer() : startSceneTimer(); });
-    setScene(0);
+    setAnimPaused(false);
     startSceneTimer();
 
     const q = NV.queryString();
