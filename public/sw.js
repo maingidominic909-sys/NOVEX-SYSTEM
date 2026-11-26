@@ -2,7 +2,7 @@
    Strategy: NETWORK-FIRST for pages + code (HTML/CSS/JS) so updates always land
    when online; CACHE-FIRST for images/fonts. Offline falls back to cache.
    The cache name is versioned — bumping it purges stale caches on activate. */
-const CACHE = 'norvex-v3';
+const CACHE = 'norvex-v4';
 const PRECACHE = [
   '/css/nv.css',
   '/js/nv-core.js', '/js/nv-auth.js', '/js/ui.js', '/js/shell.js', '/js/catalog-snapshot.js',

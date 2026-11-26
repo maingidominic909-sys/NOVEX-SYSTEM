@@ -74,7 +74,7 @@ const pages = [
 ];
 for (const [path, key] of pages) {
   const { doc, errors, close } = await loadPage(path);
-  const shellOk = key === 'auth' ? !!doc.querySelector('.auth-layout') : !!doc.querySelector('.site-header .main-nav, .site-header .nav-burger');
+  const shellOk = key === 'auth' ? !!doc.querySelector('.auth-shell') : !!doc.querySelector('.site-header .main-nav, .site-header .nav-burger');
   const footOk = key === 'auth' ? true : !!doc.querySelector('.site-footer');
   check(`boot ${key}`, errors.length === 0, errors.slice(0, 2).join(' | '));
   check(`shell ${key}`, shellOk && footOk);
@@ -166,13 +166,12 @@ for (const [path, key] of pages) {
   close();
 }
 
-/* ---------- 5. auth: demo fill + sign-in + redirect ---------- */
+/* ---------- 5. auth: modern panel, demo sign-in, compact signup, recovery ---------- */
 {
   const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
-  check('auth: logistics scene mounted (stage + card banner)', doc.querySelectorAll('[data-auth-scene] svg').length === 2);
-  const scene = doc.querySelector('[data-auth-scene]');
-  check('auth: trucks passing through', scene.querySelectorAll('.pass-truck').length === 2 && scene.querySelectorAll('.pass-truck .wheel').length === 6);
-  check('auth: crew loading goods', scene.querySelectorAll('.loader').length === 2 && scene.querySelectorAll('.carry-box').length === 1 && scene.querySelectorAll('.bed-box').length === 2);
+  check('auth: realistic photo scenes', doc.querySelectorAll('.auth-photo').length === 2 && !!doc.querySelector('.auth-visual-status'));
+  check('auth: compact sign-in fields', !!doc.querySelector('[name="identifier"]') && !!doc.querySelector('[name="password"]') && !doc.querySelector('[name="organisation"]'));
+  check('auth: demo picker present', doc.querySelectorAll('[data-demo]').length === 2);
   doc.querySelector('[data-demo="customer"]').click();
   check('auth: demo fill', doc.querySelector('[name="identifier"]').value === 'demo@norvex.co.ke');
   doc.getElementById('authForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
@@ -180,13 +179,38 @@ for (const [path, key] of pages) {
   check('auth: success state', doc.getElementById('authSuccess').classList.contains('show'));
   check('auth: signed in', window.NV.auth.isIn() && window.NV.auth.current().email === 'demo@norvex.co.ke');
   check('auth: redirect attempted', navs.some(n => n.includes('desk.html') || n.includes('navigation to another Document')), navs.join('|'));
-  /* signup validation */
-  const { window: w2, doc: d2, close: c2 } = await loadPage('/auth.html?mode=signup');
+  check('auth: no errors', errors.length === 0, errors[0]);
+  close();
+
+  const { window: w2, doc: d2, errors: e2, close: c2 } = await loadPage('/auth.html?mode=signup');
+  check('auth: signup uses name/email/password only', !!d2.querySelector('[name="name"]') && !!d2.querySelector('[name="email"]') && !!d2.querySelector('[name="password"]') && !d2.querySelector('[name="organisation"]') && !d2.querySelector('[name="phone"]') && !d2.querySelector('[name="username"]') && !d2.querySelector('[name="confirm"]'));
   d2.getElementById('authForm').dispatchEvent(new w2.Event('submit', { bubbles: true, cancelable: true }));
   await sleep(300);
-  check('auth: signup validates empty fields', d2.querySelectorAll('.auth-field.bad').length >= 5);
-  check('auth: no errors', errors.length === 0, errors[0]);
-  close(); c2();
+  check('auth: signup validates empty fields', d2.querySelectorAll('.auth-field.bad').length >= 3);
+  setInput(w2, d2.querySelector('[name="name"]'), 'QA New Buyer');
+  setInput(w2, d2.querySelector('[name="email"]'), 'qa.newbuyer@example.com');
+  setInput(w2, d2.querySelector('[name="password"]'), 'Norvex2026');
+  d2.getElementById('termsCheck').checked = true;
+  d2.getElementById('authForm').dispatchEvent(new w2.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(700);
+  check('auth: compact signup creates account', w2.NV.auth.isIn() && w2.NV.auth.current().email === 'qa.newbuyer@example.com');
+  check('auth: profile details optional', w2.NV.auth.current().organisation === '' && w2.NV.auth.current().phone === '' && !!w2.NV.auth.current().username);
+  check('auth: signup success offers next steps', d2.querySelectorAll('#authSuccess [data-success-go]').length === 2);
+  check('auth: signup no errors', e2.length === 0, e2[0]);
+  c2();
+
+  const r = await loadPage('/auth.html?mode=signin');
+  r.doc.getElementById('forgotBtn').click();
+  await sleep(120);
+  check('auth: recovery dialog opens', r.doc.getElementById('resetDialog').open || r.doc.getElementById('resetDialog').hasAttribute('open'));
+  setInput(r.window, r.doc.getElementById('resetEmail'), 'demo@norvex.co.ke');
+  setInput(r.window, r.doc.getElementById('resetPassword'), 'Recovered2026');
+  r.doc.getElementById('resetForm').dispatchEvent(new r.window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(500);
+  const signInRes = await r.window.NV.auth.signIn('demo@norvex.co.ke', 'Recovered2026');
+  check('auth: device-local password reset works', signInRes.ok === true, signInRes.error || '');
+  check('auth: recovery no errors', r.errors.length === 0, r.errors[0]);
+  r.close();
 }
 
 /* ---------- 6. basket: steppers + summary ---------- */
