@@ -1,0 +1,3182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Catalogue | Norvex Integrated Enterprises Ltd
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <style>
+
+/* =========================================================
+   CATALOGUE PAGE
+========================================================= */
+
+.catalogue-page {
+    background: #f7f8f6;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.catalogue-hero {
+    min-height: 430px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8, 34, 25, 0.96),
+            rgba(8, 34, 25, 0.82),
+            rgba(8, 34, 25, 0.45)
+        ),
+        url("image/catalogue-hero.jpg") center/cover no-repeat;
+}
+
+.catalogue-hero::after {
+    content: "";
+    position: absolute;
+    right: -120px;
+    bottom: -160px;
+    width: 420px;
+    height: 420px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+}
+
+.catalogue-hero-content {
+    width: min(1200px, 92%);
+    margin: auto;
+    position: relative;
+    z-index: 2;
+    color: #fff;
+}
+
+.catalogue-hero-content .eyebrow {
+    color: #d4a62a;
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.catalogue-hero h1 {
+    max-width: 800px;
+    font-size: clamp(42px, 6vw, 76px);
+    line-height: 1.03;
+    margin: 0 0 24px;
+    font-weight: 800;
+}
+
+.catalogue-hero h1 span {
+    color: #d4a62a;
+    display: block;
+}
+
+.catalogue-hero p:not(.eyebrow) {
+    max-width: 720px;
+    font-size: 18px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.88);
+}
+
+
+/* =========================================================
+   INTRO / SEARCH AREA
+========================================================= */
+
+.catalogue-intro {
+    width: min(1200px, 92%);
+    margin: 0 auto;
+    padding: 90px 0 55px;
+}
+
+.catalogue-intro .eyebrow,
+.catalogue-category-heading .eyebrow,
+.custom-procurement .eyebrow,
+.catalogue-basket .eyebrow {
+    color: #b18416;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.catalogue-intro h2 {
+    font-size: clamp(32px, 4vw, 48px);
+    margin: 8px 0 15px;
+    color: #123b2d;
+}
+
+.catalogue-intro > p:not(.eyebrow):not(.no-results) {
+    max-width: 720px;
+    color: #66736d;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.catalogue-search {
+    margin-top: 38px;
+    display: flex;
+    width: 100%;
+    max-width: 850px;
+    background: #fff;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    border: 1px solid #e3e7e4;
+}
+
+.catalogue-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 17px 20px;
+    font-size: 16px;
+    color: #17392d;
+}
+
+.catalogue-search input::placeholder {
+    color: #9aa49f;
+}
+
+.catalogue-search-button {
+    border: none;
+    background: #123b2d;
+    color: #fff;
+    padding: 0 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.catalogue-search-button:hover {
+    background: #b18416;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.catalogue-filters {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.catalogue-filter {
+    border: 1px solid #d9dfdb;
+    background: #fff;
+    color: #365247;
+    padding: 11px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.catalogue-filter:hover {
+    border-color: #123b2d;
+    color: #123b2d;
+}
+
+.catalogue-filter.active {
+    background: #123b2d;
+    border-color: #123b2d;
+    color: #fff;
+}
+
+
+/* =========================================================
+   PRODUCTS CONTAINER
+========================================================= */
+
+.catalogue-products {
+    width: min(1400px, 94%);
+    margin: 0 auto;
+    padding-bottom: 80px;
+}
+
+
+/* =========================================================
+   CATEGORY SECTION
+========================================================= */
+
+.catalogue-category {
+    margin-bottom: 90px;
+    scroll-margin-top: 100px;
+}
+
+.catalogue-category-heading {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.8fr) minmax(350px, 1.4fr);
+    column-gap: 70px;
+    align-items: end;
+    margin-bottom: 35px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #dfe5e1;
+}
+
+.catalogue-category-heading .eyebrow {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+}
+
+.catalogue-category-heading h2 {
+    margin: 0;
+    color: #123b2d;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.15;
+}
+
+.catalogue-category-heading p:last-child {
+    margin: 0;
+    color: #718078;
+    line-height: 1.7;
+    max-width: 620px;
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+.catalogue-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+
+/*
+   IMPORTANT:
+   Existing product cards remain unchanged.
+   The grid simply gives them more room.
+*/
+
+.catalogue-product {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   PRODUCT PLACEHOLDER
+========================================================= */
+
+.catalogue-product .product-placeholder {
+    min-height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(
+            135deg,
+            #edf1ee,
+            #e3e9e5
+        );
+    color: #89968f;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.catalogue-product .product-info {
+    padding: 22px;
+    background: #fff;
+}
+
+.catalogue-product .product-status {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    color: #b18416;
+    margin-bottom: 9px;
+}
+
+.catalogue-product h3 {
+    color: #17392d;
+    font-size: 20px;
+    margin: 0 0 10px;
+}
+
+.catalogue-product p {
+    color: #718078;
+    line-height: 1.6;
+    font-size: 14px;
+    min-height: 67px;
+}
+
+
+/* =========================================================
+   BASKET BUTTON
+========================================================= */
+
+.add-basket {
+    width: 100%;
+    border: 1px solid #123b2d;
+    background: #123b2d;
+    color: #fff;
+    padding: 12px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.25s ease;
+}
+
+.add-basket:hover {
+    background: #b18416;
+    border-color: #b18416;
+}
+
+.add-basket.added {
+    background: #b18416;
+    border-color: #b18416;
+}
+
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
+
+.no-results {
+    width: 100%;
+    text-align: center;
+    padding: 50px 20px;
+    color: #66736d;
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   CUSTOM PROCUREMENT
+========================================================= */
+
+.custom-procurement {
+    width: min(1200px, 92%);
+    margin: 20px auto 100px;
+    padding: 65px;
+    background:
+        linear-gradient(
+            120deg,
+            #123b2d,
+            #1d4d3d
+        );
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-procurement::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    right: -100px;
+    top: -120px;
+}
+
+.custom-procurement h2 {
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 10px 0 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.custom-procurement p:not(.eyebrow) {
+    max-width: 650px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.82);
+    position: relative;
+    z-index: 2;
+}
+
+.primary-button {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 14px 25px;
+    background: #d4a62a;
+    color: #17392d;
+    text-decoration: none;
+    font-weight: 800;
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   SUPPLY BASKET
+========================================================= */
+
+.catalogue-basket {
+    width: min(1200px, 92%);
+    margin: 0 auto 100px;
+    padding: 45px;
+    background: #fff;
+    border: 1px solid #e0e6e2;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+}
+
+.catalogue-basket h2 {
+    color: #123b2d;
+    margin: 8px 0 12px;
+}
+
+.catalogue-basket p {
+    color: #718078;
+    line-height: 1.7;
+}
+
+.basket-items {
+    margin-top: 30px;
+}
+
+.basket-empty {
+    padding: 25px;
+    background: #f5f7f5;
+    border: 1px dashed #ccd5cf;
+    text-align: center;
+}
+
+.basket-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 15px 18px;
+    border-bottom: 1px solid #e8ece9;
+}
+
+.basket-remove {
+    border: none;
+    background: transparent;
+    color: #a94442;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.catalogue-page footer {
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .catalogue-product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .catalogue-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .catalogue-category-heading {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .catalogue-category-heading .eyebrow {
+        grid-column: auto;
+    }
+
+    .custom-procurement {
+        padding: 45px 30px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .catalogue-hero {
+        min-height: 390px;
+    }
+
+    .catalogue-intro {
+        padding-top: 60px;
+    }
+
+    .catalogue-search {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .catalogue-search-button {
+        min-height: 50px;
+    }
+
+    .catalogue-product-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .catalogue-category {
+        margin-bottom: 65px;
+    }
+
+    .catalogue-category-heading {
+        margin-bottom: 25px;
+    }
+
+    .catalogue-product .product-placeholder {
+        min-height: 190px;
+    }
+
+    .custom-procurement {
+        width: 92%;
+        padding: 40px 25px;
+    }
+
+    .catalogue-basket {
+        padding: 30px 22px;
+    }
+
+    .basket-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .catalogue-filters {
+        gap: 7px;
+    }
+
+    .catalogue-filter {
+        padding: 9px 13px;
+        font-size: 12px;
+    }
+
+}
+
+    </style>
+
+</head>
+
+
+<body class="catalogue-page">
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <a href="index.html" class="logo">
+        <img
+            src="image/norvex-logo.png"
+            alt="Norvex Integrated Enterprises Ltd"
+        >
+    </a>
+
+    <nav> 
+        <a href="index.html">Home</a>
+
+        <a href="about.html">About Us</a>
+
+        <a href="services.html">Services</a>
+
+        <a href="future-order.html">Future Order</a>
+
+        <a href="catalogue.html">Catalogue</a>
+
+        <a href="supply-basket.html" class="basket-nav">
+        Supply Basket</a>
+        <a href="contact.html">Contact</a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+<!-- =====================================================
+     CATALOGUE HERO
+===================================================== -->
+
+<section class="catalogue-hero">
+
+
+    <div class="catalogue-hero-overlay"></div>
+
+    <div class="catalogue-hero-content">
+
+        <p class="eyebrow">
+            NORVEX SUPPLY CATALOGUE
+        </p>
+
+        <h1>
+            Products &amp;
+            <span>Procurement Solutions</span>
+        </h1>
+
+        <p>
+            Explore our range of products and supply categories
+            for businesses, institutions, NGOs, government
+            organisations and bulk procurement requirements.
+        </p>
+
+    </div>
+
+</section>
+```
+
+
+
+<!-- =========================================================
+     INTRO + SEARCH
+========================================================= -->
+
+<section class="catalogue-intro">
+
+</div>
+    <p class="eyebrow">
+        WHAT WE SUPPLY
+    </p>
+
+    <h2>
+        Find What You Need
+    </h2>
+
+    <p>
+        Browse our supply categories below. Norvex provides
+        products through regular supply, bulk procurement and
+        sourcing arrangements depending on your requirements.
+    </p>
+
+
+    <div class="catalogue-search">
+
+        <input
+            type="text"
+            id="productSearch"
+            placeholder="Search products, categories or supplies..."
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            id="searchButton"
+            class="catalogue-search-button"
+        >
+            Search
+        </button>
+
+    </div>
+
+
+    <p
+        id="noResults"
+        class="no-results"
+        style="display:none;"
+    >
+        No products found. Please try another search.
+    </p>
+
+
+    <!-- =====================================================
+         FILTERS
+    ===================================================== -->
+
+    <div class="catalogue-filters">
+
+        <button
+            type="button"
+            class="catalogue-filter active"
+            data-category="all"
+        >
+            All Products
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="food"
+        >
+            Food & Agriculture
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="office"
+        >
+            Office & Stationery
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="ict"
+        >
+            ICT
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="furniture"
+        >
+            Furniture
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="cleaning"
+        >
+            Cleaning & Hygiene
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="institutional"
+        >
+            Institutional
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="safety"
+        >
+            PPE & Safety
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="hardware"
+        >
+            Hardware & Electrical
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="textiles"
+        >
+            Corporate Wear
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="catering"
+        >
+            Catering & Kitchen
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="printing"
+        >
+            Printing & Branding
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="water"
+        >
+            Water & Beverages
+        </button>
+
+        <button
+            type="button"
+            class="catalogue-filter"
+            data-category="agriculture"
+        >
+            Agricultural Inputs
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PRODUCTS
+========================================================= -->
+
+<section class="catalogue-products">
+
+
+<!-- =========================================================
+     FOOD & AGRICULTURE
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="food"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            01 — FOOD & AGRICULTURE
+        </p>
+
+        <h2>
+            Food & Agricultural Commodities
+        </h2>
+
+        <p>
+            Dry food commodities and agricultural products
+            available for wholesale, institutional and bulk
+            procurement requirements.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="beans"
+        >
+
+            <div class="product-image">
+    <img src="image/beans.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>Beans</h3>
+
+                <p>
+                    Quality dry beans supplied according to
+                    quantity and specification requirements.
+                </p>
+
+                <button
+                    type="button"
+                    class="add-basket"
+                >
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="yellow beans"
+        >
+
+            <div class="product-image">
+    <img src="image/Yellow Beans.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>Yellow Beans</h3>
+
+                <p>
+                    Yellow beans for wholesale, institutional
+                    and bulk procurement.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="nyayo beans"
+        >
+
+            <div class="product-image">
+    <img src="image/Nyayo Beans.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Nyayo Beans</h3>
+
+                <p>
+                    Dry Nyayo beans sourced for institutional
+                    and bulk requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="rose coco beans"
+        >
+
+            <div class="product-image">
+    <img src="image/Rosecoco Beans.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Rosecoco Beans</h3>
+
+                <p>
+                    Quality Rosecoco beans available for
+                    institutional and bulk supply.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="njahi black beans"
+        >
+
+            <div class="product-image">
+    <img src="image/Njahi.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>Njahi / Black Beans</h3>
+
+                <p>
+                    Black beans suitable for wholesale and
+                    institutional food supply.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="green grams"
+        >
+
+            <div class="product-image">
+    <img src="image/green-grams.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>Green Grams</h3>
+
+                <p>
+                    Quality green grams (ndengu) for wholesale,
+                    institutional and bulk procurement.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="cowpeas kunde"
+        >
+
+            <div class="product-image">
+    <img src="image/Cowpeas.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Cowpeas / Kunde</h3>
+
+                <p>
+                    Dry cowpeas supplied according to client
+                    quantity and specification.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="pigeon peas mbaazi"
+        >
+
+            <div class="product-image">
+    <img src="image/Pigeon peas.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Pigeon Peas / Mbaazi</h3>
+
+                <p>
+                    Pigeon peas for institutional and bulk
+                    food procurement.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="lentils"
+        >
+
+            <div class="product-image">
+    <img src="image/Lentils.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Lentils</h3>
+
+                <p>
+                    Quality lentils available for bulk and
+                    institutional supply.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="chickpeas"
+        >
+
+            <div class="product-image">
+    <img src="image/chickpeas.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Chickpeas</h3>
+
+                <p>
+                    Chickpeas sourced for wholesale and
+                    institutional requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="maize"
+        >
+
+            <div class="product-image">
+    <img src="image/Maize 2.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>Maize</h3>
+
+                <p>
+                    Quality maize for wholesale, institutional
+                    and bulk procurement requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="food"
+            data-product="rice"
+        >
+
+            <div class="product-image">
+    <img src="image/Rice.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Rice</h3>
+
+                <p>
+                    Rice sourced for institutional and
+                    wholesale supply requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     OFFICE
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="office"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            02 — OFFICE
+        </p>
+
+        <h2>
+            Office & Stationery Supplies
+        </h2>
+
+        <p>
+            Everyday office products, stationery and printing
+            consumables for businesses and institutions.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="office"
+            data-product="a4 paper"
+        >
+
+            <div class="product-image">
+    <img src="image/A4 paper.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>A4 Paper</h3>
+
+                <p>
+                    Quality office printing and photocopy paper.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="office"
+            data-product="stationery"
+        >
+
+            <div class="product-image">
+    <img src="image/Wriring Stationary.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Writing Stationery</h3>
+
+                <p>
+                    Pens, pencils, markers, rulers and other
+                    everyday stationery requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="office"
+            data-product="files folders"
+        >
+
+            <div class="product-image">
+    <img src="image/File an Folder.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Files & Folders</h3>
+
+                <p>
+                    Filing products for document organisation
+                    and records management.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="office"
+            data-product="printer toner"
+        >
+
+            <div class="product-image">
+    <img src="image/Toner Cartridge.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Printer Toner & Cartridges</h3>
+
+                <p>
+                    Printing consumables for common office
+                    printer and copier requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ICT
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="ict"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            03 — TECHNOLOGY
+        </p>
+
+        <h2>
+            ICT & Computer Supplies
+        </h2>
+
+        <p>
+            Technology equipment, accessories and computer
+            consumables for organisations.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="ict"
+            data-product="laptops"
+        >
+
+            <div class="product-image">
+    <img src="image/COMPUTER.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Laptops & Computers</h3>
+
+                <p>
+                    Computers sourced according to required
+                    specifications and budget.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="ict"
+            data-product="printers"
+        >
+
+            <div class="product-image">
+    <img src="image/Printer Scanner.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Printers & Scanners</h3>
+
+                <p>
+                    Printing and document-management equipment
+                    for offices and institutions.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="ict"
+            data-product="computer accessories"
+        >
+
+            <div class="product-image">
+    <img src="image/Accessories.jpg">
+            </div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Computer Accessories</h3>
+
+                <p>
+                    Keyboards, mice, cables, storage devices,
+                    webcams and related accessories.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="ict"
+            data-product="ups power"
+        >
+
+            <div class="product-image">
+    <img src="image/UPS.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>UPS & Power Protection</h3>
+
+                <p>
+                    UPS systems and power-protection equipment
+                    for office technology.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FURNITURE
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="furniture"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            04 — FURNITURE
+        </p>
+
+        <h2>
+            Office Furniture & Fittings
+        </h2>
+
+        <p>
+            Furniture and fittings for offices, institutions,
+            schools and organisational spaces.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="furniture"
+            data-product="office desks"
+        >
+
+            <div class="product-image">
+    <img src="image/Office Desk.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Office Desks</h3>
+
+                <p>
+                    Office desks supplied according to required
+                    size, style and specification.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="furniture"
+            data-product="office chairs"
+        >
+
+            <div class="product-image">
+    <img src="image/Office Chair.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Office Chairs</h3>
+
+                <p>
+                    Executive, ergonomic, visitor and general
+                    office seating.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="furniture"
+            data-product="filing cabinets"
+        >
+
+            <div class="product-image">
+    <img src="image/Filing Cabinet.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Filing Cabinets</h3>
+
+                <p>
+                    Storage solutions for office documents
+                    and records.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CLEANING
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="cleaning"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            05 — CLEANING & HYGIENE
+        </p>
+
+        <h2>
+            Cleaning, Hygiene & Janitorial Supplies
+        </h2>
+
+        <p>
+            Cleaning products, hygiene consumables and
+            janitorial equipment for workplaces and institutions.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="cleaning"
+            data-product="cleaning chemicals"
+        >
+
+            <div class="product-image">
+    <img src="image/Cleaning Chemical.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Cleaning Chemicals</h3>
+
+                <p>
+                    Detergents, disinfectants, floor cleaners,
+                    bleach and related cleaning products.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="cleaning"
+            data-product="janitorial equipment"
+        >
+
+            <div class="product-image">
+    <img src="image/janitorial Equipment.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Janitorial Equipment</h3>
+
+                <p>
+                    Mops, brooms, buckets, brushes, dustpans
+                    and cleaning equipment.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="cleaning"
+            data-product="hygiene supplies"
+        >
+
+            <div class="product-image">
+    <img src="image/Hygiene Supplies.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Hygiene Supplies</h3>
+
+                <p>
+                    Hand sanitiser, liquid soap, tissue,
+                    paper towels and related products.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     INSTITUTIONAL
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="institutional"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            06 — INSTITUTIONAL
+        </p>
+
+        <h2>
+            Institutional & School Supplies
+        </h2>
+
+        <p>
+            Products supporting schools, institutions, NGOs
+            and organisational programmes.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="institutional"
+            data-product="school supplies"
+        >
+
+            <div class="product-image">
+    <img src="image/School supplies 📚.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    BULK SUPPLY
+                </span>
+
+                <h3>School Supplies</h3>
+
+                <p>
+                    Stationery, learning materials and general
+                    school requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="institutional"
+            data-product="institutional equipment"
+        >
+
+            <div class="product-image">
+    <img src="image/Institutionl.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Institutional Equipment</h3>
+
+                <p>
+                    Equipment and supplies required for
+                    institutional operations.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PPE & SAFETY
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="safety"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            07 — OCCUPATIONAL SAFETY
+        </p>
+
+        <h2>
+            PPE & Occupational Safety
+        </h2>
+
+        <p>
+            Personal protective equipment and workplace safety
+            products for organisations and work environments.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="safety"
+            data-product="safety helmets"
+        >
+
+            <div class="product-image">
+    <img src="image/Helment.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Safety Helmets</h3>
+
+                <p>
+                    Protective headwear for workplace safety
+                    requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="safety"
+            data-product="safety boots"
+        >
+
+            <div class="product-image">
+    <img src="image/Saftey Boots.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Safety Boots</h3>
+
+                <p>
+                    Protective footwear for workplace and
+                    industrial environments.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="safety"
+            data-product="reflective vests"
+        >
+
+            <div class="product-image">
+    <img src="image/Reflective Vest.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Reflective Vests</h3>
+
+                <p>
+                    High-visibility protective clothing for
+                    workplace environments.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="safety"
+            data-product="first aid kits"
+        >
+
+            <div class="product-image">
+    <img src="image/First Aid KIT.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>First Aid Kits</h3>
+
+                <p>
+                    Workplace first-aid kits supplied according
+                    to organisational requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="safety"
+            data-product="safety signage"
+        >
+
+           <div class="product-image">
+    <img src="image/Signage.jpg" alt="Beans">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Safety Signage</h3>
+
+                <p>
+                    Workplace warning, mandatory, emergency
+                    and directional safety signs.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     HARDWARE
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="hardware"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            08 — HARDWARE
+        </p>
+
+        <h2>
+            Electrical & Hardware Supplies
+        </h2>
+
+        <p>
+            General hardware, electrical products, tools and
+            maintenance supplies.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="hardware"
+            data-product="electrical supplies"
+        >
+
+            <div class="product-image">
+    <img src="image/Electrical supply.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Electrical Supplies</h3>
+
+                <p>
+                    Cables, switches, sockets, lighting and
+                    related electrical products.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="hardware"
+            data-product="hardware tools"
+        >
+
+            <div class="product-image">
+    <img src="image/Hardware tools.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Hardware & Tools</h3>
+
+                <p>
+                    General tools, fasteners and hardware for
+                    maintenance and project requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CORPORATE WEAR
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="textiles"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            09 — TEXTILES
+        </p>
+
+        <h2>
+            Corporate Wear & Textiles
+        </h2>
+
+        <p>
+            Workwear, uniforms and textile products for
+            organisations and institutions.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="textiles"
+            data-product="uniforms"
+        >
+
+            <div class="product-image">
+    <img src="image/Staff Uniform.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Staff Uniforms</h3>
+
+                <p>
+                    Uniforms and workwear supplied according to
+                    organisational specifications.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="textiles"
+            data-product="corporate clothing"
+        >
+
+            <div class="product-image">
+    <img src="image/Corporate Clothing.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Corporate Clothing</h3>
+
+                <p>
+                    Corporate shirts, T-shirts, jackets, caps
+                    and branded clothing.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CATERING
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="catering"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            10 — CATERING
+        </p>
+
+        <h2>
+            Catering & Kitchen Supplies
+        </h2>
+
+        <p>
+            Kitchenware, catering equipment and food-service
+            supplies for institutions and organisations.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="catering"
+            data-product="kitchen utensils"
+        >
+
+            <div class="product-image">
+    <img src="image/Kitchen Utensils.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Kitchen Utensils</h3>
+
+                <p>
+                    General kitchen utensils and equipment for
+                    institutional requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="catering"
+            data-product="catering equipment"
+        >
+
+            <div class="product-image">
+    <img src="image/Catering Equipment.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Catering Equipment</h3>
+
+                <p>
+                    Catering and food-service equipment for
+                    institutional operations.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PRINTING
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="printing"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            11 — PRINTING & BRANDING
+        </p>
+
+        <h2>
+            Printing, Branding & Promotional
+        </h2>
+
+        <p>
+            Printing, signage and branded materials for
+            businesses, organisations and events.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="printing"
+            data-product="business printing"
+        >
+
+            <div class="product-image">
+    <img src="image/Business PRINTING.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Business Printing</h3>
+
+                <p>
+                    Business cards, letterheads, brochures,
+                    flyers and corporate documents.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="printing"
+            data-product="signage branding"
+        >
+
+            <div class="product-image">
+    <img src="image/Branding Signage.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Signage & Branding</h3>
+
+                <p>
+                    Banners, posters, signs and branded
+                    promotional materials.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     WATER
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="water"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            12 — WATER & BEVERAGES
+        </p>
+
+        <h2>
+            Water & Beverage Supplies
+        </h2>
+
+        <p>
+            Drinking water and beverage supplies for offices,
+            institutions and events.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="water"
+            data-product="bottled water"
+        >
+
+            <div class="product-image">
+    <img src="image/Bottled Drinking.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    REGULAR SUPPLY
+                </span>
+
+                <h3>Bottled Drinking Water</h3>
+
+                <p>
+                    Packaged drinking water for offices,
+                    institutions and events.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="water"
+            data-product="office beverages"
+        >
+
+            <div class="product-image">
+    <img src="image/Office Beverage.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    ON REQUEST
+                </span>
+
+                <h3>Office Beverages</h3>
+
+                <p>
+                    Tea, coffee, sugar and related office
+                    beverage requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     AGRICULTURE
+========================================================= -->
+
+<section
+    class="catalogue-category"
+    data-category-section="agriculture"
+>
+
+    <div class="catalogue-category-heading">
+
+        <p class="eyebrow">
+            13 — AGRICULTURE
+        </p>
+
+        <h2>
+            Agricultural Inputs & Animal Feeds
+        </h2>
+
+        <p>
+            Agricultural products and inputs available for
+            specific bulk and project procurement requirements.
+        </p>
+
+    </div>
+
+
+    <div class="catalogue-product-grid">
+
+        <article
+            class="catalogue-product"
+            data-category="agriculture"
+            data-product="seeds"
+        >
+
+            <div class="product-image">
+    <img src="image/seeds.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    PROJECT PROCUREMENT
+                </span>
+
+                <h3>Seeds & Agricultural Inputs</h3>
+
+                <p>
+                    Agricultural inputs sourced according to
+                    project specifications.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <article
+            class="catalogue-product"
+            data-category="agriculture"
+            data-product="animal feeds"
+        >
+
+            <div class="product-image">
+    <img src="image/Animal Feeds.jpg">
+</div>
+
+            <div class="product-info">
+
+                <span class="product-status">
+                    PROJECT PROCUREMENT
+                </span>
+
+                <h3>Animal Feeds</h3>
+
+                <p>
+                    Animal feeds sourced for approved bulk and
+                    institutional requirements.
+                </p>
+
+                <button type="button" class="add-basket">
+                    Add to Supply Basket
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CUSTOM PROCUREMENT
+========================================================= -->
+
+<section class="custom-procurement">
+
+    <p class="eyebrow">
+        14 — CUSTOM PROCUREMENT
+    </p>
+
+    <h2>
+        Can't Find What You Need?
+    </h2>
+
+    <p>
+        Norvex can source products according to your
+        organisation's specifications, quantity and project
+        requirements.
+    </p>
+
+    <a
+        href="contact.html"
+        class="primary-button"
+    >
+        Discuss Your Requirement
+    </a>
+
+</section>
+
+
+</section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <p>
+        &copy; 2026 Norvex Integrated Enterprises Ltd.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+<!-- =========================================================
+     CATALOGUE JAVASCRIPT
+========================================================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       CATALOGUE SEARCH & FILTER
+    ===================================================== */
+
+    const searchInput = document.getElementById("productSearch");
+    const searchButton = document.getElementById("searchButton");
+    const noResults = document.getElementById("noResults");
+
+    const productCards =
+        document.querySelectorAll(".catalogue-product");
+
+    const categoryButtons =
+        document.querySelectorAll(".catalogue-filter");
+
+    const categorySections =
+        document.querySelectorAll(".catalogue-category");
+
+    let activeCategory = "all";
+
+
+    /* =====================================================
+       FILTER PRODUCTS
+    ===================================================== */
+
+    function filterProducts() {
+
+        const searchTerm = searchInput
+            ? searchInput.value.toLowerCase().trim()
+            : "";
+
+        let visibleProducts = 0;
+
+
+        productCards.forEach(function (card) {
+
+            const productName =
+                (card.dataset.product || "").toLowerCase();
+
+            const productCategory =
+                (card.dataset.category || "").toLowerCase();
+
+            const productText =
+                card.textContent.toLowerCase();
+
+
+            const matchesSearch =
+                searchTerm === "" ||
+                productName.includes(searchTerm) ||
+                productText.includes(searchTerm);
+
+
+            const matchesCategory =
+                activeCategory === "all" ||
+                productCategory === activeCategory;
+
+
+            if (matchesSearch && matchesCategory) {
+
+                card.style.display = "";
+                visibleProducts++;
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+
+        /* SHOW / HIDE CATEGORY SECTIONS */
+
+        categorySections.forEach(function (section) {
+
+            const sectionCategory =
+                section.dataset.categorySection;
+
+            const cards =
+                section.querySelectorAll(".catalogue-product");
+
+            let hasVisibleProduct = false;
+
+
+            cards.forEach(function (card) {
+
+                if (card.style.display !== "none") {
+                    hasVisibleProduct = true;
+                }
+
+            });
+
+
+            if (
+                hasVisibleProduct &&
+                (
+                    activeCategory === "all" ||
+                    activeCategory === sectionCategory
+                )
+            ) {
+
+                section.style.display = "";
+
+            } else {
+
+                section.style.display = "none";
+
+            }
+
+        });
+
+
+        /* NO RESULTS MESSAGE */
+
+        if (noResults) {
+
+            noResults.style.display =
+                visibleProducts === 0
+                    ? "block"
+                    : "none";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SEARCH BUTTON
+    ===================================================== */
+
+    if (searchButton) {
+
+        searchButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                filterProducts();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       SEARCH WHILE TYPING
+    ===================================================== */
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            filterProducts
+        );
+
+
+        searchInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    filterProducts();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       CATEGORY FILTER BUTTONS
+    ===================================================== */
+
+    categoryButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+
+                activeCategory =
+                    button.dataset.category || "all";
+
+
+                categoryButtons.forEach(function (btn) {
+
+                    btn.classList.remove("active");
+
+                });
+
+
+                button.classList.add("active");
+
+
+                filterProducts();
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       SUPPLY BASKET
+       SAVED USING LOCAL STORAGE
+    ===================================================== */
+
+    const addButtons =
+        document.querySelectorAll(".add-basket");
+
+
+    /* =====================================================
+       GET BASKET
+    ===================================================== */
+
+    function getBasket() {
+
+        try {
+
+            const savedBasket =
+                localStorage.getItem("norvexBasket");
+
+
+            if (!savedBasket) {
+                return [];
+            }
+
+
+            const basket =
+                JSON.parse(savedBasket);
+
+
+            return Array.isArray(basket)
+                ? basket
+                : [];
+
+        } catch (error) {
+
+            return [];
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SAVE BASKET
+    ===================================================== */
+
+    function saveBasket(basket) {
+
+        localStorage.setItem(
+            "norvexBasket",
+            JSON.stringify(basket)
+        );
+
+    }
+
+
+    /* =====================================================
+       ADD PRODUCTS
+    ===================================================== */
+
+    addButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const card =
+                    button.closest(
+                        ".catalogue-product"
+                    );
+
+
+                if (!card) {
+                    return;
+                }
+
+
+                const heading =
+                    card.querySelector("h3");
+
+
+                if (!heading) {
+                    return;
+                }
+
+
+                const productName =
+                    heading.textContent.trim();
+
+
+                let basket =
+                    getBasket();
+
+
+                /* PREVENT DUPLICATES */
+
+                if (!basket.includes(productName)) {
+
+                    basket.push(productName);
+
+                    saveBasket(basket);
+
+                }
+
+
+                /* BUTTON FEEDBACK */
+
+                const originalText =
+                    button.textContent;
+
+
+                button.textContent =
+                    "Added ✓";
+
+
+                button.classList.add("added");
+
+
+                setTimeout(function () {
+
+                    button.textContent =
+                        originalText;
+
+
+                    button.classList.remove(
+                        "added"
+                    );
+
+                }, 1500);
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
+
+    filterProducts();
+
+}); 
+
+</script>
+<!-- =========================================================
+     MAIN WEBSITE JAVASCRIPT
+========================================================= -->
+
+<script src="js/script.js"></script>
+
+
+</body>
+
+</html>

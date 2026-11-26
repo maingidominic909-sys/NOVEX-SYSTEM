@@ -1,0 +1,13 @@
+{
+  "name": "norvex-commerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Norvex Integrated Enterprises Ltd — e-commerce storefront, order desk and operations console.",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "snapshot": "node tools/build-snapshot.js"
+  },
+  "engines": { "node": ">=18" }
+}

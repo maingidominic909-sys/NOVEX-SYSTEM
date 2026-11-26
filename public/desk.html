@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order desk — Norvex</title>
+<meta name="description" content="Your Norvex order desk: basket, recent orders, future supply planning and quotations in one workspace.">
+<link rel="icon" href="/img/mark.png">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/console.css">
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body class="console" data-page="desk" data-crumb="Order desk|Overview">
+<div class="console-body">
+  <div id="nv-rail"></div>
+  <div class="console-main">
+    <div id="nv-cmdbar"></div>
+
+    <main class="workspace">
+      <div class="workspace-narrow">
+        <div class="page-title-bar">
+          <div>
+            <p class="eyebrow" style="margin-bottom:8px">Order desk</p>
+            <h1><span id="greeting">Good morning</span>, <span id="whoName">procurement team</span>.</h1>
+            <p class="sub">Here's where your supply stands today. Press <span class="kbd">Ctrl</span> <span class="kbd">K</span> to jump anywhere.</p>
+          </div>
+          <div class="title-actions">
+            <a href="/quote.html" class="btn btn-ghost btn-sm">Request quote</a>
+            <a href="/shop.html" class="btn btn-gold btn-sm">Start an order</a>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="deskKpis"></div>
+
+        <!-- quick actions -->
+        <div class="panel">
+          <div class="panel-head"><h2>Quick actions</h2><span class="hint">Everything the desk can do</span></div>
+          <div class="panel-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+            <a class="opt-tile" href="/shop.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="layers"></span>
+              <span><b>Browse catalogue</b><small>45 lines · 13 departments</small></span>
+            </a>
+            <a class="opt-tile" href="/basket.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="cart"></span>
+              <span><b>Review basket</b><small><span data-count>0</span> units waiting</small></span>
+            </a>
+            <a class="opt-tile" href="/plan.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="calendar"></span>
+              <span><b>Plan future supply</b><small>Reserve stock &amp; fix pricing</small></span>
+            </a>
+            <a class="opt-tile" href="/quote.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="clipboard"></span>
+              <span><b>Submit an RFQ</b><small>For tenders and BQs</small></span>
+            </a>
+            <a class="opt-tile" href="/order.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="truck"></span>
+              <span><b>Track a shipment</b><small>Live order status</small></span>
+            </a>
+            <a class="opt-tile" href="/account.html" style="text-decoration:none">
+              <span style="color:var(--green-700);width:20px" data-icon="building"></span>
+              <span><b>Organisation profile</b><small>Saved details &amp; terms</small></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="layout-2col" style="margin-top:16px">
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Recent orders</h2>
+                <a href="/orders.html" class="hint" style="text-decoration:underline">All orders →</a>
+              </div>
+              <div class="panel-body tight">
+                <div class="table-wrap">
+                  <table class="data">
+                    <thead><tr><th>Reference</th><th>Placed</th><th class="num">Total</th><th>Status</th></tr></thead>
+                    <tbody id="recentOrders"></tbody>
+                  </table>
+                </div>
+                <div id="recentEmpty" class="empty-state hide" style="padding:34px 20px">
+                  <div class="icon-wrap" data-icon="receipt" style="width:52px;height:52px"></div>
+                  <h3 style="font-size:1rem">No orders on record yet</h3>
+                  <p class="small">Place your first order and it will appear here with live status.</p>
+                  <a href="/shop.html" class="btn btn-gold btn-sm">Browse catalogue</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Supply basket</h2><a href="/basket.html" class="hint" style="text-decoration:underline">Open desk →</a></div>
+              <div class="panel-body tight">
+                <div class="table-wrap">
+                  <table class="data">
+                    <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Line total</th></tr></thead>
+                    <tbody id="deskBasket"></tbody>
+                  </table>
+                </div>
+                <div id="basketEmptyDesk" class="empty-state hide" style="padding:30px 20px">
+                  <p class="small muted" style="margin-bottom:12px">Your basket is empty — add lines to start an order.</p>
+                  <a href="/shop.html" class="btn btn-ghost btn-sm">Browse catalogue</a>
+                </div>
+              </div>
+              <div class="panel-foot" id="basketTotals"><span class="tiny muted">—</span></div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="panel">
+              <div class="panel-head"><h2>Account manager</h2></div>
+              <div class="panel-body">
+                <div class="row" style="gap:12px;margin-bottom:12px">
+                  <span class="avatar" style="width:44px;height:44px;font-size:.9rem">NV</span>
+                  <div><b style="display:block;font-size:.9rem">Norvex sales desk</b><span class="tiny muted">Nairobi · Mon–Fri 8:00–17:30</span></div>
+                </div>
+                <div style="display:grid;gap:8px">
+                  <a href="tel:+254742021099" class="btn btn-gold btn-sm btn-block">Call +254 742 021 099</a>
+                  <a href="https://wa.me/254742021099" target="_blank" rel="noopener" class="btn btn-ghost btn-sm btn-block">WhatsApp the desk</a>
+                  <a href="mailto:info@norvex.co.ke" class="btn btn-ghost btn-sm btn-block">Email info@norvex.co.ke</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Term planner</h2></div>
+              <div class="panel-body">
+                <p class="small muted" style="margin-bottom:12px">Lock pricing before the season. Tell us what you'll need and when.</p>
+                <div class="inline-note" style="font-size:.76rem;margin-bottom:12px">
+                  <span data-icon="calendar"></span>
+                  <div>Orders planned more than 14 days ahead qualify for reserved stock.</div>
+                </div>
+                <a href="/plan.html" class="btn btn-sm btn-block">Open planner</a>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Spend this year</h2></div>
+              <div class="panel-body">
+                <div id="spendBars" style="display:grid;gap:10px"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="console-foot">
+      <span>Norvex order desk · Nairobi, Kenya</span>
+      <span><a href="/index.html">Storefront</a> · <a href="/services.html">Services</a> · <a href="/admin.html">Operations</a></span>
+    </footer>
+  </div>
+</div>
+
+<script src="/js/catalog-snapshot.js"></script>
+<script src="/js/nv-core.js"></script>
+<script src="/js/nv-ui.js"></script>
+<script src="/js/nv-payments.js"></script>
+<script src="/js/nv-cookies.js"></script>
+<script src="/js/chrome-console.js"></script>
+<script src="/js/page-desk.js"></script>
+</body>
+</html>

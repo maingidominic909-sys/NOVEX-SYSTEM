@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Future Order | Norvex Integrated Enterprises Ltd</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<header>
+
+    <a href="index.html" class="logo">
+        <img
+            src="image/norvex-logo.png"
+            alt="Norvex Integrated Enterprises Ltd"
+        >
+    </a>
+
+    <nav>
+
+       
+        <a href="index.html">Home</a>
+
+        <a href="about.html">About Us</a>
+
+        <a href="services.html">Services</a>
+
+        <a href="future-order.html">Future Order</a>
+
+        <a href="catalogue.html">Catalogue</a>
+
+        <a href="supply-basket.html" class="basket-nav">
+        Supply Basket</a>
+        <a href="contact.html">Contact</a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    <!-- FUTURE ORDER HERO -->
+
+    <section class="future-order-hero">
+
+    <div class="future-order-hero-content">
+
+        <p class="eyebrow">
+            FUTURE ORDER
+        </p>
+
+        <h1>
+            Plan Your Supply.
+            <span>We Deliver.</span>
+        </h1>
+
+        <p>
+            Submit your future procurement requirements in advance
+            and allow Norvex to plan sourcing, quantities and
+            delivery according to your organisation's needs.
+        </p>
+
+    </div>
+
+</section>
+
+
+    <!-- ORDER INTRODUCTION -->
+
+    <section class="future-order-intro">
+
+        <div>
+
+            <p class="eyebrow">HOW IT WORKS</p>
+
+            <h2>
+                Tell Us What You Will Need
+            </h2>
+
+            <p>
+                Future orders are ideal for businesses, institutions,
+                NGOs and organizations planning upcoming purchases,
+                projects or regular supply requirements.
+            </p>
+
+        </div>
+
+
+        <div class="future-order-steps">
+
+            <div>
+                <span>01</span>
+
+                <h3>Submit Requirements</h3>
+
+                <p>
+                    Tell us the products, quantities and expected
+                    delivery date.
+                </p>
+            </div>
+
+
+            <div>
+                <span>02</span>
+
+                <h3>We Review</h3>
+
+                <p>
+                    Our team reviews your requirements and gets in
+                    touch to discuss availability and pricing.
+                </p>
+            </div>
+
+
+            <div>
+                <span>03</span>
+
+                <h3>Plan Your Supply</h3>
+
+                <p>
+                    We work with you to prepare for the agreed
+                    delivery period.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FUTURE ORDER FORM -->
+
+    <section class="future-order-section">
+
+        <div class="future-order-heading">
+
+            <p class="eyebrow">FUTURE ORDER REQUEST</p>
+
+            <h2>
+                What Would You Like to Order?
+            </h2>
+
+            <p>
+                Provide as much information as possible so we can
+                understand your requirements.
+            </p>
+
+        </div>
+
+
+        <form class="future-order-form">
+
+
+            <!-- CUSTOMER DETAILS -->
+
+            <div class="order-form-section">
+
+                <h3>01 — Your Details</h3>
+
+                <div class="form-group">
+
+    <label for="delivery-date">
+        Preferred Delivery Date
+    </label>
+
+    <input
+        type="date"
+        id="delivery-date"
+        name="delivery_date"
+        required
+    >
+
+</div>
+
+
+<div class="form-group">
+
+    <label for="delivery-location">
+        Delivery Location
+    </label>
+
+    <input
+        type="text"
+        id="delivery-location"
+        name="delivery_location"
+        placeholder="Click the map below, or type manually"
+        required
+    >
+
+    <div id="delivery-map" class="delivery-map"></div>
+
+    <p class="map-hint">
+        Click anywhere on the map to drop a pin at the delivery location.
+    </p>
+
+    <input type="hidden" id="delivery-lat" name="delivery_lat">
+    <input type="hidden" id="delivery-lng" name="delivery_lng">
+
+</div>
+
+
+                    <div class="form-group">
+
+                        <label for="order-company">
+                            Organization
+                        </label>
+
+                        <input
+                            type="text"
+                            id="order-company"
+                            name="company"
+                            placeholder="Company / organization"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="order-email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="order-email"
+                            name="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="order-phone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="order-phone"
+                            name="phone"
+                            placeholder="+254..."
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ORDER DETAILS -->
+
+            <div class="order-form-section">
+
+                <h3>02 — Order Details</h3>
+
+                <div id="order-items">
+
+                    <!-- ORDER ITEM -->
+
+                    <div class="order-item">
+
+                        <div class="form-group">
+
+                            <label>Product</label>
+
+                            <select name="product[]" required>
+
+                                <option value="">
+                                    Select product
+                                </option>
+
+                                <option value="beans">
+                                    Beans
+                                </option>
+
+                                <option value="maize">
+                                    Maize
+                                </option>
+
+                                <option value="green-grams">
+                                    Green Grams
+                                </option>
+
+                                <option value="office-supplies">
+                                    Office & Stationery Supplies
+                                </option>
+
+                                <option value="institutional-supplies">
+                                    Institutional Supplies
+                                </option>
+
+                                <option value="project-supplies">
+                                    Project Supplies
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+    <label>Estimated Quantity</label>
+
+    <input
+        type="number"
+        name="quantity[]"
+        placeholder="e.g. 10"
+        min="0"
+        step="any"
+        required
+    >
+
+</div>
+
+
+<div class="form-group">
+
+    <label>Unit</label>
+
+    <select name="unit[]" required>
+
+        <option value="">
+            Select unit
+        </option>
+
+        <option value="tonnes">
+            Tonnes
+        </option>
+
+        <option value="kilograms">
+            Kilograms
+        </option>
+
+        <option value="grams">
+            Grams
+        </option>
+
+        <option value="bags">
+            Bags
+        </option>
+
+        <option value="wholesale">
+            Wholesale
+        </option>
+
+        <option value="units">
+            Units
+        </option>
+
+    </select>
+
+</div>
+
+
+                        <button
+                            type="button"
+                            class="remove-order-item"
+                            onclick="removeOrderItem(this)"
+                            style="visibility: hidden;"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="add-order-item"
+                    onclick="addOrderItem()"
+                >
+                    + Add Another Product
+                </button>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="delivery-date">
+                            Preferred Delivery Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="delivery-date"
+                            name="delivery_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="delivery-location">
+                            Delivery Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery-location"
+                            name="delivery_location"
+                            placeholder="Town / County"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="order-message">
+                        Additional Requirements
+                    </label>
+
+                    <textarea
+                        id="order-message"
+                        name="message"
+                        rows="6"
+                        placeholder="Tell us anything else we should know about your order..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="future-order-submit">
+
+                <p>
+                    Submitting this form is a request for a future
+                    order. Our team will contact you to confirm
+                    availability, pricing and delivery arrangements.
+                </p>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Submit Future Order
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- BOTTOM CTA -->
+
+    <section class="cta">
+
+        <p class="eyebrow">
+            NEED SOMETHING SOONER?
+        </p>
+
+        <h2>
+            Request a Quote Today
+        </h2>
+
+        <p>
+            If you need immediate assistance with a supply
+            requirement, contact our team directly.
+        </p>
+
+        
+            href="contact.html"
+            class="primary-button"
+        >
+            Contact Norvex
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        &copy; 2026 Norvex Integrated Enterprises Ltd.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+<script>
+
+function addOrderItem() {
+
+    const orderItems = document.getElementById("order-items");
+
+    const newItem = document.createElement("div");
+
+    newItem.className = "order-item";
+
+    newItem.innerHTML = `
+
+        <div class="form-group">
+
+            <label>Product</label>
+
+            <select name="product[]" required>
+
+                <option value="">
+                    Select product
+                </option>
+
+                <option value="beans">
+                    Beans
+                </option>
+
+                <option value="maize">
+                    Maize
+                </option>
+
+                <option value="green-grams">
+                    Green Grams
+                </option>
+
+                <option value="office-supplies">
+                    Office & Stationery Supplies
+                </option>
+
+                <option value="institutional-supplies">
+                    Institutional Supplies
+                </option>
+
+                <option value="project-supplies">
+                    Project Supplies
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+    <label>Estimated Quantity</label>
+
+    <input
+        type="number"
+        name="quantity[]"
+        placeholder="e.g. 10"
+        min="0"
+        step="any"
+        required
+    >
+
+</div>
+
+
+<div class="form-group">
+
+    <label>Unit</label>
+
+    <select name="unit[]" required>
+
+        <option value="">
+            Select unit
+        </option>
+
+        <option value="tonnes">
+            Tonnes
+        </option>
+
+        <option value="kilograms">
+            Kilograms
+        </option>
+
+        <option value="grams">
+            Grams
+        </option>
+
+        <option value="bags">
+            Bags
+        </option>
+
+        <option value="wholesale">
+            Wholesale
+        </option>
+
+        <option value="units">
+            Units
+        </option>
+
+    </select>
+
+</div>
+
+        
+
+
+        <button
+            type="button"
+            class="remove-order-item"
+            onclick="removeOrderItem(this)"
+        >
+            Remove
+        </button>
+
+    `;
+
+    orderItems.appendChild(newItem);
+
+    updateRemoveButtons();
+
+}
+
+
+function removeOrderItem(button) {
+
+    const orderItems = document.getElementById("order-items");
+
+    const items = orderItems.querySelectorAll(".order-item");
+
+    if (items.length > 1) {
+
+        button.parentElement.remove();
+
+        updateRemoveButtons();
+
+    }
+
+}
+
+
+function updateRemoveButtons() {
+
+    const orderItems = document.getElementById("order-items");
+
+    const items = orderItems.querySelectorAll(".order-item");
+
+    items.forEach(function(item, index) {
+
+        const removeBtn = item.querySelector(".remove-order-item");
+
+        removeBtn.style.visibility = items.length > 1 ? "visible" : "hidden";
+
+    });
+
+}
+
+</script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Fix Leaflet's default marker icon (common CDN issue)
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png"
+    });
+
+    const map = L.map("delivery-map").setView([-1.2921, 36.8219], 6);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    let marker;
+
+    map.on("click", function (e) {
+
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        document.getElementById("delivery-lat").value = lat;
+        document.getElementById("delivery-lng").value = lng;
+
+        const locationField = document.getElementById("delivery-location");
+
+        locationField.placeholder = "Looking up address...";
+
+        fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                locationField.value = data.display_name || "";
+            })
+            .catch(function () {
+                locationField.placeholder = "Type the location manually";
+            });
+
+    });
+
+});
+</script>
+
+</body>
+
+</html>

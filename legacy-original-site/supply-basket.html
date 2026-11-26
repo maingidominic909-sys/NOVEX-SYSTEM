@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Supply Basket | Norvex Integrated Enterprises Ltd</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+    <a href="index.html" class="logo">
+        <img
+            src="image/norvex-logo.png"
+            alt="Norvex Integrated Enterprises Ltd"
+        >
+    </a>
+
+    <nav>
+
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="services.html">Services</a>
+        <a href="future-order.html">Future Order</a>
+        <a href="catalogue.html">Catalogue</a>
+         <a href="supply-basket.html" class="basket-nav">
+        Supply Basket</a>
+        <a href="contact.html">Contact</a>
+
+    </nav>
+
+</header>
+
+<main>
+
+
+<!-- =====================================================
+     BASKET HERO
+===================================================== -->
+
+<section class="basket-hero">
+
+    <div class="basket-hero-content">
+
+        <p class="eyebrow">
+            NORVEX SUPPLY BASKET
+        </p>
+
+        <h1>
+            Your <span>Supply Basket</span>
+        </h1>
+
+        <p>
+            Review the products you are interested in and
+            submit your requirements to Norvex for quotation
+            and procurement.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BASKET CONTENT
+===================================================== -->
+
+<section class="supply-basket-page">
+
+
+    <div class="basket-page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                SELECTED PRODUCTS
+            </p>
+
+            <h2>
+                Products You're Interested In
+            </h2>
+
+            <p>
+                Review your selected products below before
+                submitting your supply request.
+            </p>
+
+        </div>
+
+
+        <div class="basket-summary">
+
+            <span>
+                Items
+            </span>
+
+            <strong id="basketCount">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         BASKET ITEMS
+    ================================================= -->
+
+    <div
+        id="basketItems"
+        class="supply-basket-items"
+    >
+
+        <div class="basket-empty-state">
+
+            <div class="basket-empty-icon">
+                🛒
+            </div>
+
+            <h3>
+                Your supply basket is empty
+            </h3>
+
+            <p>
+                Browse our catalogue and add products you
+                would like Norvex to supply.
+            </p>
+
+            <a
+                href="catalogue.html"
+                class="primary-button"
+            >
+                Browse Catalogue
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         BASKET ACTIONS
+    ================================================= -->
+
+    <div
+        id="basketActions"
+        class="basket-actions"
+        style="display: none;"
+    >
+
+        <div class="basket-total">
+
+            <span>
+                Total Products
+            </span>
+
+            <strong id="basketTotal">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="basket-action-buttons">
+
+            <a
+                href="catalogue.html"
+                class="secondary-button"
+            >
+                Continue Shopping
+            </a>
+            <a
+    href="#"
+    id="whatsappBasket"
+    class="whatsapp-button"
+    target="_blank"
+>
+    Send Shopping List on WhatsApp
+        </a>
+
+            <button
+                type="button"
+                id="clearBasket"
+                class="clear-basket-button"
+            >
+                Clear Basket
+            </button>
+
+
+            <a
+                href="contact.html?fromBasket=true"
+                class="primary-button"
+                id="requestQuote"
+            >
+                Request a Quote
+         </a>
+
+        
+
+    </div>
+
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <p>
+        &copy; 2026 Norvex Integrated Enterprises Ltd.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+
+
+<!-- =====================================================
+     SUPPLY BASKET JAVASCRIPT
+===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =================================================
+       ELEMENTS
+    ================================================= */
+
+    const basketItems =
+        document.getElementById("basketItems");
+
+    const basketCount =
+        document.getElementById("basketCount");
+
+    const basketTotal =
+        document.getElementById("basketTotal");
+
+    const basketActions =
+        document.getElementById("basketActions");
+
+    const clearBasketButton =
+        document.getElementById("clearBasket");
+
+    const whatsappBasket =
+    document.getElementById("whatsappBasket");
+
+    /* =================================================
+       GET BASKET
+    ================================================= */
+
+    function getBasket() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem("norvexBasket")
+            ) || [];
+
+        } catch (error) {
+
+            return [];
+
+        }
+
+    }
+
+
+    /* =================================================
+       SAVE BASKET
+    ================================================= */
+
+    function saveBasket(basket) {
+
+        localStorage.setItem(
+            "norvexBasket",
+            JSON.stringify(basket)
+        );
+
+    }
+
+
+    /* =================================================
+       RENDER BASKET
+    ================================================= */
+
+    function renderBasket() {
+
+        const basket = getBasket();
+
+
+        /* UPDATE ITEM COUNTS */
+
+        if (basketCount) {
+            basketCount.textContent = basket.length;
+        }
+
+        if (basketTotal) {
+            basketTotal.textContent = basket.length;
+        }
+
+
+        /* EMPTY BASKET */
+
+        if (basket.length === 0) {
+
+            basketItems.innerHTML = `
+                <div class="basket-empty-state">
+
+                    <div class="basket-empty-icon">
+                        🛒
+                    </div>
+
+                    <h3>
+                        Your supply basket is empty
+                    </h3>
+
+                    <p>
+                        Browse our catalogue and add products
+                        you would like Norvex to supply.
+                    </p>
+
+                    <a
+                        href="catalogue.html"
+                        class="primary-button"
+                    >
+                        Browse Catalogue
+                    </a>
+
+                </div>
+            `;
+
+            basketActions.style.display = "none";
+
+            return;
+        }
+
+
+        /* =================================================
+           DISPLAY PRODUCTS
+        ================================================= */
+
+        let html = "";
+
+        basket.forEach(function (item, index) {
+
+            html += `
+                <div class="basket-item">
+
+                    <div class="basket-item-info">
+
+                        <span class="basket-item-number">
+                            ${String(index + 1).padStart(2, "0")}
+                        </span>
+
+                        <span class="basket-item-name">
+                            ${item}
+                        </span>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="basket-remove"
+                        data-index="${index}"
+                    >
+                        Remove
+                    </button>
+
+                </div>
+            `;
+
+        });
+
+
+        /* PUT PRODUCTS INTO THE PAGE */
+
+        basketItems.innerHTML = html;
+
+
+        /* SHOW ACTIONS */
+
+        basketActions.style.display = "block";
+
+
+        /* =================================================
+           REMOVE BUTTONS
+        ================================================= */
+
+        document
+            .querySelectorAll(".basket-remove")
+            .forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const basket = getBasket();
+
+                        const index =
+                            parseInt(
+                                button.dataset.index,
+                                10
+                            );
+
+
+                        basket.splice(index, 1);
+
+                        saveBasket(basket);
+
+                        renderBasket();
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    /* =================================================
+       CLEAR BASKET
+    ================================================= */
+
+    if (clearBasketButton) {
+
+        clearBasketButton.addEventListener(
+            "click",
+            function () {
+
+                const basket = getBasket();
+
+
+                if (basket.length === 0) {
+                    return;
+                }
+
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to clear your supply basket?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                localStorage.removeItem(
+                    "norvexBasket"
+                );
+
+
+                renderBasket();
+
+            }
+        );
+
+    }
+    /* =================================================
+   SEND SHOPPING LIST TO WHATSAPP
+================================================= */
+
+if (whatsappBasket) {
+
+    whatsappBasket.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            const basket = getBasket();
+
+            if (basket.length === 0) {
+
+                alert(
+                    "Your supply basket is empty. Please add products before sending your shopping list."
+                );
+
+                return;
+            }
+
+            let message =
+                "Hello Norvex, I would like to request a quotation for the following products:\n\n";
+
+            basket.forEach(function (product, index) {
+
+                message +=
+                    (index + 1) +
+                    ". " +
+                    product +
+                    "\n";
+
+            });
+
+            message +=
+                "\nPlease provide your quotation, availability and any relevant supply information.";
+
+            const whatsappNumber =
+                "254742021099";
+
+            const whatsappURL =
+                "https://wa.me/" +
+                whatsappNumber +
+                "?text=" +
+                encodeURIComponent(message);
+
+            window.open(
+                whatsappURL,
+                "_blank"
+            );
+
+        }
+    );
+
+}
+
+    /* =================================================
+       INITIAL LOAD
+    ================================================= */
+
+    renderBasket();
+
+});
+
+</script>
+
+
+</body>
+</html>

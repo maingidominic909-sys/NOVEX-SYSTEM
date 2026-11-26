@@ -1,0 +1,1425 @@
+{
+  "currency": "KES",
+  "categories": [
+    {
+      "id": "food",
+      "name": "Dry Food Commodities",
+      "icon": "grain",
+      "blurb": "Beans, cereals, pulses and grains for bulk and institutional kitchens.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "office",
+      "name": "Office & Stationery",
+      "icon": "paper",
+      "blurb": "Everyday office consumables, printing media and filing.",
+      "img": "/img/products/office.jpg"
+    },
+    {
+      "id": "ict",
+      "name": "ICT & Technology",
+      "icon": "chip",
+      "blurb": "Computers, printing hardware, accessories and power protection.",
+      "img": "/img/products/ict.jpg"
+    },
+    {
+      "id": "furniture",
+      "name": "Furniture & Seating",
+      "icon": "chair",
+      "blurb": "Desks, seating and storage for offices and institutions.",
+      "img": "/img/products/furniture.jpg"
+    },
+    {
+      "id": "cleaning",
+      "name": "Cleaning & Hygiene",
+      "icon": "spray",
+      "blurb": "Chemicals, janitorial equipment and washroom consumables.",
+      "img": "/img/products/cleaning.jpg"
+    },
+    {
+      "id": "institutional",
+      "name": "Institutional Supplies",
+      "icon": "school",
+      "blurb": "School, learning and general institutional requirements.",
+      "img": "/img/products/school.jpg"
+    },
+    {
+      "id": "safety",
+      "name": "Occupational Health & Safety",
+      "icon": "helm",
+      "blurb": "PPE, first aid, signage and workplace safety kit.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "hardware",
+      "name": "Hardware & Electrical",
+      "icon": "bolt",
+      "blurb": "Electrical fittings, tools and maintenance hardware.",
+      "img": "/img/products/hardware.jpg"
+    },
+    {
+      "id": "textiles",
+      "name": "Uniforms & Textiles",
+      "icon": "shirt",
+      "blurb": "Workwear, uniforms and branded corporate clothing.",
+      "img": "/img/products/textiles.jpg"
+    },
+    {
+      "id": "catering",
+      "name": "Catering & Kitchen",
+      "icon": "pot",
+      "blurb": "Utensils and food-service equipment for institutional kitchens.",
+      "img": "/img/products/catering.jpg"
+    },
+    {
+      "id": "printing",
+      "name": "Printing & Branding",
+      "icon": "print",
+      "blurb": "Business print, signage and promotional branding.",
+      "img": "/img/products/printing.jpg"
+    },
+    {
+      "id": "water",
+      "name": "Water & Beverages",
+      "icon": "drop",
+      "blurb": "Packaged drinking water and office beverage consumables.",
+      "img": "/img/products/water.jpg"
+    },
+    {
+      "id": "agriculture",
+      "name": "Agriculture Inputs",
+      "icon": "leaf",
+      "blurb": "Seeds, farm inputs and animal feeds for approved programmes.",
+      "img": "/img/products/agriculture.jpg"
+    }
+  ],
+  "products": [
+    {
+      "id": "nvx-fd-001",
+      "name": "Beans",
+      "cat": "food",
+      "tags": [
+        "beans",
+        "dry beans",
+        "maharagwe",
+        "pulses"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          9200
+        ],
+        [
+          10,
+          8950
+        ],
+        [
+          40,
+          8700
+        ]
+      ],
+      "lead": "2–4 days",
+      "featured": true,
+      "popular": true,
+      "desc": "Quality dry beans supplied according to quantity and specification requirements for institutional kitchens, wholesalers and relief programmes.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "nvx-fd-002",
+      "name": "Yellow Beans",
+      "cat": "food",
+      "tags": [
+        "yellow beans",
+        "maharagwe ya njano"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          9600
+        ],
+        [
+          10,
+          9300
+        ],
+        [
+          40,
+          9050
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Yellow beans for wholesale, institutional and bulk procurement.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "nvx-fd-003",
+      "name": "Nyayo Beans",
+      "cat": "food",
+      "tags": [
+        "nyayo",
+        "beans"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          9800
+        ],
+        [
+          10,
+          9500
+        ],
+        [
+          40,
+          9200
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Dry Nyayo beans sourced for institutional and bulk requirements.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "nvx-fd-004",
+      "name": "Rosecoco Beans",
+      "cat": "food",
+      "tags": [
+        "rosecoco",
+        "beans"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          10500
+        ],
+        [
+          10,
+          10200
+        ],
+        [
+          40,
+          9900
+        ]
+      ],
+      "lead": "2–4 days",
+      "featured": true,
+      "desc": "Quality Rosecoco beans available for institutional and bulk supply.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "nvx-fd-005",
+      "name": "Njahi / Black Beans",
+      "cat": "food",
+      "tags": [
+        "njahi",
+        "black beans"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          11200
+        ],
+        [
+          10,
+          10850
+        ],
+        [
+          40,
+          10500
+        ]
+      ],
+      "lead": "3–5 days",
+      "desc": "Black beans suitable for wholesale and institutional food supply.",
+      "img": "/img/products/beans.jpg"
+    },
+    {
+      "id": "nvx-fd-006",
+      "name": "Green Grams (Ndengu)",
+      "cat": "food",
+      "tags": [
+        "green grams",
+        "ndengu",
+        "mung"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          11400
+        ],
+        [
+          10,
+          11000
+        ],
+        [
+          40,
+          10650
+        ]
+      ],
+      "lead": "2–4 days",
+      "featured": true,
+      "popular": true,
+      "desc": "Quality green grams for wholesale, institutional and bulk procurement.",
+      "img": "/img/products/pulses.jpg"
+    },
+    {
+      "id": "nvx-fd-007",
+      "name": "Cowpeas / Kunde",
+      "cat": "food",
+      "tags": [
+        "cowpeas",
+        "kunde"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          8300
+        ],
+        [
+          10,
+          8050
+        ],
+        [
+          40,
+          7800
+        ]
+      ],
+      "lead": "3–5 days",
+      "desc": "Dry cowpeas supplied according to client quantity and specification.",
+      "img": "/img/products/pulses.jpg"
+    },
+    {
+      "id": "nvx-fd-008",
+      "name": "Pigeon Peas / Mbaazi",
+      "cat": "food",
+      "tags": [
+        "pigeon peas",
+        "mbaazi"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          8700
+        ],
+        [
+          10,
+          8400
+        ],
+        [
+          40,
+          8150
+        ]
+      ],
+      "lead": "3–5 days",
+      "desc": "Pigeon peas for institutional and bulk food procurement.",
+      "img": "/img/products/pulses.jpg"
+    },
+    {
+      "id": "nvx-fd-009",
+      "name": "Lentils",
+      "cat": "food",
+      "tags": [
+        "lentils",
+        "dengu"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          10800
+        ],
+        [
+          10,
+          10450
+        ],
+        [
+          40,
+          10100
+        ]
+      ],
+      "lead": "3–5 days",
+      "desc": "Quality lentils available for bulk and institutional supply.",
+      "img": "/img/products/pulses.jpg"
+    },
+    {
+      "id": "nvx-fd-010",
+      "name": "Chickpeas",
+      "cat": "food",
+      "tags": [
+        "chickpeas",
+        "dengu"
+      ],
+      "unit": "50kg bag",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          10200
+        ],
+        [
+          10,
+          9900
+        ],
+        [
+          40,
+          9600
+        ]
+      ],
+      "lead": "3–5 days",
+      "desc": "Chickpeas sourced for wholesale and institutional requirements.",
+      "img": "/img/products/pulses.jpg"
+    },
+    {
+      "id": "nvx-fd-011",
+      "name": "Maize Grain",
+      "cat": "food",
+      "tags": [
+        "maize",
+        "corn",
+        "mahindi"
+      ],
+      "unit": "90kg bag",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          4700
+        ],
+        [
+          20,
+          4550
+        ],
+        [
+          100,
+          4400
+        ]
+      ],
+      "lead": "2–3 days",
+      "featured": true,
+      "popular": true,
+      "desc": "Quality maize for wholesale, institutional and bulk procurement requirements.",
+      "img": "/img/products/maize.jpg"
+    },
+    {
+      "id": "nvx-fd-012",
+      "name": "Rice",
+      "cat": "food",
+      "tags": [
+        "rice",
+        "mchele",
+        "pishori"
+      ],
+      "unit": "25kg bag",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          4300
+        ],
+        [
+          20,
+          4150
+        ],
+        [
+          100,
+          3980
+        ]
+      ],
+      "lead": "2–4 days",
+      "featured": true,
+      "desc": "Rice sourced for institutional and wholesale supply requirements.",
+      "img": "/img/products/rice.jpg"
+    },
+    {
+      "id": "nvx-of-001",
+      "name": "A4 Copy Paper",
+      "cat": "office",
+      "tags": [
+        "a4",
+        "paper",
+        "copy paper"
+      ],
+      "unit": "ream (500 sheets)",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          620
+        ],
+        [
+          50,
+          590
+        ],
+        [
+          200,
+          565
+        ]
+      ],
+      "lead": "1–3 days",
+      "featured": true,
+      "popular": true,
+      "desc": "Quality office printing and photocopy paper, 70–80gsm, suitable for high-volume printing.",
+      "img": "/img/products/office.jpg"
+    },
+    {
+      "id": "nvx-of-002",
+      "name": "Writing Stationery",
+      "cat": "office",
+      "tags": [
+        "pens",
+        "pencils",
+        "markers",
+        "rulers"
+      ],
+      "unit": "pack",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          780
+        ],
+        [
+          25,
+          720
+        ],
+        [
+          100,
+          680
+        ]
+      ],
+      "lead": "1–3 days",
+      "desc": "Pens, pencils, markers, rulers and other everyday stationery requirements.",
+      "img": "/img/products/office.jpg"
+    },
+    {
+      "id": "nvx-of-003",
+      "name": "Files & Folders",
+      "cat": "office",
+      "tags": [
+        "files",
+        "folders",
+        "arch levers"
+      ],
+      "unit": "pack of 10",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          1450
+        ],
+        [
+          20,
+          1350
+        ],
+        [
+          80,
+          1250
+        ]
+      ],
+      "lead": "1–3 days",
+      "desc": "Filing products for document organisation and records management.",
+      "img": "/img/products/office.jpg"
+    },
+    {
+      "id": "nvx-of-004",
+      "name": "Printer Toner & Cartridges",
+      "cat": "office",
+      "tags": [
+        "toner",
+        "cartridge",
+        "ink"
+      ],
+      "unit": "unit",
+      "moq": 4,
+      "tiers": [
+        [
+          1,
+          6800
+        ],
+        [
+          10,
+          6450
+        ],
+        [
+          40,
+          6100
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Printing consumables for common office printer and copier requirements.",
+      "img": "/img/products/office.jpg"
+    },
+    {
+      "id": "nvx-it-001",
+      "name": "Laptops & Computers",
+      "cat": "ict",
+      "tags": [
+        "laptop",
+        "desktop",
+        "computer"
+      ],
+      "unit": "unit",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          78000
+        ],
+        [
+          10,
+          74000
+        ],
+        [
+          50,
+          69500
+        ]
+      ],
+      "lead": "5–10 days",
+      "featured": true,
+      "desc": "Computers sourced according to required specifications and budget, with warranty support.",
+      "img": "/img/products/ict.jpg"
+    },
+    {
+      "id": "nvx-it-002",
+      "name": "Printers & Scanners",
+      "cat": "ict",
+      "tags": [
+        "printer",
+        "scanner",
+        "photocopier"
+      ],
+      "unit": "unit",
+      "moq": 2,
+      "tiers": [
+        [
+          1,
+          46000
+        ],
+        [
+          5,
+          43500
+        ],
+        [
+          20,
+          41000
+        ]
+      ],
+      "lead": "5–10 days",
+      "desc": "Printing and document-management equipment for offices and institutions.",
+      "img": "/img/products/ict.jpg"
+    },
+    {
+      "id": "nvx-it-003",
+      "name": "Computer Accessories",
+      "cat": "ict",
+      "tags": [
+        "keyboard",
+        "mouse",
+        "cables",
+        "storage",
+        "webcam"
+      ],
+      "unit": "set",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          3200
+        ],
+        [
+          25,
+          2950
+        ],
+        [
+          100,
+          2700
+        ]
+      ],
+      "lead": "2–5 days",
+      "desc": "Keyboards, mice, cables, storage devices, webcams and related accessories.",
+      "img": "/img/products/ict.jpg"
+    },
+    {
+      "id": "nvx-it-004",
+      "name": "UPS & Power Protection",
+      "cat": "ict",
+      "tags": [
+        "ups",
+        "inverter",
+        "surge",
+        "power"
+      ],
+      "unit": "unit",
+      "moq": 4,
+      "tiers": [
+        [
+          1,
+          17500
+        ],
+        [
+          10,
+          16500
+        ],
+        [
+          40,
+          15500
+        ]
+      ],
+      "lead": "3–7 days",
+      "desc": "UPS systems and power-protection equipment for office technology.",
+      "img": "/img/products/ict.jpg"
+    },
+    {
+      "id": "nvx-fn-001",
+      "name": "Office Desks",
+      "cat": "furniture",
+      "tags": [
+        "desk",
+        "table",
+        "workstation"
+      ],
+      "unit": "unit",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          18500
+        ],
+        [
+          10,
+          17200
+        ],
+        [
+          40,
+          15900
+        ]
+      ],
+      "lead": "7–14 days",
+      "desc": "Office desks supplied according to required size, style and specification.",
+      "img": "/img/products/furniture.jpg"
+    },
+    {
+      "id": "nvx-fn-002",
+      "name": "Office Chairs",
+      "cat": "furniture",
+      "tags": [
+        "chair",
+        "seating",
+        "ergonomic",
+        "executive"
+      ],
+      "unit": "unit",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          12500
+        ],
+        [
+          10,
+          11500
+        ],
+        [
+          40,
+          10400
+        ]
+      ],
+      "lead": "7–14 days",
+      "featured": true,
+      "desc": "Executive, ergonomic, visitor and general office seating.",
+      "img": "/img/products/furniture.jpg"
+    },
+    {
+      "id": "nvx-fn-003",
+      "name": "Filing Cabinets",
+      "cat": "furniture",
+      "tags": [
+        "cabinet",
+        "storage",
+        "shelf"
+      ],
+      "unit": "unit",
+      "moq": 3,
+      "tiers": [
+        [
+          1,
+          24000
+        ],
+        [
+          5,
+          22500
+        ],
+        [
+          20,
+          20900
+        ]
+      ],
+      "lead": "7–14 days",
+      "desc": "Storage solutions for office documents and records.",
+      "img": "/img/products/furniture.jpg"
+    },
+    {
+      "id": "nvx-cl-001",
+      "name": "Cleaning Chemicals",
+      "cat": "cleaning",
+      "tags": [
+        "detergent",
+        "disinfectant",
+        "bleach",
+        "floor cleaner"
+      ],
+      "unit": "20L jerrycan",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          4300
+        ],
+        [
+          10,
+          3990
+        ],
+        [
+          40,
+          3700
+        ]
+      ],
+      "lead": "1–3 days",
+      "popular": true,
+      "desc": "Detergents, disinfectants, floor cleaners, bleach and related cleaning products.",
+      "img": "/img/products/cleaning.jpg"
+    },
+    {
+      "id": "nvx-cl-002",
+      "name": "Janitorial Equipment",
+      "cat": "cleaning",
+      "tags": [
+        "mop",
+        "broom",
+        "bucket",
+        "brush"
+      ],
+      "unit": "set",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          2600
+        ],
+        [
+          25,
+          2400
+        ],
+        [
+          100,
+          2150
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Mops, brooms, buckets, brushes, dustpans and cleaning equipment.",
+      "img": "/img/products/cleaning.jpg"
+    },
+    {
+      "id": "nvx-cl-003",
+      "name": "Hygiene Supplies",
+      "cat": "cleaning",
+      "tags": [
+        "sanitiser",
+        "soap",
+        "tissue",
+        "paper towel"
+      ],
+      "unit": "carton",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          3800
+        ],
+        [
+          25,
+          3550
+        ],
+        [
+          100,
+          3250
+        ]
+      ],
+      "lead": "1–3 days",
+      "desc": "Hand sanitiser, liquid soap, tissue, paper towels and related products.",
+      "img": "/img/products/cleaning.jpg"
+    },
+    {
+      "id": "nvx-in-001",
+      "name": "School Supplies",
+      "cat": "institutional",
+      "tags": [
+        "exercise books",
+        "school",
+        "learning materials"
+      ],
+      "unit": "pack",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          2400
+        ],
+        [
+          50,
+          2200
+        ],
+        [
+          200,
+          1980
+        ]
+      ],
+      "lead": "2–5 days",
+      "desc": "Stationery, learning materials and general school requirements.",
+      "img": "/img/products/school.jpg"
+    },
+    {
+      "id": "nvx-in-002",
+      "name": "Institutional Equipment",
+      "cat": "institutional",
+      "tags": [
+        "equipment",
+        "institution"
+      ],
+      "unit": "unit",
+      "moq": 2,
+      "tiers": [
+        [
+          1,
+          22000
+        ],
+        [
+          5,
+          20500
+        ],
+        [
+          20,
+          19000
+        ]
+      ],
+      "lead": "5–10 days",
+      "desc": "Equipment and supplies required for institutional operations.",
+      "img": "/img/products/school.jpg"
+    },
+    {
+      "id": "nvx-sf-001",
+      "name": "Safety Helmets",
+      "cat": "safety",
+      "tags": [
+        "helmet",
+        "hard hat",
+        "ppe"
+      ],
+      "unit": "unit",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          950
+        ],
+        [
+          50,
+          870
+        ],
+        [
+          200,
+          790
+        ]
+      ],
+      "lead": "2–4 days",
+      "featured": true,
+      "desc": "Protective headwear for workplace safety requirements.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "nvx-sf-002",
+      "name": "Safety Boots",
+      "cat": "safety",
+      "tags": [
+        "boots",
+        "ppe",
+        "footwear"
+      ],
+      "unit": "pair",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          3200
+        ],
+        [
+          25,
+          2950
+        ],
+        [
+          100,
+          2700
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Protective footwear for workplace and industrial environments.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "nvx-sf-003",
+      "name": "Reflective Vests",
+      "cat": "safety",
+      "tags": [
+        "vest",
+        "hi-vis",
+        "reflective",
+        "ppe"
+      ],
+      "unit": "unit",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          650
+        ],
+        [
+          50,
+          590
+        ],
+        [
+          200,
+          520
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "High-visibility protective clothing for workplace environments.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "nvx-sf-004",
+      "name": "First Aid Kits",
+      "cat": "safety",
+      "tags": [
+        "first aid",
+        "kit",
+        "medical"
+      ],
+      "unit": "kit",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          4500
+        ],
+        [
+          10,
+          4150
+        ],
+        [
+          40,
+          3800
+        ]
+      ],
+      "lead": "2–4 days",
+      "desc": "Workplace first-aid kits supplied according to organisational requirements.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "nvx-sf-005",
+      "name": "Safety Signage",
+      "cat": "safety",
+      "tags": [
+        "signage",
+        "signs",
+        "warning"
+      ],
+      "unit": "unit",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          850
+        ],
+        [
+          50,
+          780
+        ],
+        [
+          200,
+          690
+        ]
+      ],
+      "lead": "3–7 days",
+      "desc": "Workplace warning, mandatory, emergency and directional safety signs.",
+      "img": "/img/products/safety.jpg"
+    },
+    {
+      "id": "nvx-hw-001",
+      "name": "Electrical Supplies",
+      "cat": "hardware",
+      "tags": [
+        "cables",
+        "switches",
+        "sockets",
+        "lighting"
+      ],
+      "unit": "pack",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          2900
+        ],
+        [
+          25,
+          2700
+        ],
+        [
+          100,
+          2450
+        ]
+      ],
+      "lead": "2–5 days",
+      "desc": "Cables, switches, sockets, lighting and related electrical products.",
+      "img": "/img/products/hardware.jpg"
+    },
+    {
+      "id": "nvx-hw-002",
+      "name": "Hardware & Tools",
+      "cat": "hardware",
+      "tags": [
+        "tools",
+        "fasteners",
+        "hardware"
+      ],
+      "unit": "set",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          5200
+        ],
+        [
+          10,
+          4850
+        ],
+        [
+          40,
+          4500
+        ]
+      ],
+      "lead": "2–5 days",
+      "desc": "General tools, fasteners and hardware for maintenance and project requirements.",
+      "img": "/img/products/hardware.jpg"
+    },
+    {
+      "id": "nvx-tx-001",
+      "name": "Staff Uniforms",
+      "cat": "textiles",
+      "tags": [
+        "uniform",
+        "workwear",
+        "overall"
+      ],
+      "unit": "set",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          3400
+        ],
+        [
+          50,
+          3150
+        ],
+        [
+          200,
+          2850
+        ]
+      ],
+      "lead": "7–14 days",
+      "desc": "Uniforms and workwear supplied according to organisational specifications.",
+      "img": "/img/products/textiles.jpg"
+    },
+    {
+      "id": "nvx-tx-002",
+      "name": "Corporate Clothing",
+      "cat": "textiles",
+      "tags": [
+        "t-shirt",
+        "shirt",
+        "branded",
+        "corporate"
+      ],
+      "unit": "unit",
+      "moq": 25,
+      "tiers": [
+        [
+          1,
+          1800
+        ],
+        [
+          75,
+          1620
+        ],
+        [
+          300,
+          1450
+        ]
+      ],
+      "lead": "7–14 days",
+      "desc": "Corporate shirts, T-shirts, jackets, caps and branded clothing.",
+      "img": "/img/products/textiles.jpg"
+    },
+    {
+      "id": "nvx-ca-001",
+      "name": "Kitchen Utensils",
+      "cat": "catering",
+      "tags": [
+        "utensils",
+        "kitchen",
+        "cooking"
+      ],
+      "unit": "set",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          6800
+        ],
+        [
+          10,
+          6300
+        ],
+        [
+          40,
+          5800
+        ]
+      ],
+      "lead": "3–7 days",
+      "desc": "General kitchen utensils and equipment for institutional requirements.",
+      "img": "/img/products/catering.jpg"
+    },
+    {
+      "id": "nvx-ca-002",
+      "name": "Catering Equipment",
+      "cat": "catering",
+      "tags": [
+        "catering",
+        "food service",
+        "equipment"
+      ],
+      "unit": "unit",
+      "moq": 2,
+      "tiers": [
+        [
+          1,
+          34500
+        ],
+        [
+          5,
+          32500
+        ],
+        [
+          20,
+          29900
+        ]
+      ],
+      "lead": "5–12 days",
+      "desc": "Catering and food-service equipment for institutional operations.",
+      "img": "/img/products/catering.jpg"
+    },
+    {
+      "id": "nvx-pr-001",
+      "name": "Business Printing",
+      "cat": "printing",
+      "tags": [
+        "business cards",
+        "letterheads",
+        "brochures",
+        "flyers"
+      ],
+      "unit": "run (500 pcs)",
+      "moq": 1,
+      "tiers": [
+        [
+          1,
+          6500
+        ],
+        [
+          5,
+          5900
+        ],
+        [
+          20,
+          5200
+        ]
+      ],
+      "lead": "3–6 days",
+      "desc": "Business cards, letterheads, brochures, flyers and corporate documents.",
+      "img": "/img/products/printing.jpg"
+    },
+    {
+      "id": "nvx-pr-002",
+      "name": "Signage & Branding",
+      "cat": "printing",
+      "tags": [
+        "banner",
+        "poster",
+        "branding",
+        "signs"
+      ],
+      "unit": "unit",
+      "moq": 5,
+      "tiers": [
+        [
+          1,
+          4200
+        ],
+        [
+          10,
+          3800
+        ],
+        [
+          40,
+          3400
+        ]
+      ],
+      "lead": "3–7 days",
+      "desc": "Banners, posters, signs and branded promotional materials.",
+      "img": "/img/products/printing.jpg"
+    },
+    {
+      "id": "nvx-wt-001",
+      "name": "Bottled Drinking Water",
+      "cat": "water",
+      "tags": [
+        "water",
+        "bottled",
+        "drinking"
+      ],
+      "unit": "carton (12 x 1L)",
+      "moq": 20,
+      "tiers": [
+        [
+          1,
+          720
+        ],
+        [
+          50,
+          660
+        ],
+        [
+          200,
+          610
+        ]
+      ],
+      "lead": "1–2 days",
+      "featured": true,
+      "popular": true,
+      "desc": "Packaged drinking water for offices, institutions and events.",
+      "img": "/img/products/water.jpg"
+    },
+    {
+      "id": "nvx-wt-002",
+      "name": "Office Beverages",
+      "cat": "water",
+      "tags": [
+        "tea",
+        "coffee",
+        "sugar",
+        "beverages"
+      ],
+      "unit": "carton",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          3400
+        ],
+        [
+          25,
+          3150
+        ],
+        [
+          100,
+          2900
+        ]
+      ],
+      "lead": "1–3 days",
+      "desc": "Tea, coffee, sugar and related office beverage requirements.",
+      "img": "/img/products/water.jpg"
+    },
+    {
+      "id": "nvx-ag-001",
+      "name": "Seeds & Agricultural Inputs",
+      "cat": "agriculture",
+      "tags": [
+        "seeds",
+        "inputs",
+        "fertiliser"
+      ],
+      "unit": "bag",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          5600
+        ],
+        [
+          50,
+          5200
+        ],
+        [
+          200,
+          4800
+        ]
+      ],
+      "lead": "5–12 days",
+      "desc": "Agricultural inputs sourced according to project specifications.",
+      "img": "/img/products/agriculture.jpg"
+    },
+    {
+      "id": "nvx-ag-002",
+      "name": "Animal Feeds",
+      "cat": "agriculture",
+      "tags": [
+        "feeds",
+        "animal",
+        "dairy"
+      ],
+      "unit": "50kg bag",
+      "moq": 10,
+      "tiers": [
+        [
+          1,
+          3100
+        ],
+        [
+          50,
+          2900
+        ],
+        [
+          200,
+          2700
+        ]
+      ],
+      "lead": "3–7 days",
+      "desc": "Animal feeds sourced for approved bulk and institutional requirements.",
+      "img": "/img/products/agriculture.jpg"
+    }
+  ]
+}

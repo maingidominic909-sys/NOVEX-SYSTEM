@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order history — Norvex order desk</title>
+<meta name="description" content="Every Norvex order for your organisation in one place, with status, totals and one-click reorder.">
+<link rel="icon" href="/img/mark.png">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/console.css">
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body class="console" data-page="orders" data-crumb="Records|Order history">
+<div class="console-body">
+  <div id="nv-rail"></div>
+  <div class="console-main">
+    <div id="nv-cmdbar"></div>
+
+    <main class="workspace">
+      <div class="workspace-narrow">
+        <div class="page-title-bar">
+          <div>
+            <h1>Order history</h1>
+            <p class="sub">Every order placed through the desk — filter by status, reopen a sheet, or reorder in one click.</p>
+          </div>
+          <div class="title-actions">
+            <button class="btn btn-ghost btn-sm" id="exportCsv">Export CSV</button>
+            <a href="/shop.html" class="btn btn-gold btn-sm">New order</a>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="historyKpis"></div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Orders</h2>
+            <div class="row" style="gap:8px;flex-wrap:wrap">
+              <div class="seg" id="statusSeg">
+                <button class="on" data-status="all">All</button>
+                <button data-status="received">Received</button>
+                <button data-status="confirmed">Confirmed</button>
+                <button data-status="sourcing">Sourcing</button>
+                <button data-status="dispatched">Dispatched</button>
+                <button data-status="delivered">Delivered</button>
+              </div>
+              <label style="display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:.4em .9em">
+                <span data-icon="search" style="width:14px;display:inline-block;color:var(--muted)"></span>
+                <input id="historySearch" placeholder="Search ref or item…" style="border:0;outline:none;font-size:.82rem;width:170px">
+              </label>
+            </div>
+          </div>
+          <div class="panel-body tight">
+            <div class="table-wrap">
+              <table class="data" id="historyTable">
+                <thead>
+                  <tr>
+                    <th>Reference</th><th>Placed</th><th>Lines</th><th class="num">Total</th><th>Status</th><th class="actions">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+              </table>
+            </div>
+            <div id="historyEmpty" class="empty-state hide">
+              <div class="icon-wrap" data-icon="receipt"></div>
+              <h3>No orders yet</h3>
+              <p>Once you place an order it appears here with its live status. Start with the catalogue or send a quotation request.</p>
+              <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">
+                <a href="/shop.html" class="btn btn-gold">Browse catalogue</a>
+                <a href="/quote.html" class="btn btn-ghost">Request a quote</a>
+              </div>
+            </div>
+          </div>
+          <div class="panel-foot">
+            <span class="tiny muted" id="historyMeta">—</span>
+            <span class="tiny muted">Statuses update as the desk progresses your order</span>
+          </div>
+        </div>
+
+        <div class="layout-3col" style="margin-top:16px">
+          <div class="panel">
+            <div class="panel-head"><h2>Reorder favourites</h2></div>
+            <div class="panel-body" id="reorderBlock" style="font-size:.86rem"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Standing supply</h2></div>
+            <div class="panel-body">
+              <p class="small muted" style="margin-bottom:12px">Turn a repeat order into a scheduled supply plan with fixed pricing.</p>
+              <a href="/plan.html" class="btn btn-ghost btn-sm btn-block">Open future order planner</a>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Documents</h2></div>
+            <div class="panel-body">
+              <p class="small muted" style="margin-bottom:12px">Quotations, delivery notes and invoices for tender files.</p>
+              <a href="/contact.html" class="btn btn-ghost btn-sm btn-block">Request copies</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="console-foot">
+      <span>All amounts in Kenya Shillings, VAT inclusive where shown</span>
+      <span><a href="/index.html">Storefront</a> · <a href="/admin.html">Operations</a></span>
+    </footer>
+  </div>
+</div>
+
+<script src="/js/catalog-snapshot.js"></script>
+<script src="/js/nv-core.js"></script>
+<script src="/js/nv-ui.js"></script>
+<script src="/js/nv-payments.js"></script>
+<script src="/js/nv-cookies.js"></script>
+<script src="/js/chrome-console.js"></script>
+<script src="/js/page-orders.js"></script>
+</body>
+</html>
