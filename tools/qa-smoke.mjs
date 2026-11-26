@@ -85,12 +85,44 @@ for (const [path, key] of pages) {
 {
   const { window, doc, errors, close } = await loadPage('/');
   const btn = doc.querySelector('[data-add]');
+  const clicked = catalog.products.find(p => p.id === btn.dataset.add) || p1;
   btn.click();
   await sleep(400);
-  check('home: add-to-basket updates count', window.NV.basket.count() >= p1.moq, `count=${window.NV.basket.count()}`);
+  check('home: add-to-basket updates count', window.NV.basket.count() >= clicked.moq, `count=${window.NV.basket.count()}`);
   check('home: departments rendered', doc.querySelectorAll('#deptGrid .dept-card').length === catalog.categories.length);
   check('home: featured rendered', doc.querySelectorAll('#featuredGrid .pcard').length >= 8);
   check('home: no errors after interaction', errors.length === 0, errors[0]);
+  close();
+}
+
+/* ---------- 2b. home redesign: ticker, moving offers, deals, logistics ---------- */
+{
+  const { window, doc, errors, navs, close } = await loadPage('/');
+  check('home: live ticker items', doc.querySelectorAll('#liveTicker .lt-item').length >= 7);
+  check('home: ticker loop halves', doc.querySelectorAll('#liveTicker .lt-half').length === 2);
+  check('home: offer carousel has 4 slides', doc.querySelectorAll('#ocTrack .oc-slide').length === 4);
+  check('home: carousel dots built', doc.querySelectorAll('#ocDots .oc-dot').length === 4);
+  doc.getElementById('ocNext').click();
+  await sleep(60);
+  check('home: carousel next advances', doc.getElementById('ocTrack').style.transform.includes('-100%'), doc.getElementById('ocTrack').style.transform);
+  check('home: carousel dot follows slide', doc.querySelectorAll('#ocDots .oc-dot')[1].classList.contains('on'));
+  doc.getElementById('ocPrev').click();
+  await sleep(60);
+  check('home: carousel prev returns', doc.getElementById('ocTrack').style.transform.includes('0%'), doc.getElementById('ocTrack').style.transform);
+  check('home: deals rail rendered', doc.querySelectorAll('#dealRail .pcard').length >= 6);
+  check('home: deal countdown ticking', /\d+d \d{2}h \d{2}m/.test(doc.getElementById('dealCountdown').textContent), doc.getElementById('dealCountdown').textContent);
+  const saversTab = doc.querySelector('.ptab[data-tab="savers"]');
+  saversTab.click();
+  await sleep(60);
+  check('home: trending tab switches', saversTab.classList.contains('on') && doc.querySelectorAll('#featuredGrid .pcard').length === 8);
+  check('home: logistics milestones', doc.querySelectorAll('.route-steps .rs').length === 5);
+  check('home: desk feed items', doc.querySelectorAll('#deskFeedList .df-item').length === 3);
+  const tf = doc.getElementById('trackForm');
+  tf.querySelector('input').value = 'NVX-2611-P2D77E';
+  tf.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(80);
+  check('home: track form navigates to order page', navs.length >= 1, navs.join('|'));
+  check('home: redesign no errors', errors.length === 0, errors[0]);
   close();
 }
 
