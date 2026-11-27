@@ -553,12 +553,71 @@ let createdRef = '';
   const css = await (await fetch(BASE + '/css/nv.css')).text();
   check('vertical: content grids forced single-column', /\.grid-2,\.grid-3,\.grid-4,[\s\S]*?grid-template-columns:1fr!important/.test(css));
   check('vertical: basket/checkout/order/builder stacked', /\.basket-layout,\.checkout-layout,\.builder-layout,\.order-layout,/.test(css));
-  check('vertical: admin charts + KPIs stacked', /\.kpi-grid,\.admin-charts,/.test(css));
+  check('vertical: admin charts stacked', /\.admin-charts,[\s\S]*?grid-template-columns:1fr!important/.test(css));
+  check('vertical: KPI stat tiles stay a compact grid', /\.kpi-grid\{grid-template-columns:repeat\(auto-fit,minmax\(150px,1fr\)\)/.test(css));
   const a = await loadPage('/account.html', { seed: session('usr_demo'), wait: 1400 });
   check('vertical: account has no horizontal offenders', !a.doc.querySelector('.account-kpis, .profile-head, .fav-row'));
   check('vertical: account uses stacked profile + stats', !!a.doc.querySelector('.acct-profile') && !!a.doc.querySelector('.acct-stats'));
   check('vertical: account no errors', a.errors.length === 0, a.errors[0]);
   a.close();
+}
+
+/* ---------- 21. basket: live badge on load + proceed straight to payment ---------- */
+{
+  const seed = {
+    'norvex.basket.v1': [{ id: p1.id, qty: 12 }],
+    ...session('usr_demo'),
+    'norvex.customer.v1': { name: 'Grace Wanjiru', email: 'demo@norvex.co.ke', phone: '+254742021099', organisation: 'Kiambu County Referral Hospital', address: 'QA House, Test Road', town: 'Nairobi' }
+  };
+  const b = await loadPage('/basket.html', { seed, wait: 1500 });
+  const badge = b.doc.querySelector('#bottomBar [data-cart-count]');
+  check('basket: pill badge shows count on load', !!badge && badge.textContent !== '0' && badge.textContent === String(b.window.NV.basket.count()), badge && badge.textContent);
+  check('basket: total displayed', /KES/.test(b.doc.querySelector('.sum-total b').textContent));
+  check('basket: proceed-to-payment CTA', /Proceed to payment/.test(b.doc.getElementById('checkoutBtn').textContent));
+  b.doc.getElementById('checkoutBtn').click();
+  await sleep(1600);
+  check('basket: basket cleared after placing order', b.window.NV.basket.count() === 0);
+  const remote = await (await fetch(BASE + '/api/orders?email=demo@norvex.co.ke')).json();
+  const expressOrder = (remote.orders || []).find(o => o.source === 'basket-express');
+  check('basket: express order created server-side', !!expressOrder, expressOrder && expressOrder.ref);
+  check('basket: no errors', b.errors.length === 0, b.errors[0]);
+  b.close();
+}
+
+/* ---------- 22. day / night theme toggle ---------- */
+{
+  const t = await loadPage('/', { wait: 1300 });
+  const btn = t.doc.getElementById('themeBtn');
+  check('theme: toggle button in header', !!btn);
+  check('theme: default is day', t.doc.documentElement.getAttribute('data-theme') !== 'dark');
+  btn.click();
+  await sleep(150);
+  check('theme: toggles to night', t.doc.documentElement.getAttribute('data-theme') === 'dark');
+  check('theme: choice persists', t.window.localStorage.getItem('norvex.theme.v1') === 'dark');
+  btn.click();
+  await sleep(150);
+  check('theme: toggles back to day', t.doc.documentElement.getAttribute('data-theme') === 'day');
+  check('theme: no errors', t.errors.length === 0, t.errors[0]);
+  t.close();
+  const css = await (await fetch(BASE + '/css/nv.css')).text();
+  check('theme: dark token overrides present', /\[data-theme="dark"\]\{/.test(css));
+}
+
+/* ---------- 23. account settings tabs + desk dashboard ---------- */
+{
+  const a = await loadPage('/account.html', { seed: session('usr_demo'), wait: 1500 });
+  check('account: settings tabs present', a.doc.querySelectorAll('.acct-tab').length >= 2);
+  check('account: compact stat tiles present', a.doc.querySelectorAll('.acct-tile').length >= 2);
+  a.doc.querySelector('.acct-tab[data-tab="security"]').click();
+  await sleep(120);
+  check('account: security tab switches panel', a.doc.querySelector('.acct-panel[data-panel="security"]').classList.contains('on'));
+  check('account: tabs no errors', a.errors.length === 0, a.errors[0]);
+  a.close();
+  const d = await loadPage('/desk.html', { seed: session('usr_demo'), wait: 1500 });
+  check('desk: KPI tiles rendered', d.doc.querySelectorAll('#deskKpis .kpi').length === 4);
+  check('desk: quick actions rendered', d.doc.querySelectorAll('#deskQuick .quick-card').length >= 7);
+  check('desk: no errors', d.errors.length === 0, d.errors[0]);
+  d.close();
 }
 
 console.log(results.join('\n'));

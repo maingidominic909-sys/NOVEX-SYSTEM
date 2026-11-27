@@ -10,7 +10,8 @@
 <title>Order desk — Norvex</title>
 <meta name="description" content="Your supply command centre: basket, open orders, quick actions and popular lines.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/nv.css?v=15">
+<script>(function(){try{if(localStorage.getItem('norvex.theme.v1')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/nv.css?v=16">
 </head>
 <body data-page="desk">
 <div id="nv-shell-top"></div>
@@ -25,12 +26,12 @@
         <div class="cta-actions" id="deskAuthCta"></div>
       </div>
 
-      <div class="kpi-grid mb-3" id="deskKpis"></div>
+      <div class="kpi-grid desk-stats" id="deskKpis"></div>
 
-      <div class="section-head" style="margin-bottom:16px">
-        <h2 class="h-section" style="font-size:1.3rem">Quick actions</h2>
+      <div class="desk-quick-head">
+        <h2>Quick actions</h2>
       </div>
-      <div class="quick-grid mb-3" id="deskQuick"></div>
+      <div class="quick-grid" id="deskQuick"></div>
 
       <div class="card mb-3">
         <div class="card-head"><h3>Recent orders</h3><a class="btn btn-ghost btn-sm" href="/orders.html">Full history</a></div>
@@ -51,11 +52,11 @@
 
 <div id="nv-shell-bottom"></div>
 
-<script src="/js/catalog-snapshot.js?v=15"></script>
-<script src="/js/nv-core.js?v=15"></script>
-<script src="/js/nv-auth.js?v=15"></script>
-<script src="/js/ui.js?v=15"></script>
-<script src="/js/shell.js?v=15"></script>
-<script src="/js/pages/desk.js?v=15"></script>
+<script src="/js/catalog-snapshot.js?v=16"></script>
+<script src="/js/nv-core.js?v=16"></script>
+<script src="/js/nv-auth.js?v=16"></script>
+<script src="/js/ui.js?v=16"></script>
+<script src="/js/shell.js?v=16"></script>
+<script src="/js/pages/desk.js?v=16"></script>
 </body>
 </html>

@@ -53,7 +53,7 @@
       <div class="shell header-main">
         <button class="hicon nav-back" id="navBack" aria-label="Go back" title="Back">${NV.icon('arrowL')}</button>
         <a class="brand" href="/index.html" aria-label="Norvex home">
-          <img src="/img/logo.png" alt="Norvex Integrated Enterprises Ltd" width="164" height="40">
+          <img src="/img/logo.png" data-logo data-logo-light="/img/logo.png" data-logo-dark="/img/logo-light.png" alt="Norvex Integrated Enterprises Ltd" width="164" height="40">
         </a>
         <button class="header-search" id="headerSearch" type="button" aria-label="Search the catalogue">
           ${NV.icon('search')}<span>Search products, departments, SKUs…</span><kbd>/</kbd>
@@ -64,6 +64,7 @@
             : `<a href="${n.href}" class="${activeKey === n.key ? 'active' : ''}">${n.label}</a>`).join('')}
         </nav>
         <div class="header-actions">
+          <button class="hicon theme-toggle" id="themeBtn" type="button" aria-label="Switch day / night theme" title="Day / night">${NV.icon('moon')}</button>
           <a class="hicon app-acct" id="acctBtn" data-auth="account-link" href="/auth.html?mode=signin" aria-label="Account">${NV.icon('user')}</a>
           <button class="hicon" id="searchBtn" aria-label="Search catalogue (press /)" title="Search · /">${NV.icon('search')}</button>
           <a class="btn btn-gold btn-sm header-quote" href="/quote.html">${NV.icon('clipboard')} Request quote</a>
@@ -112,6 +113,12 @@
     const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    const tb = document.getElementById('themeBtn');
+    const paintThemeBtn = () => { if (tb) tb.innerHTML = NV.icon(NV.theme.get() === 'dark' ? 'moon' : 'sun'); };
+    paintThemeBtn();
+    if (tb) tb.addEventListener('click', () => { NV.theme.toggle(); paintThemeBtn(); });
+    document.addEventListener('norvex:theme', paintThemeBtn);
 
     document.getElementById('searchBtn').addEventListener('click', openSearch);
     const hs = document.getElementById('headerSearch');
@@ -349,6 +356,7 @@
       <button class="btab" id="bMenu" type="button" aria-label="Open main menu">${NV.icon('menu')}<span>Menu</span></button>
     </nav>`;
     document.body.appendChild(host);
+    updateCounts();
 
     document.getElementById('bSearch').addEventListener('click', openSearch);
     document.getElementById('bCats').addEventListener('click', openCats);
