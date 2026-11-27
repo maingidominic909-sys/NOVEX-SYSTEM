@@ -556,7 +556,7 @@
     if (msb) msb.addEventListener('click', openSearch);
     const so = document.querySelector('[data-menu-signout]');
     if (so) so.addEventListener('click', () => {
-      NV.auth.signOut({ redirect: false });
+      NV.auth.signOut({ redirect: true });
       NV.toast('You are signed out. Your basket is still saved.', { title: 'Signed out' });
       closeAll();
     });
