@@ -82,8 +82,8 @@
         </div>
         ${order ? `
           <div class="pay-due">
-            <div><div class="pd-label">Amount due</div><div class="pd-amount">${NV.money(order.totals.total)}</div><div class="pd-ref">${E(order.ref)} · ${E(order.customer ? order.customer.organisation : '')}</div></div>
-            <span class="badge gold">${E(order.status)}</span>
+            <div><div class="pd-label">${order.paid ? 'Paid in full' : 'Amount due'}</div><div class="pd-amount">${NV.money(order.totals.total)}</div><div class="pd-ref">${E(order.ref)} · ${E(order.customer ? order.customer.organisation : '')}${order.paid && order.payment ? ` · ${E(order.payment.method)}` : ''}</div></div>
+            <span class="badge ${order.paid ? 'green' : 'gold'}">${order.paid ? 'Paid' : E(order.status)}</span>
           </div>` : `
           <div class="pay-due">
             <div><div class="pd-label">Pay for an order</div><div class="pd-amount">Choose a method</div><div class="pd-ref">Enter an amount below, or open an order from your history to pay its exact total.</div></div>
@@ -109,12 +109,27 @@
     wire();
   }
 
+  async function markPaid(receipt) {
+    if (!ref) return;
+    const method = META[selected].name;
+    const amt = order ? order.totals.total : 0;
+    const payment = { method, receipt: receipt || '', amount: amt };
+    try { const r = await NV.api('/orders/' + encodeURIComponent(ref), { method: 'PATCH', body: { paid: true, payment } }); if (r.order) order = r.order; } catch {}
+    try {
+      const rows = NV.read('norvex.orders.local.v1', []);
+      const i = rows.findIndex(o => o.ref === ref);
+      if (i >= 0) { rows[i] = { ...rows[i], paid: true, paidAt: new Date().toISOString(), payment }; NV.write('norvex.orders.local.v1', rows); }
+    } catch {}
+  }
+
   function success(title, code, note) {
     NV.write('norvex.paymethod.v1', META[selected].name);
+    if (ref) markPaid(code);
     $('payPanel').innerHTML = `
       <div class="pay-success">
         <span class="ok">${NV.icon('check')}</span>
         <h3>${E(title)}</h3>
+        ${ref ? `<p class="pp-note" style="margin:6px auto 0"><b class="gold">${E(ref)}</b> marked as paid.</p>` : ''}
         <p class="pp-note" style="margin:8px auto 0;max-width:46ch">${E(note)}</p>
         ${code ? `<div class="pay-receipt">${NV.icon('receipt')} ${E(code)} <button class="btn btn-ghost btn-sm" id="copyReceipt" aria-label="Copy receipt">${NV.icon('clipboard')}</button></div>` : ''}
         <div class="row wrap" style="justify-content:center;margin-top:16px">
@@ -178,6 +193,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
+    const u = NV.auth && NV.auth.current();
+    if (u && u.role === 'admin') {
+      $('paymentRoot').innerHTML = `<div class="auth-guard"><div class="auth-guard-body"><p class="eyebrow">Admin mode</p><h2>Admins don't make payments</h2><p>Payment records and reconciliation live in the operations console. Customer checkout and paying are disabled for administrator accounts.</p></div><div class="auth-guard-actions"><a class="btn btn-gold" href="/admin.html">${NV.icon('chart')} Open operations console</a><a class="btn btn-ghost" href="/index.html">Back to storefront</a></div></div>`;
+      return;
+    }
     try { const m = await NV.api('/payments/methods'); bank = (m.methods || []).find(x => x.id === 'bank') || null; if (bank) bank = { ...bank, ...(bank.bank || {}) }; } catch {}
     if (ref) {
       try { const r = await NV.api('/orders/' + encodeURIComponent(ref)); order = r.order || null; } catch {}

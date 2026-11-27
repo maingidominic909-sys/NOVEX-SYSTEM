@@ -498,6 +498,68 @@ let createdRef = '';
   p.close();
 }
 
+/* ---------- 18. checkout → payment connection: paying marks the order paid ---------- */
+{
+  const pay = await loadPage('/payment.html?ref=' + encodeURIComponent(createdRef), { seed: session('usr_demo'), wait: 1500 });
+  check('pay-link: order total carried', /Amount due|Paid in full/.test(pay.doc.body.textContent) && pay.doc.querySelectorAll('.pay-method').length === 4);
+  check('pay-link: exact order amount (no manual field)', !pay.doc.querySelector('#mpesaForm [name="amount"]'));
+  setInput(pay.window, pay.doc.querySelector('#mpesaForm [name="phone"]'), '0722000000');
+  pay.doc.getElementById('mpesaForm').dispatchEvent(new pay.window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(1200);
+  check('pay-link: success marks order paid', /marked as paid/i.test(pay.doc.getElementById('payPanel').textContent));
+  check('pay-link: no errors', pay.errors.length === 0, pay.errors[0]);
+  pay.close();
+  const remote = await (await fetch(BASE + '/api/orders?email=demo@norvex.co.ke')).json();
+  const o = (remote.orders || []).find(x => x.ref === createdRef);
+  check('pay-link: order paid server-side', !!(o && o.paid === true && o.payment && o.payment.method), o && JSON.stringify(o.payment));
+}
+
+/* ---------- 19. admin mode: customer buying features disabled ---------- */
+{
+  const adm = session('usr_admin');
+  const b = await loadPage('/basket.html', { seed: adm, wait: 1200 });
+  check('admin-mode: basket buying blocked', /Admins don't place orders/.test(b.doc.body.textContent));
+  check('admin-mode: body class + banner', b.doc.body.classList.contains('admin-mode') && !!b.doc.querySelector('.admin-banner'));
+  b.close();
+  const c = await loadPage('/checkout.html', { seed: adm, wait: 1200 });
+  check('admin-mode: checkout blocked', /Admins don't check out/.test(c.doc.body.textContent));
+  c.close();
+  const p = await loadPage('/payment.html', { seed: adm, wait: 1200 });
+  check('admin-mode: payment blocked', /Admins don't make payments/.test(p.doc.body.textContent));
+  p.close();
+  const q = await loadPage('/quote.html', { seed: adm, wait: 1200 });
+  check('admin-mode: quote blocked', /Quotations are a customer feature/.test(q.doc.body.textContent));
+  q.close();
+  const pl = await loadPage('/plan.html', { seed: adm, wait: 1200 });
+  check('admin-mode: plan blocked', /Supply plans are a customer feature/.test(pl.doc.body.textContent));
+  pl.close();
+  const s = await loadPage('/shop.html', { seed: adm, wait: 1500 });
+  const before = s.window.NV.basket.count();
+  const addBtn = s.doc.querySelector('[data-add]');
+  if (addBtn) addBtn.click();
+  await sleep(300);
+  check('admin-mode: add-to-basket blocked', s.window.NV.basket.count() === before, `${before} -> ${s.window.NV.basket.count()}`);
+  check('admin-mode: shop no errors', s.errors.length === 0, s.errors[0]);
+  s.close();
+  const a = await loadPage('/account.html', { seed: adm, wait: 1500 });
+  check('admin-mode: account hides customer cards', !a.doc.getElementById('payCard') && !a.doc.getElementById('favCard'));
+  check('admin-mode: account no errors', a.errors.length === 0, a.errors[0]);
+  a.close();
+}
+
+/* ---------- 20. no horizontal content layouts in any portal ---------- */
+{
+  const css = await (await fetch(BASE + '/css/nv.css')).text();
+  check('vertical: content grids forced single-column', /\.grid-2,\.grid-3,\.grid-4,[\s\S]*?grid-template-columns:1fr!important/.test(css));
+  check('vertical: basket/checkout/order/builder stacked', /\.basket-layout,\.checkout-layout,\.builder-layout,\.order-layout,/.test(css));
+  check('vertical: admin charts + KPIs stacked', /\.kpi-grid,\.admin-charts,/.test(css));
+  const a = await loadPage('/account.html', { seed: session('usr_demo'), wait: 1400 });
+  check('vertical: account has no horizontal offenders', !a.doc.querySelector('.account-kpis, .profile-head, .fav-row'));
+  check('vertical: account uses stacked profile + stats', !!a.doc.querySelector('.acct-profile') && !!a.doc.querySelector('.acct-stats'));
+  check('vertical: account no errors', a.errors.length === 0, a.errors[0]);
+  a.close();
+}
+
 console.log(results.join('\n'));
 console.log(`\n${results.filter(r => r.startsWith('PASS')).length}/${results.length} checks passed, ${failures} failed`);
 process.exit(failures ? 1 : 0);

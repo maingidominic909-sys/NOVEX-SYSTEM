@@ -131,6 +131,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
+    const u = NV.auth && NV.auth.current();
+    if (u && u.role === 'admin') {
+      document.getElementById('quoteMain').innerHTML = `<div class="auth-guard"><div class="auth-guard-body"><p class="eyebrow">Admin mode</p><h2>Quotations are a customer feature</h2><p>Admins review and respond to incoming enquiries from the operations console rather than requesting quotes. Buying is disabled for administrator accounts.</p></div><div class="auth-guard-actions"><a class="btn btn-gold" href="/admin.html">${NV.icon('chart')} Open operations console</a><a class="btn btn-ghost" href="/index.html">Back to storefront</a></div></div>`;
+      return;
+    }
     cat = await NV.catalog();
     map = await NV.productMap();
     const saved = NV.customer.get();

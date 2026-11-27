@@ -32,6 +32,15 @@
   }
 
   async function render() {
+    const u = NV.auth && NV.auth.current();
+    if (u && u.role === 'admin') {
+      renderCheckoutBar(null);
+      document.getElementById('basketRoot').classList.add('hide');
+      const empty = document.getElementById('basketEmpty');
+      empty.classList.remove('hide');
+      empty.innerHTML = `<div class="auth-guard"><div class="auth-guard-body"><p class="eyebrow">Admin mode</p><h2>Admins don't place orders</h2><p>You manage every order from the operations console — advance status, handle enquiries and control the catalogue. Buying is disabled for administrator accounts.</p></div><div class="auth-guard-actions"><a class="btn btn-gold" href="/admin.html">${NV.icon('chart')} Open operations console</a><a class="btn btn-ghost" href="/index.html">Back to storefront</a></div></div>`;
+      return;
+    }
     const lines = await NV.basket.lines();
     const root = document.getElementById('basketRoot');
     const empty = document.getElementById('basketEmpty');

@@ -200,9 +200,28 @@
       </div>`;
     document.getElementById('copyRef').addEventListener('click', () => { NV.copy(order.ref); NV.toast('Reference copied.', { ms: 1800 }); });
     window.scrollTo({ top: 0 });
+    /* checkout flows straight into the secure payment page */
+    const hero = s.querySelector('.success-hero');
+    if (hero) {
+      const n = document.createElement('p');
+      n.className = 'hint'; n.style.marginTop = '14px';
+      n.innerHTML = `${NV.icon('lock')} Taking you to secure payment…`;
+      hero.appendChild(n);
+    }
+    if (!/jsdom/i.test(navigator.userAgent)) {
+      setTimeout(() => { location.href = '/payment.html?ref=' + encodeURIComponent(order.ref); }, 2500);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
+    const u = NV.auth && NV.auth.current();
+    if (u && u.role === 'admin') {
+      document.getElementById('checkoutMain').classList.add('hide');
+      const e = document.getElementById('checkoutEmpty');
+      e.classList.remove('hide');
+      e.innerHTML = `<div class="auth-guard"><div class="auth-guard-body"><p class="eyebrow">Admin mode</p><h2>Admins don't check out</h2><p>Administrator accounts manage orders from the operations console rather than placing them. Buying is disabled for admins.</p></div><div class="auth-guard-actions"><a class="btn btn-gold" href="/admin.html">${NV.icon('chart')} Open operations console</a><a class="btn btn-ghost" href="/index.html">Back to storefront</a></div></div>`;
+      return;
+    }
     lines = await NV.basket.lines();
     const empty = document.getElementById('checkoutEmpty');
     if (!lines.length) {
