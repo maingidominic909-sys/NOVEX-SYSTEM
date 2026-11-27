@@ -37,8 +37,8 @@
   ];
 
   let cat = null;
-  const locks = { search: false, cart: false, menu: false };
-  const syncLock = () => document.body.classList.toggle('locked', locks.search || locks.cart || locks.menu);
+  const locks = { search: false, cart: false, menu: false, cats: false };
+  const syncLock = () => document.body.classList.toggle('locked', locks.search || locks.cart || locks.menu || locks.cats);
 
   /* ---------------- header + utility bar ---------------- */
   function buildTop() {
@@ -49,13 +49,6 @@
 
     mount.innerHTML = `
     <a class="skip-link" href="#main">Skip to content</a>
-    <div class="util-bar">
-      <div class="shell">
-        <span class="util-hide-sm">${NV.icon('clock')} ${E(NV.CONFIG.hours)}</span>
-        <span class="spread"></span>
-        <span class="util-gold">${NV.icon('truck')} Free delivery over ${NV.money(NV.CONFIG.freeDeliveryFrom)}</span>
-      </div>
-    </div>
     <header class="site-header" id="siteHeader">
       <div class="shell header-main">
         <button class="hicon nav-back" id="navBack" aria-label="Go back" title="Back">${NV.icon('arrowL')}</button>
@@ -283,6 +276,10 @@
             </ul>
           </div>
         </div>
+        <div class="footer-info">
+          <span>${NV.icon('clock')} ${E(NV.CONFIG.hours)} · Sat 8:00am – 1:00pm</span>
+          <span>${NV.icon('truck')} Free Nairobi delivery over ${NV.money(NV.CONFIG.freeDeliveryFrom)}</span>
+        </div>
         <div class="footer-bottom">
           <span>© <span data-year>${new Date().getFullYear()}</span> Norvex Integrated Enterprises Ltd · Nairobi, Kenya</span>
           <div class="footer-pay"><span>M-PESA</span><span>VISA</span><span>MASTERCARD</span><span>BANK / LPO</span></div>
@@ -329,6 +326,17 @@
       <div class="drawer-body" id="menuBody"></div>
     </aside>
 
+    <aside class="drawer cats" id="catSheet" role="dialog" aria-modal="true" aria-label="Categories">
+      <div class="drawer-head">
+        <h3>${NV.icon('grid')} Shop by category</h3>
+        <button class="drawer-x" data-close="cats" aria-label="Close categories">${NV.icon('close')}</button>
+      </div>
+      <div class="drawer-body">
+        <div class="cat-grid" id="catGrid"></div>
+        <a class="btn btn-ghost btn-block btn-sm" href="/shop.html" style="margin-top:14px">${NV.icon('layers')} Browse the full catalogue</a>
+      </div>
+    </aside>
+
     <nav class="bottom-bar" id="bottomBar" aria-label="Quick navigation">
       <a class="btab ${activeKey === 'home' ? 'active' : ''}" href="/index.html">${NV.icon('home')}<span>Home</span></a>
       <button class="btab ${activeKey === 'shop' ? 'active' : ''}" id="bCats" type="button" aria-label="Browse categories">${NV.icon('grid')}<span>Categories</span></button>
@@ -336,12 +344,14 @@
       <a class="btab ${activeKey === 'basket' ? 'active' : ''}" href="/basket.html" aria-label="Supply basket">
         ${NV.icon('cart')}<span class="bcount count" data-cart-count data-zero="1">0</span><span>Basket</span>
       </a>
-      <a class="btab ${activeKey === 'account' ? 'active' : ''}" id="bAccount" data-auth="account-link" href="/auth.html?mode=signin">${NV.icon('user')}<span>Account</span></a>
+      <a class="btab ${activeKey === 'payment' ? 'active' : ''}" id="bPay" href="/payment.html" aria-label="Payments">${NV.icon('wallet')}<span>Pay</span></a>
+      <button class="btab" id="bMenu" type="button" aria-label="Open main menu">${NV.icon('menu')}<span>Menu</span></button>
     </nav>`;
     document.body.appendChild(host);
 
     document.getElementById('bSearch').addEventListener('click', openSearch);
-    document.getElementById('bCats').addEventListener('click', openMenu);
+    document.getElementById('bCats').addEventListener('click', openCats);
+    document.getElementById('bMenu').addEventListener('click', openMenu);
 
     document.getElementById('nvOverlay').addEventListener('click', closeAll);
     host.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
@@ -528,8 +538,10 @@
         <a class="mnav-link" href="/basket.html">${NV.icon('cart')} Basket <span class="badge gold" style="margin-left:auto" data-cart-count>0</span></a>
         <a class="mnav-link" href="/orders.html" data-auth="orders-link">${NV.icon('receipt')} My orders</a>
         <a class="mnav-link" href="/order.html">${NV.icon('truck')} Track my order</a>
-        <a class="mnav-link" href="${user ? '/account.html' : '/auth.html?mode=signin'}">${NV.icon('user')} ${user ? E(user.name) : 'Sign in / create account'}</a>
+        <a class="mnav-link" href="${user ? '/account.html' : '/auth.html?mode=signin'}">${NV.icon('user')} ${user ? E(user.name) + ' — my account' : 'Sign in / create account'}</a>
+        <a class="mnav-link" href="/payment.html">${NV.icon('wallet')} Payments</a>
         ${user && user.role === 'admin' ? `<a class="mnav-link" href="/admin.html">${NV.icon('chart')} Operations console</a>` : ''}
+        ${user ? `<button class="mnav-link mnav-signout" type="button" data-menu-signout>${NV.icon('logout')} Sign out</button>` : ''}
       </div>
       <div class="mnav-section">
         <p class="mnav-label">Departments</p>
@@ -542,15 +554,43 @@
       </div>`;
     const msb = document.getElementById('menuSearchBtn');
     if (msb) msb.addEventListener('click', openSearch);
+    const so = document.querySelector('[data-menu-signout]');
+    if (so) so.addEventListener('click', () => {
+      NV.auth.signOut({ redirect: false });
+      NV.toast('You are signed out. Your basket is still saved.', { title: 'Signed out' });
+      closeAll();
+    });
     if (NV.auth) NV.auth.refresh();
   }
 
+  /* ---------------- categories sheet (distinct from the main menu) ---------------- */
+  function openCats() {
+    closeAll();
+    locks.cats = true; syncLock();
+    document.getElementById('nvOverlay').classList.add('open');
+    document.getElementById('catSheet').classList.add('open');
+    fillCatGrid();
+  }
+  function fillCatGrid() {
+    const grid = document.getElementById('catGrid');
+    if (!grid) return;
+    const list = cat ? cat.categories : [];
+    grid.innerHTML = list.length ? list.map(c => `
+      <a class="cat-tile" href="/shop.html?cat=${E(c.id)}">
+        <span class="ct-ico">${NV.icon(c.icon || NV.catIcon(c.id))}</span>
+        <b>${E(c.name)}</b>
+        <small>${cat.products.filter(p => p.cat === c.id).length} lines</small>
+      </a>`).join('') : '<p class="muted small" style="padding:12px">Loading categories…</p>';
+  }
+
   function closeAll() {
-    locks.search = locks.cart = locks.menu = false; syncLock();
+    locks.search = locks.cart = locks.menu = locks.cats = false; syncLock();
     document.getElementById('nvOverlay').classList.remove('open');
     document.getElementById('searchOverlay').classList.remove('open');
     document.getElementById('cartDrawer').classList.remove('open');
     document.getElementById('menuDrawer').classList.remove('open');
+    const cs = document.getElementById('catSheet');
+    if (cs) cs.classList.remove('open');
     const mega = document.getElementById('megaPanel');
     if (mega) mega.classList.remove('open');
     const megaBtn = document.getElementById('megaBtn');
@@ -582,6 +622,7 @@
     NV.catalog().then(c => {
       cat = c;
       fillMega();
+      if (locks.cats) fillCatGrid();
       if (locks.search) renderSearch(document.getElementById('searchInput').value);
       if (NV.state.offline) {
         const pill = document.createElement('div');
@@ -603,5 +644,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 
-  window.NV.shell = { openSearch, openCart, openMenu, closeAll, updateCounts };
+  window.NV.shell = { openSearch, openCart, openMenu, openCats, closeAll, updateCounts };
 })();

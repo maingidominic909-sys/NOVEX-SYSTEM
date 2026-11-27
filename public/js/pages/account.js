@@ -1,8 +1,9 @@
-/* NORVEX v2 — organisation profile / account */
+/* NORVEX v2 — organisation profile / account (vertical layout + avatar picker) */
 (function () {
   'use strict';
   const NV = window.NV;
   const E = NV.esc;
+  const AVATARS = ['🦁','🐘','🦒','🐆','🦅','🌿','🌍','⭐','🔥','💼','📦','🚚','🚛','🏢','🏬','🎯','🌱','🌾','⚡','🛡'];
 
   function guard() {
     document.getElementById('accountRoot').innerHTML = `
@@ -34,31 +35,40 @@
     const favIds = NV.favourites.all();
     const map = await NV.productMap();
     const favs = favIds.map(id => map[id]).filter(Boolean);
+    const payMethod = NV.read('norvex.paymethod.v1', 'M-Pesa');
 
     root.innerHTML = `
-      <div class="card card-pad mb-3">
-        <div class="profile-head">
-          <span class="auth-avatar">${E(user.avatar)}</span>
-          <div class="spread">
+      <div class="account-stack">
+        <div class="card account-hero">
+          <span class="auth-avatar" id="heroAvatar">${E(user.avatar)}</span>
+          <div>
             <h1>${E(user.name)}</h1>
-            <div class="ph-org">${E(user.organisation)} · ${E(user.email)}</div>
-            <div class="row mt-1"><span class="badge ${user.role === 'admin' ? 'gold' : 'green'}">${user.role === 'admin' ? 'Administrator' : 'Trade account'}</span><span class="tiny muted">Member since ${NV.dateFmt(user.createdAt)}</span></div>
+            <div class="ph-org">${E(user.organisation || 'Add your organisation')} · ${E(user.email)}</div>
+            <div class="row mt-1" style="justify-content:center"><span class="badge ${user.role === 'admin' ? 'gold' : 'green'}">${user.role === 'admin' ? 'Administrator' : 'Trade account'}</span><span class="tiny muted">Member since ${NV.dateFmt(user.createdAt)}</span></div>
           </div>
-          <div class="row wrap">
+          <div class="ah-actions">
+            <button class="btn btn-soft btn-sm" id="changeAvatar">${NV.icon('user')} Change avatar</button>
             ${user.role === 'admin' ? `<a class="btn btn-soft btn-sm" href="/admin.html">${NV.icon('chart')} Operations</a>` : ''}
             <button class="btn btn-ghost btn-sm" id="signOutBtn">${NV.icon('logout')} Sign out</button>
           </div>
         </div>
-      </div>
 
-      <div class="kpi-grid mb-3">
-        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Orders</span><span class="kpi-ico">${NV.icon('receipt')}</span></div><div class="kpi-value">${orders.length}</div><div class="kpi-sub"><a class="link-arrow gold" href="/orders.html">Open history ${NV.icon('arrowR')}</a></div></div>
-        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Lifetime spend</span><span class="kpi-ico gold">${NV.icon('wallet')}</span></div><div class="kpi-value">${NV.compact(spend)}</div><div class="kpi-sub">VAT inclusive</div></div>
-        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Favourites</span><span class="kpi-ico">${NV.icon('heart')}</span></div><div class="kpi-value">${favs.length}</div><div class="kpi-sub">saved catalogue lines</div></div>
-        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Basket</span><span class="kpi-ico gold">${NV.icon('cart')}</span></div><div class="kpi-value" data-cart-count>${NV.basket.count()}</div><div class="kpi-sub"><a class="link-arrow gold" href="/basket.html">Open basket ${NV.icon('arrowR')}</a></div></div>
-      </div>
+        <div class="card" id="avatarCard" style="display:none">
+          <div class="card-head"><h3>Choose your avatar</h3><button class="btn btn-ghost btn-sm" id="closeAvatar">Done</button></div>
+          <div class="card-body">
+            <div class="avatar-picker">
+              ${AVATARS.map(a => `<button class="av-opt ${a === user.avatar ? 'on' : ''}" type="button" data-av="${a}" aria-label="Choose avatar ${a}">${a}</button>`).join('')}
+            </div>
+          </div>
+        </div>
 
-      <div class="account-grid">
+        <div class="account-kpis">
+          <div class="kpi"><div class="kpi-top"><span class="kpi-label">Orders</span><span class="kpi-ico">${NV.icon('receipt')}</span></div><div class="kpi-value">${orders.length}</div><div class="kpi-sub"><a class="link-arrow gold" href="/orders.html">History ${NV.icon('arrowR')}</a></div></div>
+          <div class="kpi"><div class="kpi-top"><span class="kpi-label">Spend</span><span class="kpi-ico gold">${NV.icon('wallet')}</span></div><div class="kpi-value">${NV.compact(spend)}</div><div class="kpi-sub">VAT inclusive</div></div>
+          <div class="kpi"><div class="kpi-top"><span class="kpi-label">Favourites</span><span class="kpi-ico">${NV.icon('heart')}</span></div><div class="kpi-value">${favs.length}</div><div class="kpi-sub">saved lines</div></div>
+          <div class="kpi"><div class="kpi-top"><span class="kpi-label">Basket</span><span class="kpi-ico gold">${NV.icon('cart')}</span></div><div class="kpi-value" data-cart-count>${NV.basket.count()}</div><div class="kpi-sub"><a class="link-arrow gold" href="/basket.html">Open ${NV.icon('arrowR')}</a></div></div>
+        </div>
+
         <div class="card">
           <div class="card-head"><h3>Organisation details</h3></div>
           <div class="card-body">
@@ -71,38 +81,62 @@
             </form>
           </div>
         </div>
-        <div class="col" style="gap:22px">
-          <div class="card">
-            <div class="card-head"><h3>Security</h3></div>
-            <div class="card-body">
-              <form id="pwForm" class="col" style="gap:14px" novalidate>
-                <div class="field"><label>Current password</label><input class="input" name="old" type="password" autocomplete="current-password"><span class="err-msg">Required.</span></div>
-                <div class="field"><label>New password</label><input class="input" name="next" type="password" autocomplete="new-password"><span class="err-msg">8+ characters with a number.</span></div>
-                <button class="btn btn-ghost" type="submit">${NV.icon('lock')} Change password</button>
-              </form>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Favourites</h3><a class="btn btn-ghost btn-sm" href="/shop.html">Browse more</a></div>
-            <div class="card-body" style="padding-top:8px">
-              ${favs.length ? favs.slice(0, 6).map(p => `
-                <div class="fav-row">
-                  ${p.img ? `<img src="${E(p.img)}" alt="">` : `<span class="manage-art">${NV.icon(NV.catIcon(p.cat))}</span>`}
-                  <div class="spread"><b><a href="/product.html?id=${E(p.id)}">${E(p.name)}</a></b><small>${E(p.unit)} · ${NV.money(p.tiers[0][1])}</small></div>
-                  <button class="btn btn-soft btn-sm" data-add="${E(p.id)}">${NV.icon('cart')} Add</button>
-                </div>`).join('')
-              : '<p class="muted small" style="padding:10px 0">Tap the heart on any catalogue line to keep it here for quick re-ordering.</p>'}
-            </div>
-          </div>
-          <div class="card" style="border-color:#f0d4d1">
-            <div class="card-head" style="border-color:#f0d4d1"><h3 class="red">Danger zone</h3></div>
-            <div class="card-body">
-              <p class="small muted mb-2">Remove this account and its session from this device. Order records held by Norvex are not affected.</p>
-              <button class="btn btn-danger btn-sm" id="deleteAccount">${NV.icon('trash')} Delete my account</button>
+
+        <div class="card">
+          <div class="card-head"><h3>Payment</h3><a class="btn btn-ghost btn-sm" href="/payment.html">${NV.icon('wallet')} Open payments</a></div>
+          <div class="card-body">
+            <div class="fav-row">
+              <span class="manage-art">${NV.icon('wallet')}</span>
+              <div class="spread"><b>Default method · ${E(payMethod)}</b><small>M-Pesa, card, bank transfer or invoice/LPO — choose at checkout or on the payments page.</small></div>
+              <a class="btn btn-soft btn-sm" href="/payment.html">Manage</a>
             </div>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Security</h3></div>
+          <div class="card-body">
+            <form id="pwForm" class="col" style="gap:14px" novalidate>
+              <div class="field"><label>Current password</label><input class="input" name="old" type="password" autocomplete="current-password"><span class="err-msg">Required.</span></div>
+              <div class="field"><label>New password</label><input class="input" name="next" type="password" autocomplete="new-password"><span class="err-msg">8+ characters with a number.</span></div>
+              <button class="btn btn-ghost" type="submit">${NV.icon('lock')} Change password</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Favourites</h3><a class="btn btn-ghost btn-sm" href="/shop.html">Browse more</a></div>
+          <div class="card-body" style="padding-top:8px">
+            ${favs.length ? favs.slice(0, 6).map(p => `
+              <div class="fav-row">
+                ${p.img ? `<img src="${E(p.img)}" alt="">` : `<span class="manage-art">${NV.icon(NV.catIcon(p.cat))}</span>`}
+                <div class="spread"><b><a href="/product.html?id=${E(p.id)}">${E(p.name)}</a></b><small>${E(p.unit)} · ${NV.money(p.tiers[0][1])}</small></div>
+                <button class="btn btn-soft btn-sm" data-add="${E(p.id)}">${NV.icon('cart')} Add</button>
+              </div>`).join('')
+            : '<p class="muted small" style="padding:10px 0">Tap the heart on any catalogue line to keep it here for quick re-ordering.</p>'}
+          </div>
+        </div>
+
+        <div class="card" style="border-color:#f0d4d1">
+          <div class="card-head" style="border-color:#f0d4d1"><h3 class="red">Danger zone</h3></div>
+          <div class="card-body">
+            <p class="small muted mb-2">Remove this account and its session from this device. Order records held by Norvex are not affected.</p>
+            <button class="btn btn-danger btn-sm" id="deleteAccount">${NV.icon('trash')} Delete my account</button>
+          </div>
+        </div>
       </div>`;
+
+    /* avatar picker */
+    const avatarCard = document.getElementById('avatarCard');
+    document.getElementById('changeAvatar').addEventListener('click', () => {
+      avatarCard.style.display = avatarCard.style.display === 'none' ? '' : 'none';
+      if (avatarCard.style.display !== 'none') avatarCard.scrollIntoView({ block: 'nearest' });
+    });
+    document.getElementById('closeAvatar').addEventListener('click', () => { avatarCard.style.display = 'none'; });
+    document.querySelectorAll('[data-av]').forEach(b => b.addEventListener('click', () => {
+      const res = NV.auth.update({ avatar: b.dataset.av });
+      if (res.ok) { NV.toast('Avatar updated.', { title: 'Saved' }); }
+    }));
 
     document.getElementById('signOutBtn').addEventListener('click', () => {
       NV.auth.signOut({ redirect: false });
