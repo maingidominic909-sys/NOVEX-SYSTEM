@@ -48,6 +48,8 @@
   document.addEventListener('click', async e => {
     const add = e.target.closest && e.target.closest('[data-add]');
     if (add) {
+      const u = NV.auth && NV.auth.current();
+      if (u && u.role === 'admin') { NV.toast('Admin accounts manage orders from the console — buying is disabled.', { title: 'Admin mode', type: 'error' }); return; }
       const id = add.dataset.add;
       const map = await NV.productMap();
       const p = map[id];
@@ -63,6 +65,8 @@
     }
     const fav = e.target.closest && e.target.closest('[data-fav]');
     if (fav) {
+      const u = NV.auth && NV.auth.current();
+      if (u && u.role === 'admin') { NV.toast('Favourites are a customer feature — disabled for admins.', { title: 'Admin mode', type: 'error' }); return; }
       const on = NV.favourites.toggle(fav.dataset.fav);
       fav.classList.toggle('on', on);
       fav.setAttribute('aria-pressed', String(on));

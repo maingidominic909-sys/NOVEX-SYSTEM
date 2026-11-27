@@ -385,8 +385,27 @@ async function handleApi(req, res, url) {
       const body = await readBody(req);
       const allowed = ['received', 'confirmed', 'sourcing', 'dispatched', 'delivered', 'cancelled'];
       const status = clean(body.status, 30);
-      if (!allowed.includes(status)) return json(res, 422, { ok: false, error: 'Invalid status' });
-      const updated = { ...order, status, statusHistory: [...(order.statusHistory || []), { status, at: new Date().toISOString(), note: clean(body.note, 240) }] };
+      const wantsPaid = body.paid === true || body.paid === 'true';
+      const pay = body.payment && typeof body.payment === 'object' ? body.payment : null;
+      if (!status && !wantsPaid && !pay) return json(res, 422, { ok: false, error: 'Nothing to update' });
+      if (status && !allowed.includes(status)) return json(res, 422, { ok: false, error: 'Invalid status' });
+      let updated = { ...order };
+      if (status) {
+        updated.status = status;
+        updated.statusHistory = [...(order.statusHistory || []), { status, at: new Date().toISOString(), note: clean(body.note, 240) }];
+      }
+      if (wantsPaid || pay) {
+        const at = new Date().toISOString();
+        updated.paid = true;
+        updated.paidAt = at;
+        updated.payment = {
+          method: clean(pay && pay.method, 60) || (order.customer && order.customer.payment) || 'M-Pesa',
+          receipt: clean(pay && pay.receipt, 80),
+          amount: Math.round(Number(pay && pay.amount) || (order.totals ? order.totals.total : 0)),
+          at
+        };
+        updated.statusHistory = [...(updated.statusHistory || order.statusHistory || []), { status: updated.status || order.status, at, note: 'Payment received · ' + updated.payment.method + (updated.payment.receipt ? ' · ' + updated.payment.receipt : '') }];
+      }
       const next = orders.map(o => o.ref === order.ref ? updated : o);
       await writeCollection('orders', next);
       return json(res, 200, { ok: true, order: updated });

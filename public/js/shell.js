@@ -94,6 +94,7 @@
         </div>
       </div>
     </header>
+    <div class="admin-banner">${NV.icon('shield')}<span>Admin mode — buying is disabled. Manage orders, catalogue and payments from the console.</span><a href="/admin.html">Open console ${NV.icon('arrowR')}</a></div>
     ${WORKSPACE.includes(PAGE) ? `
     <nav class="workspace-tabs" aria-label="Order desk sections">
       <div class="shell">
@@ -611,11 +612,17 @@
   });
 
   /* ---------------- boot ---------------- */
+  function syncAdminMode() {
+    const admin = NV.auth && NV.auth.isIn() && NV.auth.current().role === 'admin';
+    document.body.classList.toggle('admin-mode', !!admin);
+  }
+
   function boot() {
     buildTop();
     buildSideNav();
     buildFooter();
     buildOverlays();
+    syncAdminMode();
     document.dispatchEvent(new Event('norvex:chrome'));
     NV.reveal();
 
@@ -633,7 +640,8 @@
     }).catch(() => {});
 
     if (NV.auth) NV.auth.onChange(() => {
-      /* admin tabs appear/disappear with role */
+      /* admin mode (no buying) + admin tabs appear/disappear with role */
+      syncAdminMode();
       const isAdmin = NV.auth.isIn() && NV.auth.current().role === 'admin';
       const strip = document.querySelector('.workspace-tabs .shell');
       if (!strip) return;

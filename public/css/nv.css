@@ -1349,20 +1349,21 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
     display:flex;align-items:center;gap:4px;
     background:rgba(5,26,19,.96);backdrop-filter:blur(18px);
     border:1px solid rgba(255,255,255,.12);border-radius:99px;
-    padding:9px 8px;box-shadow:0 18px 44px rgba(5,26,19,.45);
+    padding:11px 10px;box-shadow:0 18px 44px rgba(5,26,19,.45);
     max-width:calc(100vw - 16px);
-    animation:pillIn .5s var(--ease) both,pillGlow 4.5s ease-in-out infinite;
+    animation:pillFloat 3.8s ease-in-out infinite,pillGlow 4.5s ease-in-out infinite;
   }
-  @keyframes pillIn{from{opacity:0;transform:translateX(-50%) translateY(22px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-  @keyframes pillGlow{0%,100%{box-shadow:0 18px 44px rgba(5,26,19,.45)}50%{box-shadow:0 18px 52px rgba(201,162,74,.3)}}
-  @keyframes tabPop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  @keyframes pillFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+  @keyframes pillGlow{0%,100%{box-shadow:0 18px 44px rgba(5,26,19,.45)}50%{box-shadow:0 22px 56px rgba(201,162,74,.34)}}
+  @keyframes activePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
   .btab{
-    position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
-    padding:9px 9px 8px;border-radius:99px;font-size:.6rem;font-weight:700;min-width:48px;
+    position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;
+    padding:11px 11px 9px;border-radius:99px;font-size:.66rem;font-weight:700;min-width:54px;
     color:#9fb4aa;transition:color .18s,background .18s;letter-spacing:.01em;white-space:nowrap;
   }
-  .btab svg{width:22px;height:22px}
-  .btab.active svg{animation:tabPop .32s var(--ease)}
+  .btab svg{width:25px;height:25px}
+  .btab.active svg{animation:activePulse 1.9s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){.bottom-bar{animation:none}.btab.active svg{animation:none}}
   .btab:active{background:rgba(255,255,255,.08)}
   .btab.active{color:#fff;background:var(--green-800);box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .btab.active svg{color:var(--gold-400)}
@@ -1408,8 +1409,8 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .drawer-foot{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:360px){
-  .btab{padding:8px 6px 7px;font-size:.54rem;min-width:42px}
-  .btab svg{width:20px;height:20px}
+  .btab{padding:9px 7px 8px;font-size:.58rem;min-width:46px}
+  .btab svg{width:22px;height:22px}
   .brand img{height:32px}
 }
 
@@ -1911,6 +1912,65 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
 .pay-bank .pb-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
 .pay-bank .pb-row b{font-weight:700}
 
+/* =========================================================
+   v13 — admin mode (no buying) · vertical account · bigger pill
+   ========================================================= */
+.admin-banner{display:none;align-items:center;gap:10px;background:var(--green-950);color:#fff;padding:10px 16px;font-size:.82rem;font-weight:600}
+.admin-banner>svg{width:16px;height:16px;color:var(--gold-400);flex:none}
+.admin-banner span{flex:1}
+.admin-banner a{color:var(--gold-400);font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.admin-banner a svg{width:14px;height:14px}
+.admin-mode .admin-banner{display:flex}
+.admin-mode [data-add],.admin-mode .pc-actions,.admin-mode [data-fav]{display:none!important}
+.admin-mode #cartBtn,.admin-mode .header-quote{display:none!important}
+.admin-mode #bottomBar a[href="/basket.html"],.admin-mode #bPay{display:none!important}
+
+/* account — fully vertical, modern settings-style */
+.acct-profile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:28px 22px}
+.acct-profile .auth-avatar{width:88px;height:88px;font-size:2.1rem;border-radius:26px}
+.acct-profile h1{font-family:var(--font-serif);font-size:1.5rem}
+.acct-profile .ph-org{color:var(--muted);font-size:.86rem}
+.acct-badges{display:flex;flex-direction:column;align-items:center;gap:6px}
+.acct-actions{display:flex;flex-direction:column;gap:9px;width:100%;max-width:340px;margin-top:6px}
+.acct-stats{display:flex;flex-direction:column;padding:6px 0!important}
+.acct-stat-row{display:flex;align-items:center;gap:13px;padding:13px 18px;border-bottom:1px solid var(--line);color:var(--ink)}
+.acct-stat-row:last-child{border-bottom:0}
+a.acct-stat-row:hover{background:var(--green-50)}
+.as-ico{width:38px;height:38px;border-radius:11px;background:var(--green-50);color:var(--green-700);display:grid;place-items:center;flex:none}
+.as-ico.gold{background:var(--gold-50);color:var(--gold-600)}
+.as-ico svg{width:19px;height:19px}
+.as-label{flex:1;font-size:.9rem;font-weight:600}
+.as-val{font-family:var(--font-serif);font-size:1.1rem}
+.as-arrow{color:var(--line-2);display:flex}
+.as-arrow svg{width:16px;height:16px}
+.acct-pay{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.acct-pay .pm-ico{width:48px;height:48px}
+.ap-text b{display:block;font-size:.95rem}
+.ap-text small{color:var(--muted);font-size:.8rem}
+.acct-favs{display:flex;flex-direction:column;gap:14px}
+.acct-fav{display:flex;flex-direction:column;gap:7px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--surface)}
+.acct-fav img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
+.acct-fav-art{width:100%;aspect-ratio:16/9;border-radius:10px;background:var(--green-50);color:var(--green-700);display:grid;place-items:center}
+.acct-fav-art svg{width:40px;height:40px;opacity:.5}
+.acct-fav b{font-size:.92rem}
+.acct-fav small{color:var(--muted);font-size:.78rem}
+
+/* =========================================================
+   v13 — vertical-first: no horizontal content panels in any
+   portal. Product/category/tile grids + home hero are kept.
+   ========================================================= */
+.grid-2,.grid-3,.grid-4,
+.kpi-grid,.admin-charts,
+.basket-layout,.checkout-layout,.builder-layout,.order-layout,
+.contact-grid,.shop-layout,.account-kpis,.form-grid,
+.meta-grid,.stat-band,.steps-grid,.module-row,.trust-strip .shell{
+  grid-template-columns:1fr!important;
+}
+/* profile head + favourite rows stack instead of sitting side-by-side */
+.profile-head{flex-direction:column;align-items:flex-start;text-align:left}
+.fav-row{flex-wrap:wrap}
+/* KPI cards stack as full-width rows (single-column grid above) */
+.kpi-grid{gap:12px}
 /* v14 — payment brand marks */
 .pm-ico{overflow:hidden}
 .pm-ico.mpesa{background:#fff;border:1px solid #e4e9e5;padding:5px}
