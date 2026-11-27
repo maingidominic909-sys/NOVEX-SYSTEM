@@ -1,9 +1,10 @@
-/* NORVEX v2 — operations console */
+/* NORVEX — operations console (admin control room) */
 (function () {
   'use strict';
   const NV = window.NV;
   const E = NV.esc;
   const FLOW = ['received', 'confirmed', 'sourcing', 'dispatched', 'delivered'];
+  const PLAN_FLOW = ['planning', 'confirmed', 'scheduled', 'completed', 'cancelled'];
   const COLORS = { received: '#2c5f88', confirmed: '#c9a24a', sourcing: '#96691d', dispatched: '#5b5390', delivered: '#177350', cancelled: '#b23a30' };
 
   function guard() {
@@ -12,7 +13,7 @@
         <div class="auth-guard-body">
           <p class="eyebrow">Restricted · operations</p>
           <h2>Administrator sign-in required</h2>
-          <p>The operations console shows revenue, the order pipeline and enquiries. Sign in with an administrator account to continue.</p>
+          <p>The operations console controls orders, enquiries, future plans, payments and the catalogue. Sign in with an administrator account to continue.</p>
           <p class="hint mt-1">Demo administrator: <b>admin@norvex.co.ke</b> · <b>Norvex2026</b></p>
         </div>
         <div class="auth-guard-actions">
@@ -24,8 +25,14 @@
 
   async function loadData() {
     try {
-      const [summary, ordersRes] = await Promise.all([NV.api('/admin/summary'), NV.api('/orders')]);
-      return { summary, orders: ordersRes.orders || [], offline: false };
+      const [summary, ordersRes, enqRes, planRes, payRes] = await Promise.all([
+        NV.api('/admin/summary'), NV.api('/orders'), NV.api('/enquiries'),
+        NV.api('/future-orders'), NV.api('/payments/methods')
+      ]);
+      return {
+        summary, orders: ordersRes.orders || [], enquiries: enqRes.enquiries || [],
+        plans: planRes.futureOrders || [], methods: payRes.methods || [], offline: false
+      };
     } catch {
       const orders = NV.read('norvex.orders.local.v1', []);
       const enquiries = NV.read('norvex.enquiries.local.v1', []);
@@ -36,7 +43,7 @@
       const skus = {};
       orders.forEach(o => o.items.forEach(i => { skus[i.name] = (skus[i.name] || 0) + i.qty; }));
       return {
-        offline: true, orders,
+        offline: true, orders, enquiries, plans, methods: [],
         summary: {
           kpis: { orders: orders.length, revenue, openOrders: orders.filter(o => !['delivered', 'cancelled'].includes(o.status)).length, futureOrders: plans.length, enquiries: enquiries.length, avgOrderValue: orders.length ? Math.round(revenue / orders.length) : 0 },
           byStatus,
@@ -79,27 +86,32 @@
     </div>`;
   }
 
+  const cap = s => s[0].toUpperCase() + s.slice(1);
+
   async function render() {
     const user = NV.auth.current();
     if (!user || user.role !== 'admin') return guard();
     const root = document.getElementById('adminRoot');
     root.innerHTML = '<div class="kpi-grid mb-3">' + Array.from({ length: 6 }, () => '<div class="skel" style="height:110px"></div>').join('') + '</div><div class="skel" style="height:260px"></div>';
-    const { summary, orders, offline } = await loadData();
+    const { summary, orders, enquiries, plans, methods, offline } = await loadData();
     const k = summary.kpis;
     const maxQty = Math.max(1, ...(summary.topItems || []).map(t => t.qty));
+    const newEnq = enquiries.filter(e => e.status === 'new').length;
 
     root.innerHTML = `
-      ${offline ? '<div class="auth-guard" style="background:var(--amber-50);border-color:#ecd9ac;margin-bottom:20px"><div class="auth-guard-body"><h2 style="font-size:1.05rem">Offline preview</h2><p class="small">Showing orders captured on this device. Live figures return when the API is reachable.</p></div></div>' : ''}
-      <div class="row between wrap mb-3">
+      ${offline ? '<div class="console-note">Offline preview — showing records captured on this device. Live figures return when the API is reachable.</div>' : ''}
+      <div class="console-head" id="overview">
         <div>
           <p class="eyebrow">Operations console</p>
-          <h1 class="serif" style="font-size:1.7rem">Business at a glance</h1>
+          <h1 class="serif">Business at a glance</h1>
+          <p class="console-sub">Signed in as ${E(user.name)} · you control orders, catalogue, enquiries, plans and payments.</p>
         </div>
         <div class="row wrap">
           <a class="btn btn-ghost btn-sm" href="/manage.html">${NV.icon('settings')} Catalogue manager</a>
           <button class="btn btn-primary btn-sm" id="refreshAdmin">${NV.icon('refresh')} Refresh</button>
         </div>
       </div>
+
       <div class="kpi-grid mb-3">
         <div class="kpi"><div class="kpi-top"><span class="kpi-label">Revenue</span><span class="kpi-ico gold">${NV.icon('wallet')}</span></div><div class="kpi-value">${NV.compact(k.revenue)}</div><div class="kpi-sub">VAT incl · excl. cancelled</div></div>
         <div class="kpi"><div class="kpi-top"><span class="kpi-label">Orders</span><span class="kpi-ico">${NV.icon('receipt')}</span></div><div class="kpi-value">${k.orders}</div><div class="kpi-sub">all time</div></div>
@@ -110,25 +122,17 @@
       </div>
 
       <div class="admin-charts mb-3">
-        <div class="chart-box">
-          <h3>Revenue · last 14 days</h3>
-          <p class="sub">Placed order value per day (VAT inclusive)</p>
-          ${barChart(orders)}
-        </div>
-        <div class="chart-box">
-          <h3>Status mix</h3>
-          <p class="sub">Where orders sit in the pipeline</p>
-          ${donut(summary.byStatus || {})}
-        </div>
+        <div class="chart-box"><h3>Revenue · last 14 days</h3><p class="sub">Placed order value per day (VAT inclusive)</p>${barChart(orders)}</div>
+        <div class="chart-box"><h3>Status mix</h3><p class="sub">Where orders sit in the pipeline</p>${donut(summary.byStatus || {})}</div>
       </div>
 
-      <div class="card mb-3">
-        <div class="card-head"><h3>Order pipeline</h3><span class="small muted">${orders.length} orders · advance status inline</span></div>
+      <div class="card mb-3" id="orders">
+        <div class="card-head"><h3>Order pipeline</h3><span class="small muted">${orders.length} orders · advance or cancel inline</span></div>
         <div class="table-wrap" style="border:0;border-radius:0">
           <table class="table">
             <thead><tr><th>Reference</th><th>Date</th><th>Organisation</th><th class="num">Lines</th><th class="num">Total</th><th>Status</th><th></th></tr></thead>
             <tbody>
-              ${orders.slice(0, 15).map(o => `
+              ${orders.slice(0, 20).map(o => `
                 <tr data-ref="${E(o.ref)}">
                   <td><b class="serif">${E(o.ref)}</b></td>
                   <td class="nowrap">${NV.dateFmt(o.createdAt)}</td>
@@ -137,7 +141,7 @@
                   <td class="num">${NV.money(o.totals ? o.totals.total : 0)}</td>
                   <td>
                     <select class="select status-select" data-status-ref="${E(o.ref)}" aria-label="Status for ${E(o.ref)}">
-                      ${[...FLOW, 'cancelled'].map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s[0].toUpperCase() + s.slice(1)}</option>`).join('')}
+                      ${[...FLOW, 'cancelled'].map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${cap(s)}</option>`).join('')}
                     </select>
                   </td>
                   <td><a class="btn btn-ghost btn-sm" href="/order.html?ref=${encodeURIComponent(o.ref)}">View</a></td>
@@ -147,36 +151,77 @@
         </div>
       </div>
 
-      <div class="grid grid-2">
-        <div class="card">
-          <div class="card-head"><h3>Top moving lines</h3></div>
-          <div class="card-body">
-            ${(summary.topItems || []).map((t, i) => `
-              <div class="topline">
-                <span class="rank">${i + 1}</span>
-                <span class="tl-name">${E(t.name)}</span>
-                <span class="tl-bar progress green"><i style="width:${Math.round(t.qty / maxQty * 100)}%"></i></span>
-                <span class="tl-qty">${t.qty} units</span>
-              </div>`).join('') || '<p class="muted small">Order data will rank your best movers here.</p>'}
-          </div>
+      <div class="card mb-3" id="enquiries">
+        <div class="card-head"><h3>Enquiries &amp; quotations</h3><span class="small muted">${newEnq} new · mark resolved when handled</span></div>
+        <div class="card-body console-list">
+          ${enquiries.slice(0, 12).map(q => `
+            <div class="enq-item" data-enq="${E(q.ref)}">
+              <div class="enq-top"><b>${E(q.name)}</b>${NV.ui.statusBadge(q.status || 'new')}<span class="badge gray">${E(q.type || 'general')}</span>
+                <span class="enq-actions">
+                  ${q.status !== 'resolved'
+                    ? `<button class="btn btn-primary btn-sm" data-enq-resolve="${E(q.ref)}">${NV.icon('check')} Resolve</button>`
+                    : `<button class="btn btn-ghost btn-sm" data-enq-reopen="${E(q.ref)}">Reopen</button>`}
+                </span>
+              </div>
+              <p class="enq-msg">${E(q.message)}</p>
+              <p class="enq-meta">${E(q.organisation || '')} · ${E(q.email)} · ${NV.dateFmt(q.createdAt)} · ${E(q.ref)}</p>
+            </div>`).join('') || '<p class="muted small" style="padding:12px 0">No enquiries yet — quote requests and contact messages land here.</p>'}
         </div>
-        <div class="card">
-          <div class="card-head"><h3>Latest enquiries</h3><a class="btn btn-ghost btn-sm" href="/contact.html">Contact form</a></div>
-          <div class="card-body" style="padding-top:6px">
-            ${(summary.recentEnquiries || []).map(q => `
-              <div class="enq-item">
-                <div class="enq-top"><b>${E(q.name)}</b>${NV.ui.statusBadge(q.status || 'new')}<span class="badge gray">${E(q.type || 'general')}</span></div>
-                <p class="enq-msg">${E(q.message)}</p>
-                <p class="enq-meta">${E(q.organisation || '')} · ${E(q.email)} · ${NV.dateFmt(q.createdAt)} · ${E(q.ref)}</p>
-              </div>`).join('') || '<p class="muted small" style="padding:12px 0">No enquiries yet — quote requests and contact messages land here.</p>'}
-          </div>
+      </div>
+
+      <div class="card mb-3" id="plans">
+        <div class="card-head"><h3>Future supply plans</h3><span class="small muted">${plans.length} reserved · confirm and schedule cycles</span></div>
+        <div class="table-wrap" style="border:0;border-radius:0">
+          <table class="table">
+            <thead><tr><th>Reference</th><th>Organisation</th><th>Delivery</th><th>Cycle</th><th class="num">Items</th><th>Status</th></tr></thead>
+            <tbody>
+              ${plans.slice(0, 15).map(f => `
+                <tr>
+                  <td><b class="serif">${E(f.ref)}</b></td>
+                  <td>${E(f.contact ? f.contact.organisation : '—')}</td>
+                  <td class="nowrap">${E(f.deliveryDate || '—')}</td>
+                  <td>${E(f.recurrence || 'One-off')}</td>
+                  <td class="num">${(f.items || []).length}</td>
+                  <td>
+                    <select class="select" data-plan-ref="${E(f.ref)}" aria-label="Status for ${E(f.ref)}">
+                      ${PLAN_FLOW.map(s => `<option value="${s}" ${f.status === s ? 'selected' : ''}>${cap(s)}</option>`).join('')}
+                    </select>
+                  </td>
+                </tr>`).join('') || '<tr><td colspan="6" class="muted center" style="padding:30px">No future plans yet.</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mb-3" id="payments">
+        <div class="card-head"><h3>Payment channels</h3><span class="small muted">configured for checkout</span></div>
+        <div class="card-body pay-grid">
+          ${(methods || []).map(m => `
+            <div class="pay-tile">
+              <div class="pay-top">${NV.icon(m.id === 'mpesa' ? 'phone' : m.id === 'bank' ? 'building' : m.id === 'card' ? 'wallet' : 'receipt')}<b>${E(m.name)}</b>${m.instant ? '<span class="badge green">Instant</span>' : '<span class="badge gray">Manual</span>'}</div>
+              <p class="small muted">${m.id === 'mpesa' ? `Paybill ${E(m.paybill)} · Till ${E(m.till)}` : m.id === 'bank' ? `${E(m.bank ? m.bank.name : 'Bank transfer')} · holds ${m.holdHours || 48}h` : m.id === 'card' ? `${(m.brands || []).join(' · ')} · ${E(m.secure || '')}` : `${m.termsDays || 30}-day terms · approval required`}</p>
+            </div>`).join('') || '<p class="muted small">Payment channels load when the API is reachable.</p>'}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Top moving lines</h3></div>
+        <div class="card-body">
+          ${(summary.topItems || []).map((t, i) => `
+            <div class="topline">
+              <span class="rank">${i + 1}</span>
+              <span class="tl-name">${E(t.name)}</span>
+              <span class="tl-bar progress green"><i style="width:${Math.round(t.qty / maxQty * 100)}%"></i></span>
+              <span class="tl-qty">${t.qty} units</span>
+            </div>`).join('') || '<p class="muted small">Order data will rank your best movers here.</p>'}
         </div>
       </div>`;
 
     document.getElementById('refreshAdmin').addEventListener('click', render);
+
+    /* order status control */
     document.querySelectorAll('[data-status-ref]').forEach(sel => sel.addEventListener('change', async () => {
-      const ref = sel.dataset.statusRef;
-      const status = sel.value;
+      const ref = sel.dataset.statusRef, status = sel.value;
       sel.disabled = true;
       try {
         await NV.api('/orders/' + encodeURIComponent(ref), { method: 'PATCH', body: { status, note: 'Advanced from the operations console' } });
@@ -185,17 +230,31 @@
         if (err.offline) {
           const rows = NV.read('norvex.orders.local.v1', []);
           const o = rows.find(x => x.ref === ref);
-          if (o) {
-            o.status = status;
-            o.statusHistory = [...(o.statusHistory || []), { status, at: new Date().toISOString(), note: 'Advanced offline' }];
-            NV.write('norvex.orders.local.v1', rows);
-            NV.toast(`${ref} → ${status} (offline).`, { title: 'Status advanced' });
-          }
-        } else {
-          NV.toast(err.message, { type: 'error', title: 'Not updated' });
-          render();
-        }
+          if (o) { o.status = status; o.statusHistory = [...(o.statusHistory || []), { status, at: new Date().toISOString(), note: 'Advanced offline' }]; NV.write('norvex.orders.local.v1', rows); NV.toast(`${ref} → ${status} (offline).`, { title: 'Status advanced' }); }
+        } else { NV.toast(err.message, { type: 'error', title: 'Not updated' }); render(); }
       }
+      sel.disabled = false;
+    }));
+
+    /* enquiry resolution */
+    const setEnq = async (ref, status) => {
+      try {
+        await NV.api('/enquiries/' + encodeURIComponent(ref), { method: 'PATCH', body: { status } });
+        NV.toast(`${ref} marked ${status}.`, { title: 'Enquiry updated' });
+        render();
+      } catch (err) { NV.toast(err.message || 'Could not update', { type: 'error', title: 'Not updated' }); }
+    };
+    document.querySelectorAll('[data-enq-resolve]').forEach(b => b.addEventListener('click', () => setEnq(b.dataset.enqResolve, 'resolved')));
+    document.querySelectorAll('[data-enq-reopen]').forEach(b => b.addEventListener('click', () => setEnq(b.dataset.enqReopen, 'new')));
+
+    /* future plan control */
+    document.querySelectorAll('[data-plan-ref]').forEach(sel => sel.addEventListener('change', async () => {
+      const ref = sel.dataset.planRef, status = sel.value;
+      sel.disabled = true;
+      try {
+        await NV.api('/future-orders/' + encodeURIComponent(ref), { method: 'PATCH', body: { status } });
+        NV.toast(`${ref} → ${status}.`, { title: 'Plan updated' });
+      } catch (err) { NV.toast(err.message || 'Could not update', { type: 'error', title: 'Not updated' }); render(); }
       sel.disabled = false;
     }));
   }

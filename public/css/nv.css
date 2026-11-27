@@ -1331,9 +1331,11 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .util-bar,.workspace-tabs,.main-nav,.header-quote,#authSlot{display:none}
   #searchBtn,#cartBtn,.nav-burger,.nav-back{display:none}
   .app-acct{display:grid}
-  .header-main{gap:8px;height:56px}
-  .brand img{height:30px}
+  .site-header{padding-top:0}
+  .header-main{gap:8px;height:46px}
+  .brand img{height:27px}
   .header-actions{margin-left:auto;gap:6px}
+  .hicon{width:36px;height:36px}
 
   /* clearance for the floating pill + iPhone home indicator */
   body:not(.auth-body){padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
@@ -1754,3 +1756,84 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   /* remove website-only sections from the app/system view */
   .hero-restore,.trust-strip,.home-close,.logi-band,.home-cta,.site-footer{display:none!important}
 }
+
+/* =========================================================
+   AUTH — compact login motion (small fleet gliding, no controls)
+   ========================================================= */
+.auth-photo.is-active{opacity:1;animation:authKen 26s ease-in-out infinite alternate}
+@keyframes authKen{from{transform:scale(1.05) translateY(0)}to{transform:scale(1.12) translateY(-1.5%)}}
+.auth-drive{position:absolute;left:0;right:0;bottom:0;height:36%;z-index:2;pointer-events:none;overflow:hidden}
+.ad-truck{position:absolute;bottom:5%;height:60%;width:auto;left:-32%;filter:drop-shadow(0 4px 5px rgba(0,0,0,.35));animation:adDrive 17s linear infinite}
+.ad-van{position:absolute;bottom:3%;height:38%;width:auto;left:-24%;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));animation:adDrive 12s linear infinite;animation-delay:6s}
+@keyframes adDrive{0%{left:-32%}100%{left:112%}}
+.auth-visual-status{z-index:3}
+@media (max-width:768px){
+  .auth-drive{height:42%}
+  .ad-truck{height:56%}
+  .ad-van{height:34%}
+}
+@media (prefers-reduced-motion:reduce){
+  .auth-drive{display:none}
+  .auth-photo.is-active{animation:none;transform:scale(1.05)}
+}
+
+/* =========================================================
+   OPERATIONS CONSOLE — admin-only control room (dark)
+   ========================================================= */
+.console-body{background:var(--green-950)}
+.console-side{position:fixed;left:0;top:0;bottom:0;width:248px;background:#04140e;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;z-index:60}
+.cs-brand{display:flex;gap:11px;align-items:center;padding:18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.cs-brand img{width:32px;height:32px;border-radius:9px}
+.cs-brand b{display:block;color:#fff;font-family:var(--font-serif);font-size:1.1rem;line-height:1.1}
+.cs-brand small{color:var(--gold-400);font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cs-nav{flex:1;padding:12px 10px;overflow-y:auto}
+.cs-link{position:relative;display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:11px;color:#aebfb5;font-size:.86rem;font-weight:600;margin-bottom:2px;transition:background .15s,color .15s}
+.cs-link:hover{background:rgba(255,255,255,.06);color:#fff}
+.cs-link.active{background:var(--green-800);color:#fff}
+.cs-link.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:99px;background:var(--gold-400)}
+.cs-link svg{width:18px;height:18px;flex:none}
+.cs-link.ghost{color:#8fa398}
+.cs-foot{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px}
+.cs-user{display:flex;gap:10px;align-items:center;padding:10px 8px}
+.cs-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold-500);color:#241a06;display:grid;place-items:center;font-weight:800;font-size:.8rem;flex:none}
+.cs-who b{display:block;color:#fff;font-size:.82rem;line-height:1.2}
+.cs-who small{color:#8fa398;font-size:.7rem}
+.cs-signout{display:flex;gap:8px;align-items:center;width:100%;padding:9px 12px;border-radius:10px;color:#aebfb5;font-size:.8rem;font-weight:650;border:1px solid rgba(255,255,255,.12);margin-top:4px}
+.cs-signout:hover{background:rgba(255,255,255,.06);color:#fff}
+.cs-signout svg{width:15px;height:15px}
+.console-top,.console-tabs{display:none}
+.console-main{margin-left:248px;min-height:100vh}
+.console-wrap{max-width:1180px;margin:0 auto;padding:28px 28px 60px}
+.console-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.console-head h1{color:#fff;font-size:1.7rem}
+.console-head .eyebrow{color:var(--gold-400)}
+.console-sub{color:#9fb4aa;font-size:.85rem;margin-top:6px}
+.console-note{background:rgba(201,162,74,.12);border:1px solid rgba(201,162,74,.4);color:var(--gold-400);padding:12px 16px;border-radius:12px;margin-bottom:18px;font-size:.84rem}
+.enq-actions{margin-left:auto;display:flex;gap:6px}
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.pay-tile{border:1px solid var(--line);border-radius:12px;padding:14px}
+.pay-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pay-top svg{width:17px;height:17px;color:var(--green-700)}
+.pay-top b{font-size:.9rem}
+.pay-top .badge{margin-left:auto}
+
+@media (max-width:900px){
+  .console-side{display:none}
+  .console-top{display:flex;position:sticky;top:0;z-index:60;align-items:center;justify-content:space-between;background:#04140e;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ct-brand{display:flex;gap:8px;align-items:center;color:#fff}
+  .ct-brand img{width:24px;height:24px;border-radius:7px}
+  .ct-brand b{font-size:.9rem;font-family:var(--font-serif)}
+  .ct-actions{display:flex;gap:6px}
+  .ct-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#aebfb5;border:1px solid rgba(255,255,255,.12)}
+  .ct-icon svg{width:18px;height:18px}
+  .console-tabs{display:flex;gap:6px;overflow-x:auto;background:#04140e;padding:8px 12px;position:sticky;top:52px;z-index:59;border-bottom:1px solid rgba(255,255,255,.08);scrollbar-width:none}
+  .console-tabs::-webkit-scrollbar{display:none}
+  .ctab{flex:none;display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:99px;color:#aebfb5;font-size:.78rem;font-weight:650;border:1px solid rgba(255,255,255,.1)}
+  .ctab.active{background:var(--green-800);color:#fff;border-color:var(--green-800)}
+  .ctab svg{width:15px;height:15px}
+  .console-main{margin-left:0}
+  .console-wrap{padding:18px 14px 60px}
+  body.console-body{padding-bottom:0}
+  .console-head h1{font-size:1.35rem}
+}
+@media print{.console-side,.console-top,.console-tabs{display:none!important}.console-main{margin-left:0}}
