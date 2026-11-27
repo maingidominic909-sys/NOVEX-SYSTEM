@@ -83,7 +83,7 @@
         <div class="card" id="payCard">
           <div class="card-head"><h3>Payment</h3></div>
           <div class="card-body acct-pay">
-            <span class="pm-ico mpesa">${NV.icon('phone')}</span>
+            <div class="acct-payment-marks">${['mpesa','card','bank','invoice'].map(id => `<span class="pm-ico ${id}">${NV.paymentMark(id)}</span>`).join('')}</div>
             <div class="ap-text"><b>Default method · ${E(payMethod)}</b><small>M-Pesa, card, bank transfer or invoice/LPO — choose at checkout or on the payments page.</small></div>
             <a class="btn btn-soft btn-block" href="/payment.html">${NV.icon('wallet')} Open payments</a>
           </div>
