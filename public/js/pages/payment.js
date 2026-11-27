@@ -93,7 +93,7 @@
           ${Object.entries(META).map(([id, m]) => `
             <button class="pay-method ${selected === id ? 'on' : ''}" type="button" data-method="${id}" aria-pressed="${selected === id}">
               <span class="pm-tag">${m.tag}</span>
-              <span class="pm-ico ${m.cls}">${NV.icon(m.icon)}</span>
+              <span class="pm-ico ${m.cls}">${id === 'mpesa' ? '<img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-PESA logo" loading="lazy" decoding="async">' : NV.icon(m.icon)}</span>
               <b>${m.name}</b><small>${m.blurb}</small>
             </button>`).join('')}
         </div>
