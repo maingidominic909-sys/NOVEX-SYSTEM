@@ -74,8 +74,10 @@ const pages = [
 ];
 for (const [path, key] of pages) {
   const { doc, errors, close } = await loadPage(path);
-  const shellOk = key === 'auth' ? !!doc.querySelector('.auth-shell') : !!doc.querySelector('.site-header .main-nav, .site-header .nav-burger');
-  const footOk = key === 'auth' ? true : !!doc.querySelector('.site-footer');
+  const shellOk = key === 'auth' ? !!doc.querySelector('.auth-shell')
+    : (key === 'admin' || key === 'manage') ? !!doc.querySelector('.console-side')
+    : !!doc.querySelector('.site-header .main-nav, .site-header .nav-burger');
+  const footOk = (key === 'auth' || key === 'admin' || key === 'manage') ? true : !!doc.querySelector('.site-footer');
   check(`boot ${key}`, errors.length === 0, errors.slice(0, 2).join(' | '));
   check(`shell ${key}`, shellOk && footOk);
   close();
@@ -170,6 +172,7 @@ for (const [path, key] of pages) {
 {
   const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
   check('auth: compact visual, no big animation', doc.querySelectorAll('.auth-photo').length === 1 && !doc.getElementById('authAnim') && !doc.getElementById('animToggle') && !!doc.querySelector('.auth-visual-status'));
+  check('auth: login motion present', !!doc.querySelector('.auth-drive .ad-truck') && !!doc.querySelector('.auth-drive .ad-van'));
   check('auth: compact sign-in fields', !!doc.querySelector('[name="identifier"]') && !!doc.querySelector('[name="password"]') && !doc.querySelector('[name="organisation"]'));
   check('auth: demo picker present', doc.querySelectorAll('[data-demo]').length === 2);
   doc.querySelector('[data-demo="customer"]').click();
@@ -441,10 +444,21 @@ let createdRef = '';
   check('sidenav: no errors', errors.length === 0, errors[0]);
   close();
 
-  const admin = await loadPage('/admin.html', { seed: session('usr_admin'), wait: 1400 });
+  const admin = await loadPage('/', { seed: session('usr_admin'), wait: 1400 });
   check('sidenav: admin links for admin', !!admin.doc.querySelector('#sideNav .sn-link[href="/admin.html"]') && !!admin.doc.querySelector('#sideNav .sn-link[href="/manage.html"]'));
   check('sidenav: admin no errors', admin.errors.length === 0, admin.errors[0]);
   admin.close();
+}
+
+/* ---------- 16. admin operations console (distinct from client) ---------- */
+{
+  const c = await loadPage('/admin.html', { seed: session('usr_admin'), wait: 1800 });
+  check('console: distinct admin chrome', !!c.doc.querySelector('.console-side') && !c.doc.getElementById('bottomBar') && !c.doc.querySelector('.site-header'));
+  check('console: admin nav sections', c.doc.querySelectorAll('.console-side .cs-link').length >= 6 && !!c.doc.querySelector('.cs-link[href="/manage.html"]'));
+  check('console: control panels present', !!c.doc.getElementById('orders') && !!c.doc.getElementById('enquiries') && !!c.doc.getElementById('plans') && !!c.doc.getElementById('payments'));
+  check('console: enquiry control buttons', c.doc.querySelectorAll('[data-enq-resolve], [data-enq-reopen]').length > 0);
+  check('console: no errors', c.errors.length === 0, c.errors[0]);
+  c.close();
 }
 
 console.log(results.join('\n'));

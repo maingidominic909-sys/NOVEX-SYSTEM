@@ -10,6 +10,7 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
+const zlib = require('zlib');
 
 const ROOT = path.join(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -105,13 +106,23 @@ function priceLine(product, qty) {
 
 const json = (res, status, payload) => {
   const body = JSON.stringify(payload);
-  res.writeHead(status, {
+  const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET,POST,PATCH,OPTIONS'
-  });
+    'Access-Control-Allow-Methods': 'GET,POST,PATCH,OPTIONS',
+    'Vary': 'Accept-Encoding'
+  };
+  /* gzip JSON payloads when the client accepts it and the body is worth compressing */
+  if (res._acceptGzip && Buffer.byteLength(body) > 1024) {
+    const gz = zlib.gzipSync(body);
+    headers['Content-Encoding'] = 'gzip';
+    headers['Content-Length'] = gz.length;
+    res.writeHead(status, headers);
+    return res.end(gz);
+  }
+  res.writeHead(status, headers);
   res.end(body);
 };
 
@@ -436,6 +447,21 @@ async function handleApi(req, res, url) {
     return json(res, 200, { ok: true, futureOrders: rows.slice(0, 100) });
   }
 
+  const foMatch = route.match(/^\/future-orders\/([A-Za-z0-9-]+)$/);
+  if (foMatch && method === 'PATCH') {
+    const body = await readBody(req);
+    const allowed = ['planning', 'confirmed', 'scheduled', 'completed', 'cancelled'];
+    const status = clean(body.status, 30);
+    if (!allowed.includes(status)) return json(res, 422, { ok: false, error: 'Invalid status' });
+    const rows = await readCollection('futureOrders');
+    const row = rows.find(f => f.ref.toLowerCase() === foMatch[1].toLowerCase());
+    if (!row) return json(res, 404, { ok: false, error: 'Future order not found' });
+    row.status = status;
+    row.updatedAt = new Date().toISOString();
+    await writeCollection('futureOrders', rows);
+    return json(res, 200, { ok: true, futureOrder: row });
+  }
+
   /* ---- enquiries (contact / quote) ---- */
   if (route === '/enquiries' && method === 'POST') {
     const body = await readBody(req);
@@ -461,6 +487,26 @@ async function handleApi(req, res, url) {
     rows.unshift(record);
     await writeCollection('enquiries', rows);
     return json(res, 201, { ok: true, enquiry: record });
+  }
+
+  if (route === '/enquiries' && method === 'GET') {
+    const rows = await readCollection('enquiries');
+    return json(res, 200, { ok: true, enquiries: rows.slice(0, 200) });
+  }
+
+  const enqMatch = route.match(/^\/enquiries\/([A-Za-z0-9-]+)$/);
+  if (enqMatch && method === 'PATCH') {
+    const body = await readBody(req);
+    const allowed = ['new', 'in-progress', 'resolved'];
+    const status = clean(body.status, 30);
+    if (!allowed.includes(status)) return json(res, 422, { ok: false, error: 'Invalid status' });
+    const rows = await readCollection('enquiries');
+    const row = rows.find(e => e.ref.toLowerCase() === enqMatch[1].toLowerCase());
+    if (!row) return json(res, 404, { ok: false, error: 'Enquiry not found' });
+    row.status = status;
+    row.updatedAt = new Date().toISOString();
+    await writeCollection('enquiries', rows);
+    return json(res, 200, { ok: true, enquiry: row });
   }
 
   /* ---- admin summary ---- */
@@ -514,11 +560,36 @@ async function serveStatic(req, res, url) {
     if (stat.isDirectory()) throw new Error('dir');
     const ext = path.extname(target).toLowerCase();
     const isAsset = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.woff2', '.ico'].includes(ext);
-    res.writeHead(200, {
+    const isText = ['.html', '.css', '.js', '.json', '.svg', '.txt', '.webmanifest'].includes(ext);
+    const versioned = url.searchParams.has('v');
+
+    /* conditional request → 304 (fast repeat loads) */
+    const etag = `W/"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}"`;
+    if (req.headers['if-none-match'] === etag) { res.writeHead(304, { 'ETag': etag }); return res.end(); }
+
+    /* cache policy: versioned assets are immutable for a year; images 7d; HTML revalidates */
+    const cache = versioned ? 'public, max-age=31536000, immutable'
+      : isAsset ? 'public, max-age=604800'
+      : 'no-cache';
+    const headers = {
       'Content-Type': MIME[ext] || 'application/octet-stream',
-      'Cache-Control': isAsset ? 'public, max-age=604800' : 'no-cache',
+      'Cache-Control': cache,
+      'ETag': etag,
       'X-Content-Type-Options': 'nosniff'
-    });
+    };
+
+    /* gzip compressible text responses (CSS/JS/HTML/JSON) — big transfer savings */
+    if (isText && res._acceptGzip && stat.size > 1024) {
+      const raw = await fsp.readFile(target);
+      const gz = zlib.gzipSync(raw, { level: 6 });
+      headers['Content-Encoding'] = 'gzip';
+      headers['Content-Length'] = gz.length;
+      headers['Vary'] = 'Accept-Encoding';
+      res.writeHead(200, headers);
+      return res.end(gz);
+    }
+    headers['Content-Length'] = stat.size;
+    res.writeHead(200, headers);
     fs.createReadStream(target).pipe(res);
   } catch {
     try {
@@ -540,6 +611,7 @@ const IS_SECURE = process.env.NORVEX_SECURE === '1' || process.env.NODE_ENV === 
 
 const server = http.createServer(async (req, res) => {
   Object.entries(SECURITY_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
+  res._acceptGzip = /\bgzip\b/.test(req.headers['accept-encoding'] || '');
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   try {
     if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
