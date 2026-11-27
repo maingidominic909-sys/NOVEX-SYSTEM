@@ -139,7 +139,7 @@
     }));
 
     document.getElementById('signOutBtn').addEventListener('click', () => {
-      NV.auth.signOut({ redirect: false });
+      NV.auth.signOut({ redirect: true });
       NV.toast('You are signed out. Your basket is still saved.', { title: 'Signed out' });
     });
     document.getElementById('profileForm').addEventListener('submit', e => {
@@ -168,6 +168,7 @@
       if (!confirm('Delete this account from this device? This cannot be undone.')) return;
       NV.auth.removeAccount();
       NV.toast('Account removed from this device.', { title: 'Deleted' });
+      NV.auth.go('/index.html');
     });
   }
 
