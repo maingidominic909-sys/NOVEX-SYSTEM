@@ -1896,7 +1896,7 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
 .pay-method.on{border-color:var(--green-700);box-shadow:0 0 0 3px rgba(17,85,60,.12)}
 .pm-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff}
 .pm-ico svg{width:26px;height:26px}
-.pm-ico.mpesa{background:#43b02a}.pm-ico.card{background:#2c5f88}.pm-ico.bank{background:var(--gold-500);color:#241a06}.pm-ico.invoice{background:#5b5390}
+.pm-ico.mpesa{background:#fff;border:1px solid #e4e9e5;padding:5px}.pm-ico.mpesa img{display:block;width:100%;height:100%;object-fit:contain}.pm-ico.card{background:#2c5f88}.pm-ico.bank{background:var(--gold-500);color:#241a06}.pm-ico.invoice{background:#5b5390}
 .pay-method b{font-size:.95rem}
 .pay-method small{color:var(--muted);font-size:.74rem}
 .pm-tag{position:absolute;top:14px;right:14px;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--green-50);color:var(--green-700)}
@@ -1971,3 +1971,15 @@ a.acct-stat-row:hover{background:var(--green-50)}
 .fav-row{flex-wrap:wrap}
 /* KPI cards stack as full-width rows (single-column grid above) */
 .kpi-grid{gap:12px}
+/* v14 — payment brand marks */
+.pm-ico{overflow:hidden}
+.pm-ico.mpesa{background:#fff;border:1px solid #e4e9e5;padding:5px}
+.pm-ico.mpesa img{display:block;width:100%;height:100%;object-fit:contain}
+.pm-ico.card{background:#fff;border:1px solid #e4e9e5;padding:7px;width:100%;max-width:124px}
+.pm-card-brands{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:100%}
+.pm-card-brands img{display:block;width:30%;max-width:34px;height:24px;object-fit:contain}
+.pm-ico.bank{background:#fff;border:1px solid #e4e9e5;color:#1d1d1d;padding:5px;width:100%;max-width:124px}
+.pm-equity{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;font-size:.66rem;letter-spacing:.04em}
+.pm-equity svg{width:25px;height:25px;flex:none}
+.pm-ico.invoice{background:#f3f0ff;border:1px solid #e4e0f4;color:#5b5390}
+.pm-invoice-mark{width:34px;height:34px;display:block}

@@ -13,6 +13,14 @@
     bank: { icon: 'building', cls: 'bank', name: 'Bank transfer', tag: '48h hold', blurb: 'Equity Bank · EFT' },
     invoice: { icon: 'receipt', cls: 'invoice', name: 'Invoice / LPO', tag: '30-day terms', blurb: 'Approved accounts' }
   };
+
+  function paymentMark(id) {
+    if (id === 'mpesa') return '<img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-PESA logo" loading="lazy" decoding="async">';
+    if (id === 'card') return '<span class="pm-card-brands" aria-label="Visa, Mastercard and American Express"><img src="https://cdn.simpleicons.org/visa/1434CB" alt="Visa" loading="lazy"><img src="https://cdn.simpleicons.org/mastercard/EB001B" alt="Mastercard" loading="lazy"><img src="https://cdn.simpleicons.org/americanexpress/016FD0" alt="American Express" loading="lazy"></span>';
+    if (id === 'bank') return '<span class="pm-equity" role="img" aria-label="Equity Bank"><svg viewBox="0 0 48 40" aria-hidden="true"><path d="M5 17 24 4l19 13v4H5z" fill="#a42a29"/><path d="M9 22h30v4H9zm4 6h22v3H13z" fill="#a42a29"/><path d="M8 35h32" stroke="#a42a29" stroke-width="3" stroke-linecap="round"/></svg><b>EQUITY</b></span>';
+    return '<svg class="pm-invoice-mark" viewBox="0 0 48 48" role="img" aria-label="Invoice document"><path d="M12 4h17l8 8v31H12z" fill="#fff" stroke="#5b5390" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 4v9h8M18 21h13M18 27h13M18 33h8" fill="none" stroke="#5b5390" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m27 38 3 3 6-7" fill="none" stroke="#a42a29" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
   const nameToId = { 'M-Pesa': 'mpesa', 'Card': 'card', 'Bank transfer': 'bank', 'Invoice / LPO': 'invoice' };
 
   let order = null, bank = null, recent = [];
@@ -93,7 +101,7 @@
           ${Object.entries(META).map(([id, m]) => `
             <button class="pay-method ${selected === id ? 'on' : ''}" type="button" data-method="${id}" aria-pressed="${selected === id}">
               <span class="pm-tag">${m.tag}</span>
-              <span class="pm-ico ${m.cls}">${NV.icon(m.icon)}</span>
+              <span class="pm-ico ${m.cls}">${paymentMark(id)}</span>
               <b>${m.name}</b><small>${m.blurb}</small>
             </button>`).join('')}
         </div>

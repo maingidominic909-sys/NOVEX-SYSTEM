@@ -27,6 +27,7 @@ async function loadPage(path, { seed = {}, wait = 1300 } = {}) {
     }
     if (msg.includes('Could not parse CSS stylesheet')) return; // modern CSS — fine in real browsers
     if (msg.includes('Not implemented: window.scrollTo')) return;
+    if (/Could not load (img|script|link)|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|fetch failed|getaddrinfo/i.test(msg)) return; // external brand logos load in the browser, not the sandbox
     errors.push(msg + (e.detail ? ` :: ${e.detail && e.detail.message || e.detail}` : ''));
   });
   const dom = await JSDOM.fromURL(BASE + path, {
@@ -479,7 +480,7 @@ let createdRef = '';
 {
   const p = await loadPage('/payment.html');
   check('payment: four method cards', p.doc.querySelectorAll('.pay-method').length === 4);
-  check('payment: modern method icons', p.doc.querySelectorAll('.pay-method .pm-ico svg').length === 4);
+  check('payment: modern method icons', p.doc.querySelectorAll('.pay-method .pm-ico').length === 4 && [...p.doc.querySelectorAll('.pay-method .pm-ico')].every(el => el.querySelector('img, svg')));
   check('payment: mpesa panel default', !!p.doc.getElementById('mpesaForm'));
   p.doc.querySelector('[data-method="card"]').click();
   await sleep(80);
