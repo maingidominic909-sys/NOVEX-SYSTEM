@@ -1,5 +1,137 @@
 [
   {
+    "ref": "NVX-2611-B133BF",
+    "createdAt": "2026-11-27T02:19:15.216Z",
+    "status": "received",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-27T02:19:15.216Z",
+        "note": "Order received through the Norvex web console"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "QA House, Test Road",
+      "town": "Nairobi",
+      "county": "",
+      "notes": "",
+      "payment": "M-Pesa"
+    },
+    "delivery": {
+      "method": "Standard delivery",
+      "window": "Next business day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-fd-001",
+        "sku": "NVX-FD-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "cat": "food",
+        "qty": 12,
+        "unitPrice": 8950,
+        "listPrice": 9200,
+        "discount": 3,
+        "lineTotal": 107400
+      }
+    ],
+    "totals": {
+      "subtotal": 107400,
+      "delivery": 4500,
+      "vat": 17904,
+      "total": 129804,
+      "savings": 3000,
+      "currency": "KES"
+    },
+    "source": "basket-express"
+  },
+  {
+    "ref": "NVX-2611-FA5587",
+    "createdAt": "2026-11-27T02:18:26.785Z",
+    "status": "confirmed",
+    "statusHistory": [
+      {
+        "status": "received",
+        "at": "2026-11-27T02:18:26.785Z",
+        "note": "Order received through the Norvex web console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-27T02:18:33.955Z",
+        "note": "Advanced from the operations console"
+      },
+      {
+        "status": "confirmed",
+        "at": "2026-11-27T02:19:01.658Z",
+        "note": "Payment received · M-Pesa · Q9650B68E"
+      }
+    ],
+    "customer": {
+      "name": "Grace Wanjiru",
+      "email": "demo@norvex.co.ke",
+      "phone": "+254742021099",
+      "organisation": "Kiambu County Referral Hospital",
+      "address": "QA House, Test Road",
+      "town": "Nairobi",
+      "county": "Nairobi",
+      "notes": "",
+      "payment": "M-Pesa"
+    },
+    "delivery": {
+      "method": "Express delivery",
+      "window": "Same day",
+      "zone": "Nairobi Metro (Zone A)"
+    },
+    "items": [
+      {
+        "id": "nvx-fd-001",
+        "sku": "NVX-FD-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "cat": "food",
+        "qty": 10,
+        "unitPrice": 8950,
+        "listPrice": 9200,
+        "discount": 3,
+        "lineTotal": 89500
+      },
+      {
+        "id": "nvx-fd-002",
+        "sku": "NVX-FD-002",
+        "name": "Yellow Beans",
+        "unit": "50kg bag",
+        "cat": "food",
+        "qty": 10,
+        "unitPrice": 9300,
+        "listPrice": 9600,
+        "discount": 3,
+        "lineTotal": 93000
+      }
+    ],
+    "totals": {
+      "subtotal": 182500,
+      "delivery": 2500,
+      "vat": 29600,
+      "total": 214600,
+      "savings": 5500,
+      "currency": "KES"
+    },
+    "source": "web-v2",
+    "paid": true,
+    "paidAt": "2026-11-27T02:19:01.658Z",
+    "payment": {
+      "method": "M-Pesa",
+      "receipt": "Q9650B68E",
+      "amount": 214600,
+      "at": "2026-11-27T02:19:01.658Z"
+    }
+  },
+  {
     "ref": "NVX-2611-K4F2A8",
     "createdAt": "2026-11-17T09:30:00.000Z",
     "status": "delivered",

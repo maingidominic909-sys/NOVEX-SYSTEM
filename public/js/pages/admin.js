@@ -198,7 +198,7 @@
         <div class="card-body pay-grid">
           ${(methods || []).map(m => `
             <div class="pay-tile">
-              <div class="pay-top">${NV.icon(m.id === 'mpesa' ? 'phone' : m.id === 'bank' ? 'building' : m.id === 'card' ? 'wallet' : 'receipt')}<b>${E(m.name)}</b>${m.instant ? '<span class="badge green">Instant</span>' : '<span class="badge gray">Manual</span>'}</div>
+              <div class="pay-top"><span class="pm-ico ${m.id}">${NV.paymentMark(m.id)}</span><b>${E(m.name)}</b>${m.instant ? '<span class="badge green">Instant</span>' : '<span class="badge gray">Manual</span>'}</div>
               <p class="small muted">${m.id === 'mpesa' ? `Paybill ${E(m.paybill)} · Till ${E(m.till)}` : m.id === 'bank' ? `${E(m.bank ? m.bank.name : 'Bank transfer')} · holds ${m.holdHours || 48}h` : m.id === 'card' ? `${(m.brands || []).join(' · ')} · ${E(m.secure || '')}` : `${m.termsDays || 30}-day terms · approval required`}</p>
             </div>`).join('') || '<p class="muted small">Payment channels load when the API is reachable.</p>'}
         </div>

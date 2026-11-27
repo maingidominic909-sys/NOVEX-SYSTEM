@@ -91,7 +91,7 @@
               <div class="dl-row">${NV.icon('mail')}<span><small>Contact</small><b>${E(c.email || '—')}</b> · ${E(c.phone || '')}</span></div>
               <div class="dl-row">${NV.icon('pin')}<span><small>Deliver to</small><b>${E(c.address || '—')}</b>${c.town ? ', ' + E(c.town) : ''}${c.county ? ', ' + E(c.county) : ''}</span></div>
               <div class="dl-row">${NV.icon('truck')}<span><small>Delivery method</small><b>${E(d.method || 'Standard delivery')}</b> · ${E(d.window || 'Next business day')}</span></div>
-              <div class="dl-row">${NV.icon('wallet')}<span><small>Payment</small><b>${E(c.payment || 'Invoice request')}</b></span></div>
+              <div class="dl-row"><span class="pm-ico ${/mpesa|m-pesa/i.test(c.payment || '') ? 'mpesa' : /card/i.test(c.payment || '') ? 'card' : /bank|eft/i.test(c.payment || '') ? 'bank' : 'invoice'}">${NV.paymentMark(/mpesa|m-pesa/i.test(c.payment || '') ? 'mpesa' : /card/i.test(c.payment || '') ? 'card' : /bank|eft/i.test(c.payment || '') ? 'bank' : 'invoice')}</span><span><small>Payment</small><b>${E(c.payment || 'Invoice request')}</b></span></div>
               ${c.notes ? `<div class="dl-row">${NV.icon('file')}<span><small>Notes</small>${E(c.notes)}</span></div>` : ''}
             </div>
             ${/mpesa|m-pesa/i.test(c.payment || '') ? `<div class="free-ship mt-2" style="margin-bottom:0">${NV.icon('phone')} M-Pesa Paybill <b>4168290</b> · Account <b>${E(o.ref)}</b> · Amount <b>${NV.money(t.total || 0)}</b></div>` : ''}
