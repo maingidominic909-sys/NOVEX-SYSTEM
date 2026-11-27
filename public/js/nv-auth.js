@@ -401,7 +401,7 @@
         btn.dataset.bound = '1';
         btn.addEventListener('click', e => {
           e.preventDefault(); e.stopPropagation();
-          signOut({ redirect: false });
+          signOut({ redirect: true });
           NV.toast('You are signed out. Your basket is still saved.', { title: 'Signed out' });
         });
       }
@@ -412,7 +412,7 @@
         btn.dataset.bound = '1';
         btn.addEventListener('click', e => {
           e.preventDefault();
-          signOut({ redirect: false });
+          signOut({ redirect: true });
           NV.toast('You are signed out.', { title: 'Signed out' });
         });
       }
