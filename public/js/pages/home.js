@@ -11,6 +11,13 @@
   const leadDays = p => parseInt(p.lead, 10) || 99;
 
   document.addEventListener('DOMContentLoaded', async () => {
+    /* ---------- app search bar (phone) ---------- */
+    const appSearch = $('appSearch');
+    if (appSearch) appSearch.addEventListener('click', () => {
+      if (window.NV.shell && NV.shell.openSearch) NV.shell.openSearch();
+      else location.href = '/shop.html';
+    });
+
     /* ---------- hero search ---------- */
     const heroForm = $('heroSearch');
     if (heroForm) heroForm.addEventListener('submit', e => {

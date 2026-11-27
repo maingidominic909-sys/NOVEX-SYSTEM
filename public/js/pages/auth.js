@@ -4,8 +4,6 @@
   const NV = window.NV;
   const A = NV.auth;
   let mode = 'signin', busy = false;
-  let sceneTimer = null;
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const $ = sel => document.querySelector(sel);
   const form = () => $('#authForm');
@@ -107,33 +105,6 @@
     try { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); }
     catch { dlg.removeAttribute('open'); }
   }
-
-  const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>';
-  const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
-  const LABELS = ['Loading at the depot', 'On the way to you', 'Tracked to your door'];
-  let animPaused = false, labelIdx = 0;
-
-  function setAnimPaused(p) {
-    animPaused = p;
-    const a = $('#authAnim');
-    if (a) a.classList.toggle('paused', p);
-    const t = $('#animToggle');
-    if (t) {
-      t.setAttribute('aria-pressed', String(p));
-      t.setAttribute('aria-label', p ? 'Play animation' : 'Pause animation');
-      t.innerHTML = p ? ICON_PLAY : ICON_PAUSE;
-    }
-  }
-  function startSceneTimer() {
-    stopSceneTimer();
-    if (reduceMotion) return;
-    sceneTimer = setInterval(() => {
-      labelIdx = (labelIdx + 1) % LABELS.length;
-      const l = $('#sceneLabel');
-      if (l) l.textContent = LABELS[labelIdx];
-    }, 6000);
-  }
-  function stopSceneTimer() { if (sceneTimer) { clearInterval(sceneTimer); sceneTimer = null; } }
 
   function wire() {
     document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = NV.icon(el.dataset.icon); });
@@ -242,12 +213,6 @@
     });
 
     form().addEventListener('submit', onSubmit);
-
-    const toggle = $('#animToggle');
-    if (toggle) toggle.addEventListener('click', () => setAnimPaused(!animPaused));
-    document.addEventListener('visibilitychange', () => { document.hidden ? stopSceneTimer() : startSceneTimer(); });
-    setAnimPaused(false);
-    startSceneTimer();
 
     const q = NV.queryString();
     setMode(q.get('mode') === 'signup' ? 'signup' : 'signin');
