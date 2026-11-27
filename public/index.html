@@ -10,7 +10,7 @@
 <title>Norvex Integrated Enterprises Ltd — Supply · Procurement · Safety</title>
 <meta name="description" content="Institutional supply across Kenya: dry food commodities, office, ICT, safety and more. Live offers, tier pricing, formal quotations and tracked delivery from Nairobi.">
 <link rel="icon" href="/img/mark.png">
-<link rel="stylesheet" href="/css/nv.css?v=9">
+<link rel="stylesheet" href="/css/nv.css?v=10">
 </head>
 <body data-page="home">
 <div id="nv-shell-top"></div>
@@ -24,6 +24,18 @@
       <div class="lt-half"><span class="lt-item">Free Nairobi delivery on orders over KES 150,000 · Express dispatch within 24h · Every order tracked from received to delivered</span></div>
       <div class="lt-half" aria-hidden="true"><span class="lt-item">Free Nairobi delivery on orders over KES 150,000 · Express dispatch within 24h · Every order tracked from received to delivered</span></div>
     </div></div>
+  </div>
+
+  <!-- APP TOP (phone only): prominent search + quick actions -->
+  <div class="app-home-top">
+    <button class="app-search" id="appSearch" type="button" aria-label="Search the catalogue">
+      <span data-ic="search"></span><span class="as-text">Search beans, rice, A4 paper, safety boots…</span><kbd>/</kbd>
+    </button>
+    <div class="app-quick">
+      <a href="/order.html"><span data-ic="truck"></span>Track order</a>
+      <a href="/quote.html"><span data-ic="clipboard"></span>Get a quote</a>
+      <a href="/plan.html"><span data-ic="calendar"></span>Plan supply</a>
+    </div>
   </div>
 
   <!-- MOVING OFFERS -->
@@ -302,7 +314,7 @@
   </section>
 
   <!-- COMPACT CTA -->
-  <section class="section tight" style="padding-top:0">
+  <section class="section tight home-cta" style="padding-top:0">
     <div class="shell">
       <div class="cta-band compact reveal">
         <div>
@@ -322,12 +334,12 @@
 
 <div id="nv-shell-bottom"></div>
 
-<script src="/js/catalog-snapshot.js?v=9"></script>
-<script src="/js/nv-core.js?v=9"></script>
-<script src="/js/nv-auth.js?v=9"></script>
-<script src="/js/ui.js?v=9"></script>
-<script src="/js/shell.js?v=9"></script>
-<script src="/js/pages/home.js?v=9"></script>
+<script src="/js/catalog-snapshot.js?v=10"></script>
+<script src="/js/nv-core.js?v=10"></script>
+<script src="/js/nv-auth.js?v=10"></script>
+<script src="/js/ui.js?v=10"></script>
+<script src="/js/shell.js?v=10"></script>
+<script src="/js/pages/home.js?v=10"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = NV.icon(el.dataset.ic); });

@@ -11,7 +11,7 @@
 <meta name="description" content="Sign in or create your Norvex trade account: orders, quotes, favourites and tracked delivery in one place.">
 <link rel="icon" href="/img/mark.png">
 <link rel="preload" as="image" href="/img/auth-logistics.jpg">
-<link rel="stylesheet" href="/css/nv.css?v=9">
+<link rel="stylesheet" href="/css/nv.css?v=10">
 </head>
 <body class="auth-body" data-page="auth">
 
@@ -20,28 +20,9 @@
   <!-- REALISTIC LOGISTICS VISUAL -->
   <section class="auth-visual" aria-label="Norvex logistics">
     <div class="auth-visual-media" aria-hidden="true">
-      <!-- Living logistics scene: realistic cut-outs choreographed with CSS -->
-      <div class="auth-anim" id="authAnim">
-        <img class="aa-bg" src="/img/anim/yard.jpg" alt="">
-        <div class="aa-pass aa-pass-truck"><img src="/img/anim/truck.png" alt=""></div>
-        <div class="aa-pass aa-pass-van"><img src="/img/anim/van.png" alt=""></div>
-        <div class="aa-yard">
-          <span class="aa-shadow aa-shadow-truck"></span>
-          <img class="aa-parked" src="/img/anim/truck.png" alt="">
-          <span class="aa-stack"><i></i><i></i><i></i></span>
-          <span class="aa-shadow aa-shadow-receive"></span>
-          <img class="aa-worker aa-receive" src="/img/anim/worker-receive.png" alt="">
-          <span class="aa-carry"><span class="aa-flip"><img src="/img/anim/worker-carry.png" alt=""></span></span>
-        </div>
-        <div class="aa-grade"></div>
-      </div>
-      <!-- Static realistic fallback for reduced motion -->
-      <img class="auth-photo is-active" data-scene="0" src="/img/auth-logistics.jpg"
+      <img class="auth-photo is-active" src="/img/auth-logistics.jpg"
            srcset="/img/auth-logistics-640.jpg 640w, /img/auth-logistics.jpg 1122w"
-           sizes="(max-width: 1024px) 100vw, 52vw" alt="">
-      <img class="auth-photo" data-scene="1" src="/img/auth-delivery.jpg"
-           srcset="/img/auth-delivery-640.jpg 640w, /img/auth-delivery.jpg 1122w"
-           sizes="(max-width: 1024px) 100vw, 52vw" alt="" loading="lazy">
+           sizes="(max-width: 768px) 100vw, 52vw" alt="">
       <div class="auth-visual-scrim"></div>
     </div>
 
@@ -57,8 +38,7 @@
     </div>
 
     <div class="auth-visual-status">
-      <div class="auth-live"><span class="auth-live-dot" aria-hidden="true"></span><span id="sceneLabel">Loading at the depot</span></div>
-      <button type="button" class="aa-toggle" id="animToggle" aria-label="Pause animation" aria-pressed="false"></button>
+      <div class="auth-live"><span class="auth-live-dot" aria-hidden="true"></span><span id="sceneLabel">Tracked to your door</span></div>
     </div>
   </section>
 
@@ -200,9 +180,9 @@
   </div>
 </dialog>
 
-<script src="/js/catalog-snapshot.js?v=9"></script>
-<script src="/js/nv-core.js?v=9"></script>
-<script src="/js/nv-auth.js?v=9"></script>
-<script src="/js/pages/auth.js?v=9"></script>
+<script src="/js/catalog-snapshot.js?v=10"></script>
+<script src="/js/nv-core.js?v=10"></script>
+<script src="/js/nv-auth.js?v=10"></script>
+<script src="/js/pages/auth.js?v=10"></script>
 </body>
 </html>

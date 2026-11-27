@@ -19,8 +19,8 @@
       <a class="pc-media" href="/product.html?id=${E(p.id)}" aria-label="${E(p.name)}">
         ${p.img ? `<img src="${E(p.img)}" alt="${E(p.name)}" loading="lazy">` : `<span class="art">${NV.icon(NV.catIcon(p.cat))}</span>`}
         <span class="pc-flag">
-          ${p.featured ? '<span class="badge gold">Featured</span>' : ''}
-          ${p.tiers.length > 1 ? `<span class="badge green">Save up to ${Math.round((1 - from / list) * 100)}%</span>` : ''}
+          ${p.tiers.length > 1 ? `<span class="badge gold pc-disc">-${Math.round((1 - from / list) * 100)}%</span>` : ''}
+          ${p.featured ? '<span class="badge green">Featured</span>' : ''}
         </span>
       </a>
       <button class="pc-fav ${fav ? 'on' : ''}" data-fav="${E(p.id)}" aria-label="Save ${E(p.name)} for later" aria-pressed="${fav}">${NV.icon('heart')}</button>

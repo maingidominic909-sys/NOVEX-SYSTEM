@@ -169,13 +169,7 @@ for (const [path, key] of pages) {
 /* ---------- 5. auth: modern panel, demo sign-in, compact signup, recovery ---------- */
 {
   const { window, doc, errors, navs, close } = await loadPage('/auth.html?mode=signin');
-  check('auth: realistic photo scenes', doc.querySelectorAll('.auth-photo').length === 2 && !!doc.querySelector('.auth-visual-status'));
-  check('auth: living animation scene', !!doc.getElementById('authAnim') && doc.querySelectorAll('.aa-pass').length === 2 && !!doc.querySelector('.aa-carry') && !!doc.querySelector('.aa-receive') && !!doc.querySelector('.aa-stack'));
-  const animToggle = doc.getElementById('animToggle');
-  animToggle.click();
-  check('auth: animation pauses', doc.getElementById('authAnim').classList.contains('paused') && animToggle.getAttribute('aria-pressed') === 'true');
-  animToggle.click();
-  check('auth: animation resumes', !doc.getElementById('authAnim').classList.contains('paused'));
+  check('auth: compact visual, no big animation', doc.querySelectorAll('.auth-photo').length === 1 && !doc.getElementById('authAnim') && !doc.getElementById('animToggle') && !!doc.querySelector('.auth-visual-status'));
   check('auth: compact sign-in fields', !!doc.querySelector('[name="identifier"]') && !!doc.querySelector('[name="password"]') && !doc.querySelector('[name="organisation"]'));
   check('auth: demo picker present', doc.querySelectorAll('[data-demo]').length === 2);
   doc.querySelector('[data-demo="customer"]').click();
@@ -390,13 +384,19 @@ let createdRef = '';
   doc.querySelector('[data-add]').click();
   await sleep(400);
   check('phone: badge live-updates', badge && badge.textContent === String(window.NV.basket.count()) && badge.dataset.zero === '0', badge && badge.textContent);
+  check('phone: account tab present', !!doc.getElementById('bAccount'));
+  check('phone: header account icon', !!doc.getElementById('acctBtn'));
+  doc.getElementById('appSearch').click();
+  await sleep(120);
+  check('phone: app search bar opens overlay', doc.getElementById('searchOverlay').classList.contains('open'));
+  window.NV.shell.closeAll();
   doc.getElementById('bSearch').click();
   await sleep(150);
   check('phone: bottom search opens overlay', doc.getElementById('searchOverlay').classList.contains('open'));
   window.NV.shell.closeAll();
-  doc.getElementById('bMenu').click();
+  doc.getElementById('bCats').click();
   await sleep(150);
-  check('phone: bottom menu opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
+  check('phone: categories opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
   check('phone: drawer has departments', doc.querySelectorAll('#menuBody .mnav-depts a').length === catalog.categories.length);
   check('track: moved into menu drawer', !!doc.querySelector('#menuBody a[href="/order.html"]'));
   check('track: present in footer', !!doc.querySelector('.site-footer a[href="/order.html"]'));
@@ -404,7 +404,7 @@ let createdRef = '';
   close();
 
   const shop = await loadPage('/shop.html');
-  check('phone: shop tab active on catalogue', shop.doc.querySelector('#bottomBar .btab.active span').textContent === 'Shop');
+  check('phone: categories tab active on catalogue', shop.doc.querySelector('#bottomBar .btab.active span').textContent === 'Categories');
   shop.close();
 }
 {

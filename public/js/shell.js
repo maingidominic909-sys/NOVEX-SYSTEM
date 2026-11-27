@@ -62,12 +62,16 @@
         <a class="brand" href="/index.html" aria-label="Norvex home">
           <img src="/img/logo.png" alt="Norvex Integrated Enterprises Ltd" width="164" height="40">
         </a>
+        <button class="header-search" id="headerSearch" type="button" aria-label="Search the catalogue">
+          ${NV.icon('search')}<span>Search products, departments, SKUs…</span><kbd>/</kbd>
+        </button>
         <nav class="main-nav" aria-label="Primary">
           ${NAV.map(n => n.mega
             ? `<button type="button" id="megaBtn" class="${activeKey === n.key ? 'active' : ''}" aria-expanded="false" aria-controls="megaPanel">${n.label} ${NV.icon('chevronD')}</button>`
             : `<a href="${n.href}" class="${activeKey === n.key ? 'active' : ''}">${n.label}</a>`).join('')}
         </nav>
         <div class="header-actions">
+          <a class="hicon app-acct" id="acctBtn" data-auth="account-link" href="/auth.html?mode=signin" aria-label="Account">${NV.icon('user')}</a>
           <button class="hicon" id="searchBtn" aria-label="Search catalogue (press /)" title="Search · /">${NV.icon('search')}</button>
           <a class="btn btn-gold btn-sm header-quote" href="/quote.html">${NV.icon('clipboard')} Request quote</a>
           <div id="authSlot"></div>
@@ -116,6 +120,8 @@
     onScroll();
 
     document.getElementById('searchBtn').addEventListener('click', openSearch);
+    const hs = document.getElementById('headerSearch');
+    if (hs) hs.addEventListener('click', openSearch);
     document.getElementById('cartBtn').addEventListener('click', openCart);
     document.getElementById('menuBtn').addEventListener('click', openMenu);
     /* app-style back: uses the session history so the OS/system back gesture and
@@ -325,17 +331,17 @@
 
     <nav class="bottom-bar" id="bottomBar" aria-label="Quick navigation">
       <a class="btab ${activeKey === 'home' ? 'active' : ''}" href="/index.html">${NV.icon('home')}<span>Home</span></a>
-      <a class="btab ${activeKey === 'shop' ? 'active' : ''}" href="/shop.html">${NV.icon('layers')}<span>Shop</span></a>
+      <button class="btab ${activeKey === 'shop' ? 'active' : ''}" id="bCats" type="button" aria-label="Browse categories">${NV.icon('grid')}<span>Categories</span></button>
       <button class="btab" id="bSearch" type="button" aria-label="Search catalogue">${NV.icon('search')}<span>Search</span></button>
       <a class="btab ${activeKey === 'basket' ? 'active' : ''}" href="/basket.html" aria-label="Supply basket">
         ${NV.icon('cart')}<span class="bcount count" data-cart-count data-zero="1">0</span><span>Basket</span>
       </a>
-      <button class="btab" id="bMenu" type="button" aria-label="Open menu">${NV.icon('menu')}<span>Menu</span></button>
+      <a class="btab ${activeKey === 'account' ? 'active' : ''}" id="bAccount" data-auth="account-link" href="/auth.html?mode=signin">${NV.icon('user')}<span>Account</span></a>
     </nav>`;
     document.body.appendChild(host);
 
     document.getElementById('bSearch').addEventListener('click', openSearch);
-    document.getElementById('bMenu').addEventListener('click', openMenu);
+    document.getElementById('bCats').addEventListener('click', openMenu);
 
     document.getElementById('nvOverlay').addEventListener('click', closeAll);
     host.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
