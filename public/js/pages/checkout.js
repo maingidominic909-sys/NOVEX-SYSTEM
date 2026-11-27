@@ -188,11 +188,14 @@
         <p class="lede" style="margin:0 auto">${E(data.organisation)} will receive confirmation on ${E(data.email)}. Our desk confirms availability within business hours.</p>
         <div class="ref-chip">${E(order.ref)} <button id="copyRef" aria-label="Copy reference">${NV.icon('clipboard')}</button></div>
         ${offline ? '<p class="hint">Offline preview — this order is saved on this device and will appear in your order history.</p>' : ''}
-        ${data.payment === 'M-Pesa' ? `<div class="card card-pad" style="max-width:440px;margin:14px auto;text-align:left"><b class="small">M-Pesa payment</b><p class="small muted mt-1">Paybill <b class="gold">4168290</b> · Account <b class="gold">${E(order.ref)}</b><br>Amount <b>${NV.money(order.totals.total)}</b>. The order sheet has full instructions.</p></div>` : ''}
+        <div class="card card-pad" style="max-width:460px;margin:16px auto;text-align:left">
+          <b class="small">Next step · payment</b>
+          <p class="small muted mt-1">Complete your order securely with M-Pesa, card, bank transfer or invoice/LPO — amount <b>${NV.money(order.totals.total)}</b>.</p>
+        </div>
         <div class="row wrap" style="justify-content:center;margin-top:20px">
-          <a class="btn btn-gold" href="/order.html?ref=${encodeURIComponent(order.ref)}">${NV.icon('truck')} Track this order</a>
+          <a class="btn btn-gold" href="/payment.html?ref=${encodeURIComponent(order.ref)}">${NV.icon('wallet')} Proceed to payment</a>
+          <a class="btn btn-ghost" href="/order.html?ref=${encodeURIComponent(order.ref)}">${NV.icon('truck')} Track order</a>
           <a class="btn btn-ghost" href="/orders.html">${NV.icon('receipt')} Order history</a>
-          <a class="btn btn-ghost" href="/shop.html">Continue shopping</a>
         </div>
       </div>`;
     document.getElementById('copyRef').addEventListener('click', () => { NV.copy(order.ref); NV.toast('Reference copied.', { ms: 1800 }); });

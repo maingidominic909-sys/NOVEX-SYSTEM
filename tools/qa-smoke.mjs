@@ -70,7 +70,7 @@ const pages = [
   ['/quote.html', 'quote'], ['/desk.html', 'desk'], ['/basket.html', 'basket'],
   ['/checkout.html', 'checkout'], ['/orders.html', 'orders'], ['/order.html', 'order'],
   ['/plan.html', 'plan'], ['/account.html', 'account'], ['/admin.html', 'admin'],
-  ['/manage.html', 'manage'], ['/auth.html', 'auth'], ['/404.html', '404']
+  ['/manage.html', 'manage'], ['/payment.html', 'payment'], ['/auth.html', 'auth'], ['/404.html', '404']
 ];
 for (const [path, key] of pages) {
   const { doc, errors, close } = await loadPage(path);
@@ -257,6 +257,7 @@ let createdRef = '';
   const refEl = doc.querySelector('#checkoutSuccess .ref-chip');
   createdRef = refEl ? refEl.textContent.trim().split(/\s/)[0] : '';
   check('checkout: reference issued', /^NVX-/.test(createdRef), createdRef);
+  check('checkout: proceeds to payment', !!doc.querySelector('#checkoutSuccess a[href^="/payment.html"]'));
   check('checkout: basket cleared', window.NV.basket.count() === 0);
   check('checkout: no errors', errors.length === 0, errors.slice(0, 2).join('|'));
   close();
@@ -366,6 +367,13 @@ let createdRef = '';
   a.doc.getElementById('profileForm').dispatchEvent(new a.window.Event('submit', { bubbles: true, cancelable: true }));
   await sleep(400);
   check('account: profile update works', a.window.NV.auth.current().organisation === 'QA Updated Org');
+  check('account: vertical layout', !!a.doc.querySelector('.account-stack') && !a.doc.querySelector('.account-grid'));
+  check('account: 20 avatar options', a.doc.querySelectorAll('.av-opt').length === 20);
+  const avBtn = a.doc.querySelector('.av-opt');
+  const avChoice = avBtn.dataset.av;
+  avBtn.click();
+  await sleep(250);
+  check('account: avatar change persists', a.window.NV.auth.current().avatar === avChoice, a.window.NV.auth.current().avatar);
   check('account: no errors', a.errors.length === 0, a.errors[0]);
   a.close();
 }
@@ -373,21 +381,22 @@ let createdRef = '';
 /* ---------- 14. phone navigation: bottom bar, badges, drawers, checkout bar ---------- */
 {
   const { window, doc, errors, close } = await loadPage('/');
-  const util = doc.querySelector('.util-bar');
-  check('top: phone number removed from util bar', util && !util.textContent.includes('+254'), util && util.textContent.trim());
-  check('top: track order removed from util bar', util && !util.textContent.includes('Track'));
+  check('top: util bar removed', !doc.querySelector('.util-bar'));
+  const fi = doc.querySelector('.footer-info');
+  check('top: hours + free delivery moved to footer', !!fi && /Free/.test(fi.textContent) && /8:00am/.test(fi.textContent));
   check('app: theme-color meta present', !!doc.querySelector('meta[name="theme-color"]'));
   check('app: back button present', !!doc.getElementById('navBack'));
   const bar = doc.getElementById('bottomBar');
   check('phone: floating pill present', !!bar);
-  check('phone: five tabs', bar && bar.querySelectorAll('.btab').length === 5);
+  check('phone: six tabs', bar && bar.querySelectorAll('.btab').length === 6);
   check('phone: home tab active', bar && bar.querySelector('.btab.active span') && bar.querySelector('.btab.active span').textContent === 'Home');
   const badge = bar && bar.querySelector('.bcount');
   check('phone: badge hidden at zero', badge && badge.dataset.zero === '1');
   doc.querySelector('[data-add]').click();
   await sleep(400);
   check('phone: badge live-updates', badge && badge.textContent === String(window.NV.basket.count()) && badge.dataset.zero === '0', badge && badge.textContent);
-  check('phone: account tab present', !!doc.getElementById('bAccount'));
+  check('phone: menu tab present', !!doc.getElementById('bMenu'));
+  check('phone: pay tab present', !!doc.getElementById('bPay'));
   check('phone: header account icon', !!doc.getElementById('acctBtn'));
   doc.getElementById('appSearch').click();
   await sleep(120);
@@ -399,8 +408,13 @@ let createdRef = '';
   window.NV.shell.closeAll();
   doc.getElementById('bCats').click();
   await sleep(150);
-  check('phone: categories opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
-  check('phone: drawer has departments', doc.querySelectorAll('#menuBody .mnav-depts a').length === catalog.categories.length);
+  check('phone: categories opens sheet', doc.getElementById('catSheet').classList.contains('open'));
+  check('phone: categories sheet has departments', doc.querySelectorAll('#catGrid .cat-tile').length === catalog.categories.length);
+  window.NV.shell.closeAll();
+  doc.getElementById('bMenu').click();
+  await sleep(150);
+  check('phone: main menu opens drawer', doc.getElementById('menuDrawer').classList.contains('open'));
+  check('phone: menu has departments', doc.querySelectorAll('#menuBody .mnav-depts a').length === catalog.categories.length);
   check('track: moved into menu drawer', !!doc.querySelector('#menuBody a[href="/order.html"]'));
   check('track: present in footer', !!doc.querySelector('.site-footer a[href="/order.html"]'));
   check('phone: no errors', errors.length === 0, errors[0]);
@@ -459,6 +473,29 @@ let createdRef = '';
   check('console: enquiry control buttons', c.doc.querySelectorAll('[data-enq-resolve], [data-enq-reopen]').length > 0);
   check('console: no errors', c.errors.length === 0, c.errors[0]);
   c.close();
+}
+
+/* ---------- 17. payments page: methods + M-Pesa flow ---------- */
+{
+  const p = await loadPage('/payment.html');
+  check('payment: four method cards', p.doc.querySelectorAll('.pay-method').length === 4);
+  check('payment: modern method icons', p.doc.querySelectorAll('.pay-method .pm-ico svg').length === 4);
+  check('payment: mpesa panel default', !!p.doc.getElementById('mpesaForm'));
+  p.doc.querySelector('[data-method="card"]').click();
+  await sleep(80);
+  check('payment: card panel switches', !!p.doc.getElementById('cardForm'));
+  p.doc.querySelector('[data-method="bank"]').click();
+  await sleep(80);
+  check('payment: bank panel shows details', !!p.doc.getElementById('bankForm') && /Equity/.test(p.doc.getElementById('payPanel').textContent));
+  p.doc.querySelector('[data-method="mpesa"]').click();
+  await sleep(80);
+  setInput(p.window, p.doc.querySelector('#mpesaForm [name="phone"]'), '0722000000');
+  setInput(p.window, p.doc.querySelector('#mpesaForm [name="amount"]'), '25000');
+  p.doc.getElementById('mpesaForm').dispatchEvent(new p.window.Event('submit', { bubbles: true, cancelable: true }));
+  await sleep(700);
+  check('payment: mpesa prompt success', !!p.doc.querySelector('.pay-success') && /prompt sent/i.test(p.doc.getElementById('payPanel').textContent));
+  check('payment: no errors', p.errors.length === 0, p.errors[0]);
+  p.close();
 }
 
 console.log(results.join('\n'));

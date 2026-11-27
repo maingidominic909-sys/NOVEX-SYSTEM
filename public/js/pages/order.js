@@ -77,6 +77,7 @@
             <h3 style="font-size:1rem;margin-bottom:10px">Need help with this order?</h3>
             <p class="small muted mb-2">Quote reference <b>${E(o.ref)}</b> and our desk will pick it up immediately.</p>
             <div class="col" style="gap:8px">
+              <a class="btn btn-gold btn-sm" href="/payment.html?ref=${encodeURIComponent(o.ref)}">${NV.icon('wallet')} Pay for this order</a>
               <a class="btn btn-soft btn-sm" href="tel:${NV.CONFIG.phoneRaw}">${NV.icon('phone')} ${E(NV.CONFIG.phone)}</a>
               <a class="btn btn-soft btn-sm" target="_blank" rel="noopener" href="https://wa.me/${NV.CONFIG.whatsapp}?text=${encodeURIComponent('Hello Norvex, I need help with order ' + o.ref)}">${NV.icon('whatsapp')} WhatsApp the desk</a>
             </div>

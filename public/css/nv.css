@@ -1331,11 +1331,12 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .util-bar,.workspace-tabs,.main-nav,.header-quote,#authSlot{display:none}
   #searchBtn,#cartBtn,.nav-burger,.nav-back{display:none}
   .app-acct{display:grid}
-  .site-header{padding-top:0}
-  .header-main{gap:8px;height:46px}
-  .brand img{height:27px}
+  .site-header{position:fixed;top:0;left:0;right:0;padding-top:env(safe-area-inset-top,0px)}
+  .header-main{gap:8px;height:58px}
+  .brand img{height:36px}
   .header-actions{margin-left:auto;gap:6px}
-  .hicon{width:36px;height:36px}
+  .hicon{width:38px;height:38px}
+  body:not(.auth-body):not(.console-body){padding-top:calc(58px + env(safe-area-inset-top,0px))}
 
   /* clearance for the floating pill + iPhone home indicator */
   body:not(.auth-body){padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
@@ -1348,15 +1349,20 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
     display:flex;align-items:center;gap:4px;
     background:rgba(5,26,19,.96);backdrop-filter:blur(18px);
     border:1px solid rgba(255,255,255,.12);border-radius:99px;
-    padding:8px 10px;box-shadow:0 18px 44px rgba(5,26,19,.45);
-    max-width:calc(100vw - 20px);
+    padding:9px 8px;box-shadow:0 18px 44px rgba(5,26,19,.45);
+    max-width:calc(100vw - 16px);
+    animation:pillIn .5s var(--ease) both,pillGlow 4.5s ease-in-out infinite;
   }
+  @keyframes pillIn{from{opacity:0;transform:translateX(-50%) translateY(22px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes pillGlow{0%,100%{box-shadow:0 18px 44px rgba(5,26,19,.45)}50%{box-shadow:0 18px 52px rgba(201,162,74,.3)}}
+  @keyframes tabPop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
   .btab{
     position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
-    padding:9px 14px 8px;border-radius:99px;font-size:.64rem;font-weight:700;
+    padding:9px 9px 8px;border-radius:99px;font-size:.6rem;font-weight:700;min-width:48px;
     color:#9fb4aa;transition:color .18s,background .18s;letter-spacing:.01em;white-space:nowrap;
   }
-  .btab svg{width:23px;height:23px}
+  .btab svg{width:22px;height:22px}
+  .btab.active svg{animation:tabPop .32s var(--ease)}
   .btab:active{background:rgba(255,255,255,.08)}
   .btab.active{color:#fff;background:var(--green-800);box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .btab.active svg{color:var(--gold-400)}
@@ -1402,9 +1408,9 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .drawer-foot{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:360px){
-  .btab{padding:8px 9px 7px;font-size:.58rem}
-  .btab svg{width:21px;height:21px}
-  .brand img{height:26px}
+  .btab{padding:8px 6px 7px;font-size:.54rem;min-width:42px}
+  .btab svg{width:20px;height:20px}
+  .brand img{height:32px}
 }
 
 /* =========================================================
@@ -1837,3 +1843,70 @@ button,.btn,.chip,.hicon,.btab{touch-action:manipulation}
   .console-head h1{font-size:1.35rem}
 }
 @media print{.console-side,.console-top,.console-tabs{display:none!important}.console-main{margin-left:0}}
+
+/* =========================================================
+   v12 — categories sheet · menu sign-out · footer info ·
+   account vertical layout + avatar picker · payments page
+   ========================================================= */
+.acct-av{display:grid;place-items:center;width:100%;height:100%;font-size:1.1rem;line-height:1}
+
+/* categories sheet */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-tile{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:16px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);transition:border-color .15s,transform .15s,box-shadow .15s}
+.cat-tile:hover{border-color:var(--gold-500);transform:translateY(-2px);box-shadow:var(--shadow-s)}
+.ct-ico{width:46px;height:46px;border-radius:13px;background:var(--green-50);color:var(--green-700);display:grid;place-items:center}
+.ct-ico svg{width:24px;height:24px}
+.cat-tile b{font-size:.82rem;line-height:1.2}
+.cat-tile small{color:var(--muted);font-size:.7rem}
+
+/* main-menu sign out */
+.mnav-signout{font:inherit;color:var(--red-600);width:100%;text-align:left;background:none;border:0;cursor:pointer}
+.mnav-signout:hover{background:var(--red-50)}
+.mnav-signout svg{color:var(--red-600)}
+
+/* relocated hours + free-delivery info (footer) */
+.footer-info{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;padding:16px 0 4px;border-top:1px solid rgba(255,255,255,.1);margin-top:10px;font-size:.8rem;color:#cbbd93}
+.footer-info span{display:inline-flex;align-items:center;gap:8px}
+.footer-info svg{width:15px;height:15px;color:var(--gold-400);flex:none}
+
+/* account — vertical layout */
+.account-stack{display:flex;flex-direction:column;gap:18px;max-width:780px;margin:0 auto}
+.account-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:28px 22px}
+.account-hero .auth-avatar{width:84px;height:84px;font-size:2rem;border-radius:24px}
+.account-hero h1{font-family:var(--font-serif);font-size:1.5rem}
+.account-hero .ph-org{color:var(--muted);font-size:.88rem}
+.account-hero .ah-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.avatar-picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:6px 0}
+.av-opt{font-size:1.5rem;width:100%;aspect-ratio:1;border-radius:14px;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
+.av-opt:hover{transform:translateY(-2px);border-color:var(--gold-500)}
+.av-opt.on{border-color:var(--green-700);background:var(--green-50)}
+.account-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:600px){.account-kpis{grid-template-columns:1fr 1fr}.avatar-picker{grid-template-columns:repeat(5,1fr)}}
+
+/* payments page */
+.pay-wrap{max-width:860px;margin:0 auto}
+.pay-due{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--green-950);color:#fff;border-radius:var(--radius-l);padding:22px 24px;margin-bottom:20px}
+.pay-due .pd-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-400);font-weight:800}
+.pay-due .pd-amount{font-family:var(--font-serif);font-size:2rem;color:#fff;line-height:1.1}
+.pay-due .pd-ref{color:#9fb4aa;font-size:.82rem;margin-top:4px}
+.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.pay-method{position:relative;display:flex;flex-direction:column;gap:10px;padding:18px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface);cursor:pointer;text-align:left;transition:border-color .15s,transform .15s,box-shadow .15s}
+.pay-method:hover{transform:translateY(-3px);box-shadow:var(--shadow-m)}
+.pay-method.on{border-color:var(--green-700);box-shadow:0 0 0 3px rgba(17,85,60,.12)}
+.pm-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.pm-ico svg{width:26px;height:26px}
+.pm-ico.mpesa{background:#43b02a}.pm-ico.card{background:#2c5f88}.pm-ico.bank{background:var(--gold-500);color:#241a06}.pm-ico.invoice{background:#5b5390}
+.pay-method b{font-size:.95rem}
+.pay-method small{color:var(--muted);font-size:.74rem}
+.pm-tag{position:absolute;top:14px;right:14px;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--green-50);color:var(--green-700)}
+.pay-panel{border:1px solid var(--line);border-radius:var(--radius-l);padding:22px;background:var(--surface)}
+.pay-panel h3{font-family:var(--font-serif);font-size:1.2rem;margin-bottom:6px}
+.pay-panel .pp-note{color:var(--muted);font-size:.84rem;margin-bottom:16px}
+.pay-form{display:flex;flex-direction:column;gap:14px;max-width:420px}
+.pay-success{text-align:center;padding:30px 10px}
+.pay-success .ok{width:74px;height:74px;border-radius:50%;background:var(--green-100);color:var(--green-700);display:grid;place-items:center;margin:0 auto 16px}
+.pay-success .ok svg{width:34px;height:34px}
+.pay-receipt{display:inline-flex;align-items:center;gap:8px;background:var(--green-50);border:1px solid var(--green-100);border-radius:99px;padding:8px 16px;font-weight:700;color:var(--green-800);margin:12px 0}
+.pay-bank{display:flex;flex-direction:column;gap:8px;max-width:420px}
+.pay-bank .pb-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+.pay-bank .pb-row b{font-weight:700}

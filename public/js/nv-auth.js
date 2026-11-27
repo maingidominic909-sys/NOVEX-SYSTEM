@@ -95,7 +95,7 @@
   }
   const publicUser = u => ({
     id: u.id, name: u.name, username: u.username, email: u.email, phone: u.phone,
-    organisation: u.organisation, role: u.role || 'customer', createdAt: u.createdAt, avatar: initials(u.name)
+    organisation: u.organisation, role: u.role || 'customer', createdAt: u.createdAt, avatar: u.avatar || initials(u.name)
   });
   function initials(name) {
     return String(name || '')
@@ -232,6 +232,7 @@
     ['name', 'email', 'phone', 'organisation'].forEach(k => {
       if (patch[k] != null && norm(patch[k])) user[k] = k === 'email' ? lower(patch[k]) : k === 'phone' ? normalisePhone(patch[k]) : norm(patch[k]);
     });
+    if (patch.avatar != null) user.avatar = String(patch.avatar).slice(0, 8);
     user.updatedAt = nowISO();
     saveAccounts(list);
     NV.customer.save({ name: user.name, organisation: user.organisation, email: user.email, phone: user.phone });
@@ -377,6 +378,8 @@
       a.setAttribute('href', user ? '/account.html' : '/auth.html?mode=signin');
       a.setAttribute('aria-label', user ? `Account — ${user.name}` : 'Sign in');
     });
+    const acct = document.getElementById('acctBtn');
+    if (acct) acct.innerHTML = user ? `<span class="acct-av">${NV.esc(user.avatar)}</span>` : NV.icon('user');
     document.querySelectorAll('[data-auth="drawer-link"]').forEach(a => {
       a.textContent = user ? `Signed in — ${user.name}` : 'Sign in / create account';
       a.setAttribute('href', user ? '/account.html' : '/auth.html?mode=signin');
