@@ -1,5 +1,38 @@
 [
   {
+    "ref": "ENQ-2611-81C0AB",
+    "createdAt": "2026-11-27T02:18:44.360Z",
+    "status": "new",
+    "type": "general",
+    "name": "QA Visitor",
+    "organisation": "",
+    "email": "qa@norvex.co.ke",
+    "phone": "",
+    "subject": "General enquiry",
+    "message": "This is a smoke-test message over ten chars.",
+    "items": []
+  },
+  {
+    "ref": "ENQ-2611-CF7999",
+    "createdAt": "2026-11-27T02:18:39.319Z",
+    "status": "new",
+    "type": "quote",
+    "name": "QA name",
+    "organisation": "QA organisation",
+    "email": "qa@norvex.co.ke",
+    "phone": "0712345678",
+    "subject": "Quotation request — 1 lines",
+    "message": "40 × Beans (50kg bag) @ KES 8,700 = KES 348,000\nIndicative total: KES 403,680",
+    "items": [
+      {
+        "id": "nvx-fd-001",
+        "name": "Beans",
+        "unit": "50kg bag",
+        "qty": 40
+      }
+    ]
+  },
+  {
     "ref": "ENQ-2611-Q7D21C",
     "createdAt": "2026-11-26T15:30:00.000Z",
     "status": "new",

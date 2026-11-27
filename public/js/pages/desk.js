@@ -41,8 +41,8 @@
 
     const quick = [
       ['layers', 'Catalogue', '45+ lines, 13 departments', '/shop.html'],
-      ['cart', 'Supply basket', 'Review lines & tier nudges', '/basket.html'],
-      ['wallet', 'Checkout', '3 steps to a placed order', '/checkout.html'],
+      ['cart', 'Supply basket', lines.length ? `${lines.length} ${lines.length === 1 ? 'line' : 'lines'} · ${NV.compact(t.subtotal)}` : 'Review lines & tier nudges', '/basket.html'],
+      ['wallet', 'Pay & checkout', 'Straight to secure payment', '/basket.html'],
       ['receipt', 'Order history', 'Track, export, reorder', '/orders.html'],
       ['truck', 'Track my order', 'Live status by reference', '/order.html'],
       ['clipboard', 'Quote desk', 'Formal multi-line RFQ', '/quote.html'],

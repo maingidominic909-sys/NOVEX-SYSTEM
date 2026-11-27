@@ -47,6 +47,7 @@
         <nav class="cs-nav" aria-label="Console sections">${navLinks('cs-link')}</nav>
         <div class="cs-foot">
           <a class="cs-link ghost" href="/index.html">${NV.icon('home')}<span>View storefront</span></a>
+          <button class="cs-link ghost console-theme" type="button">${NV.icon('moon')}<span>Day / night</span></button>
           <div class="cs-user">${identity()}</div>
           <button class="cs-signout" type="button" data-auth-signout>${NV.icon('arrowL')} Sign out</button>
         </div>
@@ -54,6 +55,7 @@
       <header class="console-top">
         <a class="ct-brand" href="/admin.html"><img src="/img/mark.png" alt=""><b>Operations console</b></a>
         <div class="ct-actions">
+          <button class="ct-icon console-theme" type="button" aria-label="Day / night theme">${NV.icon('moon')}</button>
           <a class="ct-icon" href="/index.html" aria-label="View storefront">${NV.icon('home')}</a>
           <a class="ct-icon" href="/account.html" aria-label="Account">${NV.icon('user')}</a>
         </div>
@@ -62,8 +64,20 @@
     document.body.classList.add('console-body');
   }
 
+  function paintConsoleTheme() {
+    const dark = NV.theme.get() === 'dark';
+    document.querySelectorAll('.console-theme').forEach(b => {
+      const svg = NV.icon(dark ? 'moon' : 'sun');
+      const span = b.querySelector('span');
+      b.innerHTML = span ? `${svg}<span>Day / night</span>` : svg;
+    });
+  }
+
   function boot() {
     build();
+    paintConsoleTheme();
+    document.querySelectorAll('.console-theme').forEach(b => b.addEventListener('click', () => { NV.theme.toggle(); paintConsoleTheme(); }));
+    document.addEventListener('norvex:theme', paintConsoleTheme);
     if (NV.auth) NV.auth.onChange(() => {
       const u = document.querySelector('.cs-user');
       if (u) u.innerHTML = identity();

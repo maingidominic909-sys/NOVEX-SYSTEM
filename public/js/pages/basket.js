@@ -4,10 +4,37 @@
   const NV = window.NV;
   const E = NV.esc;
 
-  function goCheckout() {
+  async function goCheckout() {
     if (NV.auth && !NV.auth.isIn()) {
-      NV.auth.require({ returnTo: '/checkout.html', title: 'Sign in to check out', body: 'Your basket is saved. Sign in or create a trade account to place this order.' });
-    } else location.href = '/checkout.html';
+      NV.auth.require({ returnTo: '/basket.html', title: 'Sign in to pay', body: 'Your basket is saved. Sign in or create a trade account to place and pay for this order.' });
+      return;
+    }
+    const u = NV.auth && NV.auth.current();
+    if (u && u.role === 'admin') { NV.toast('Admins manage orders from the console — buying is disabled.', { type: 'error', title: 'Admin mode' }); return; }
+    const lines = await NV.basket.lines();
+    if (!lines.length) return;
+    const c = NV.customer.get();
+    const customer = {
+      name: c.name || (u && u.name) || '', email: c.email || (u && u.email) || '',
+      phone: c.phone || (u && u.phone) || '', organisation: c.organisation || (u && u.organisation) || '',
+      address: c.address || '', town: c.town || 'Nairobi', county: c.county || '', notes: c.notes || '',
+      payment: NV.read('norvex.paymethod.v1', 'M-Pesa')
+    };
+    const complete = customer.name && customer.email && customer.phone && customer.organisation && customer.address;
+    if (!complete) { location.href = '/checkout.html'; return; }
+    const btns = [document.getElementById('checkoutBtn'), document.getElementById('barCheckout')].filter(Boolean);
+    btns.forEach(b => { b.disabled = true; b.innerHTML = `${NV.icon('lock')} Placing order…`; });
+    try {
+      const res = await NV.api('/orders', { method: 'POST', body: {
+        customer, items: lines.map(l => ({ id: l.id, qty: l.qty })),
+        deliveryMethod: c.deliveryMethod || 'Standard delivery', deliveryWindow: c.deliveryWindow || 'Next business day', source: 'basket-express'
+      } });
+      NV.basket.clear();
+      location.href = '/payment.html?ref=' + encodeURIComponent(res.order.ref);
+    } catch (err) {
+      if (!err.offline) NV.toast(err.message || 'Review your delivery details to continue.', { type: 'error', title: 'Checkout' });
+      location.href = '/checkout.html';
+    }
   }
 
   /* sticky total + checkout CTA above the phone bottom bar */
@@ -27,7 +54,7 @@
     document.body.classList.add('has-checkoutbar');
     bar.innerHTML = `
       <div class="cb-total"><small>Total · VAT incl.</small><b>${NV.money(total)}</b></div>
-      <button class="btn btn-gold" id="barCheckout" type="button">Checkout ${NV.icon('arrowR')}</button>`;
+      <button class="btn btn-gold" id="barCheckout" type="button">Pay ${NV.icon('arrowR')}</button>`;
     document.getElementById('barCheckout').addEventListener('click', goCheckout);
   }
 
@@ -104,7 +131,8 @@
           <div class="sum-row"><span>VAT 16%</span><span>${NV.money(t.vat)}</span></div>
         </div>
         <div class="sum-total"><span class="bold">Estimated total</span><span><b>${NV.money(t.total)}</b><br><small>VAT inclusive</small></span></div>
-        <button class="btn btn-gold btn-block btn-lg" id="checkoutBtn">${NV.icon('wallet')} Proceed to checkout</button>
+        <button class="btn btn-gold btn-block btn-lg" id="checkoutBtn">${NV.icon('wallet')} Proceed to payment</button>
+        <a class="btn btn-soft btn-block btn-sm" style="margin-top:10px" href="/checkout.html">${NV.icon('truck')} Review delivery details</a>
         <a class="btn btn-ghost btn-block btn-sm" style="margin-top:10px" href="/shop.html">${NV.icon('arrowL')} Continue shopping</a>
         <a class="btn btn-soft btn-block btn-sm" style="margin-top:10px" id="waOrder" target="_blank" rel="noopener">${NV.icon('whatsapp')} Order via WhatsApp</a>
         <p class="hint mt-2 center">Tier pricing is confirmed server-side at checkout.</p>

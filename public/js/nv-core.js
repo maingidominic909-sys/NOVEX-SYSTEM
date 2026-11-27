@@ -116,7 +116,9 @@
     receipt: P('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>'),
     wallet: P('<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="17" cy="14.5" r="1"/>'),
     refresh: P('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/>'),
-    logoutAlt: P('<path d="M9 4H5v16h4"/><path d="M15 8l4 4-4 4M8 12h11"/>')
+    logoutAlt: P('<path d="M9 4H5v16h4"/><path d="M15 8l4 4-4 4M8 12h11"/>'),
+    sun: P('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+    moon: P('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>')
   };
   function paymentMark(id) {
     if (id === 'mpesa') return '<img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-PESA logo" loading="lazy" decoding="async">';
@@ -468,6 +470,7 @@
 
   /* ---------------- PWA + small niceties ---------------- */
   function boot() {
+    theme.apply(theme.get());
     const link = document.createElement('link');
     link.rel = 'manifest';
     link.href = '/manifest.webmanifest';
@@ -487,10 +490,28 @@
   else boot();
 
   /* ---------------- export ---------------- */
+  /* ---------------- day / night theme ---------------- */
+  const THEME_KEY = 'norvex.theme.v1';
+  const theme = {
+    get() { try { return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'day'; } catch (e) { return 'day'; } },
+    apply(t) {
+      const dark = t === 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'day');
+      try { localStorage.setItem(THEME_KEY, dark ? 'dark' : 'day'); } catch (e) {}
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', dark ? '#0b0f0d' : '#0b3d2c');
+      document.querySelectorAll('img[data-logo]').forEach(img => {
+        img.src = dark ? img.dataset.logoDark : img.dataset.logoLight;
+      });
+      document.dispatchEvent(new CustomEvent('norvex:theme', { detail: { theme: dark ? 'dark' : 'day' } }));
+    },
+    toggle() { const next = theme.get() === 'dark' ? 'day' : 'dark'; theme.apply(next); return next; }
+  };
+
   global.NV = {
     CONFIG, money, compact, dateFmt, timeFmt, esc, icon, paymentMark, productArt, catIcon,
     api, catalog, productMap, tierPrice, quote, basket, favourites, customer,
     toast, reveal, queryString, copy, ref, read, write, state, storageOk,
-    reloadCatalog, catalogAdmin, shrinkImage
+    reloadCatalog, catalogAdmin, shrinkImage, theme
   };
 })(window);
