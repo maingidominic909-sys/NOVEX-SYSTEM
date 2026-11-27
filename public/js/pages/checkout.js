@@ -17,10 +17,10 @@
     { id: 'Pickup', name: 'Collect at depot', desc: 'Upper Hill, Nairobi · ready in 24h', fee: 'Free' }
   ];
   const PAYMENTS = [
-    { id: 'M-Pesa', name: 'M-Pesa Paybill', desc: 'Paybill 4168290 · account = order reference', icon: 'phone' },
-    { id: 'Bank transfer', name: 'Bank transfer', desc: 'Equity Bank · details on the order sheet', icon: 'building' },
-    { id: 'Card', name: 'Debit / credit card', desc: 'Visa · Mastercard · 3-D Secure', icon: 'wallet' },
-    { id: 'Invoice / LPO', name: 'Invoice / LPO', desc: '30-day terms for approved accounts', icon: 'receipt' }
+    { id: 'M-Pesa', name: 'M-Pesa Paybill', desc: 'Paybill 4168290 · account = order reference', mark: 'mpesa' },
+    { id: 'Bank transfer', name: 'Bank transfer', desc: 'Equity Bank · details on the order sheet', mark: 'bank' },
+    { id: 'Card', name: 'Debit / credit card', desc: 'Visa · Mastercard · 3-D Secure', mark: 'card' },
+    { id: 'Invoice / LPO', name: 'Invoice / LPO', desc: '30-day terms for approved accounts', mark: 'invoice' }
   ];
 
   function totals() {
@@ -82,7 +82,7 @@
     pay.innerHTML = PAYMENTS.map(p => `
       <label class="pay-opt ${data.payment === p.id ? 'on' : ''}">
         <input type="radio" name="payment" value="${E(p.id)}" ${data.payment === p.id ? 'checked' : ''}>
-        <span><b>${NV.icon(p.icon)} ${E(p.name)}</b><small>${E(p.desc)}</small></span>
+        <span class="pay-opt-brand pm-ico ${p.mark}">${NV.paymentMark(p.mark)}</span><span><b>${E(p.name)}</b><small>${E(p.desc)}</small></span>
       </label>`).join('');
     document.querySelectorAll('input[name="deliveryMethod"],input[name="payment"]').forEach(r => r.addEventListener('change', () => {
       data[r.name] = r.value;
